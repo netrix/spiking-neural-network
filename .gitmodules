@@ -1,0 +1,3 @@
+[submodule "submodules/nlib"]
+	path = submodules/nlib
+	url = gl@ah.netrix.org.pl:nlib

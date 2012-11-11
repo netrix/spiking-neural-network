@@ -12,9 +12,16 @@ public:
 
 	void process();
 
+	void setWeight(real fWeight)	{ m_fWeight = fWeight; }
+	real getWeight() const			{ return m_fWeight; }
+
+	void setDecayTime(real fDecayTime)	{ m_fDecayTime = fDecayTime; }
+	real getDecayTime() const			{ return m_fDecayTime; }
+
+	bool isActive() const			{ return m_fActive; }
 	real getImpulseValue() const	{ return m_fValue; }
 
-public:
+private:
 	bool m_fActive;
 	int m_iImpulseTime;
 	real m_fValue;

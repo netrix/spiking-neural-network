@@ -5,6 +5,8 @@
 
 typedef double real;
 
+const int NEURON_DEACTIVATION_TIME = 0x0fffffff;
+
 
 inline real H(real fTime)
 {

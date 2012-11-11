@@ -15,7 +15,7 @@ inline real H(real fTime)
 
 inline real expDrop(real fTime, real fDecayTime)
 {
-	return exp(-fTime / fDecayTime) * H(fTime);
+	return exp(-fTime / fDecayTime);// * H(fTime);
 }
 
 

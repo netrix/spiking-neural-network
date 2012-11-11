@@ -17,37 +17,44 @@ void SpikingNeuron::handleInput(NLib::NSize_t uInput, real value)
 {
 	NAssert(uInput < m_aInputs.size(), "Invalid input index");
 
-	m_aInputs[uInput].activate();
-	m_bActive = true;
+	if(!m_bRelaxationActive)
+	{
+		m_aInputs[uInput].activate();
+		m_bActive = true;
+	}
 }
 
 void SpikingNeuron::process()
 {
 	if(m_bActive)
 	{
-		real m_fValue = 0.0;
+		real fValue = 0.0;
 		bool bActive = false;
 		for(int i = 0; i < m_aInputs.size(); ++i)
 		{
 			NeuronInput& input = m_aInputs[i];
 			input.process();
-			m_fValue += input.getImpulseValue();
+			fValue += input.getImpulseValue();
 
 			bActive = bActive || input.isActive();
 		}
 
-		// Impulse
-		if(m_iImpulseTime > 0 && m_fValue >= m_fThreshold)
+		if(!m_bRelaxationActive)
 		{
-			m_iImpulseTime = 0;
-			m_bRelaxationActive = true;
+			m_fValue = fValue;
+			// Impulse
+			if(m_fValue >= m_fThreshold)
+			{
+				m_iImpulseTime = 0;
+				m_bRelaxationActive = true;
+			}
 		}
-		else if(m_bRelaxationActive)
+		else
 		{
 			m_iImpulseTime += 1;
-			m_fValue += -m_fRelaxation * expDrop((real)m_iImpulseTime, m_fDecayTime);
+			m_fValue = -(m_fRelaxation * expDrop((real)m_iImpulseTime, m_fDecayTime));
 
-			if(m_fValue < 0.0 && !bActive)
+			if(m_fValue > -0.1)
 			{
 				m_bRelaxationActive = false;
 			}

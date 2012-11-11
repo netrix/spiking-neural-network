@@ -19,7 +19,7 @@ void NeuronInput::process()
 	if(m_fActive)
 	{
 		m_iImpulseTime += 1;
-		m_fValue = m_fWeight * expDrop((real)m_iImpulseTime, m_fDecayTime);
+		m_fValue = m_fWeight * expDrop((real)m_iImpulseTime, m_fDecayTime) + expDrop(1.0, 4.0) * m_fValue;
 
 		if(m_iImpulseTime > NEURON_DEACTIVATION_TIME)
 		{

@@ -30,10 +30,17 @@ public:
 	void setInputDecay(NLib::NSize_t uInput, real fInputDecay)	{ m_aInputs[uInput].setDecayTime(fInputDecay); }
 	real getInputDecay(NLib::NSize_t uInput) const				{ return m_aInputs[uInput].getDecayTime(); }
 
+	void setInputDelay(NLib::NSize_t uInput, real fInputDelay)	{ m_aInputs[uInput].setDelay(fInputDelay); }
+	real getInputDelay(NLib::NSize_t uInput) const				{ return m_aInputs[uInput].getDelay(); }
+
 	real getValue() const		{ return m_fValue; }
 
 	bool isActive() const		{ return m_bActive; }
 	bool isImpulse() const		{ return m_iImpulseTime == 0; }
+
+	NLib::NSize_t getParametersCount() const;
+	void getParameters(real* opParameters);
+	void setParameters(const real* pParameters);
 
 private:
 	void operator=(const SpikingNeuron& sn)	{}
@@ -47,7 +54,7 @@ private:
 
 	real m_fDecayTime;
 	real m_fRelaxation;
-	real m_fThreshold;	
+	real m_fThreshold;
 };
 
 #endif // SNN_SPIKING_NEURON

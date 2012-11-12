@@ -66,3 +66,32 @@ void SpikingNeuron::process()
 		}
 	}
 }
+
+NLib::NSize_t SpikingNeuron::getParametersCount() const
+{
+	return m_aInputs[0].getParametersCount() * m_aInputs.size() + 3;
+}
+
+void SpikingNeuron::getParameters(real* opParameters)
+{
+	opParameters[0] = m_fDecayTime;
+	opParameters[1] = m_fRelaxation;
+	opParameters[2] = m_fThreshold; 
+
+	for(NLib::NSize_t i = 0; i < m_aInputs.size(); ++i)
+	{
+		m_aInputs[i].getParameters(opParameters + m_aInputs[i].getParametersCount() * i + 3);
+	}
+}
+
+void SpikingNeuron::setParameters(const real* pParameters)
+{
+	m_fDecayTime = pParameters[0];
+	m_fRelaxation = pParameters[1];
+	m_fThreshold = pParameters[2]; 
+
+	for(NLib::NSize_t i = 0; i < m_aInputs.size(); ++i)
+	{
+		m_aInputs[i].setParameters(pParameters + m_aInputs[i].getParametersCount() * i + 3);
+	}
+}

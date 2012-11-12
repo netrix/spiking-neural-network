@@ -19,6 +19,11 @@ int main()
 	sn.setInputWeight(1, 5.0);
 	sn.setInputDecay(1, 5.0);
 
+	std::vector<real> temp;
+	temp.resize(sn.getParametersCount());
+
+	sn.getParameters(&temp[0]);
+
 	for(int i = 0; i < 100; ++i)
 	{
 		if(i == 10)
@@ -28,7 +33,7 @@ int main()
 		if(i > 10 && (i % 4) == 0)
 		{
 			sn.handleInput(1);
-		}
+		}	
 
 		sn.process();
 		cout << sn.getValue() << endl;

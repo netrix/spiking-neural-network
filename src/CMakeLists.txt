@@ -1,7 +1,8 @@
 set(HPP Common.hpp
 		NeuralConnection.hpp
 		NeuronInput.hpp
-		SpikingNeuron.hpp)
+		SpikingNeuron.hpp
+		TestEnvironment.hpp)
 
 set(CPP main.cpp
 		NeuralConnection.cpp

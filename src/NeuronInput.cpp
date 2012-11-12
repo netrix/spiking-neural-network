@@ -6,6 +6,7 @@ NeuronInput::NeuronInput()
 	, m_fValue(0)
 	, m_fWeight(0)
 	, m_fDecayTime(0)
+	, m_fDelay(0)
 {}
 
 void NeuronInput::activate()
@@ -19,7 +20,7 @@ void NeuronInput::process()
 	if(m_fActive)
 	{
 		m_iImpulseTime += 1;
-		m_fValue = m_fWeight * expDrop((real)m_iImpulseTime, m_fDecayTime) + expDrop(1.0, 4.0) * m_fValue;
+		m_fValue = m_fWeight * expDrop((real)m_iImpulseTime - m_fDelay, m_fDecayTime) + expDrop(1.0, 4.0) * m_fValue;
 
 		if(m_iImpulseTime > NEURON_DEACTIVATION_TIME)
 		{
@@ -27,4 +28,23 @@ void NeuronInput::process()
 			m_fValue = 0.0;
 		}
 	}
+}
+
+NLib::NSize_t NeuronInput::getParametersCount() const
+{
+	return 3;
+}
+
+void NeuronInput::getParameters(real* opParameters)
+{
+	opParameters[0] = m_fWeight;
+	opParameters[1] = m_fDecayTime;
+	opParameters[2] = m_fDelay;
+}
+
+void NeuronInput::setParameters(const real* pParameters)
+{
+	m_fWeight = pParameters[0];
+	m_fDecayTime = pParameters[1];
+	m_fDelay = pParameters[2];
 }

@@ -2,6 +2,7 @@
 #define SNN_NEURON_INPUT
 
 #include "Common.hpp"
+#include <NLib/Base/nBase.hpp>
 
 class NeuronInput
 {
@@ -18,8 +19,15 @@ public:
 	void setDecayTime(real fDecayTime)	{ m_fDecayTime = fDecayTime; }
 	real getDecayTime() const			{ return m_fDecayTime; }
 
+	void setDelay(real fDelay)		{ m_fDelay = fDelay; }
+	real getDelay() const			{ return m_fDelay; }
+
 	bool isActive() const			{ return m_fActive; }
 	real getImpulseValue() const	{ return m_fValue; }
+
+	NLib::NSize_t getParametersCount() const;
+	void getParameters(real* opParameters);
+	void setParameters(const real* pParameters);
 
 private:
 	bool m_fActive;
@@ -28,6 +36,7 @@ private:
 
 	real m_fWeight;
 	real m_fDecayTime;
+	real m_fDelay;
 };
 
 #endif // SNN_NEURON_INPUT

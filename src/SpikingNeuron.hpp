@@ -1,8 +1,8 @@
 #ifndef SNN_SPIKING_NEURON
 #define SNN_SPIKING_NEURON
 
-#include <NLib/Base/nBase.hpp>
 #include <vector>
+#include <NLib/Base/nBase.hpp>
 #include "Common.hpp"
 #include "NeuronInput.hpp"
 

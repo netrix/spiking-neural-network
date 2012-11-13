@@ -1,5 +1,5 @@
 #include "SpikingNeuron.hpp"
-#include <NLib\Base\nAssert.hpp>
+#include <NLib/Base/nAssert.hpp>
 
 SpikingNeuron::SpikingNeuron(NLib::NSize_t uInputNum)
 	: m_iImpulseTime(0)

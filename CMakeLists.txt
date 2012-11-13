@@ -13,5 +13,5 @@ option(BUILD_UNITTESTS "Build Unit tests" 0)
 add_subdirectory(modules/nlib)
 
 # Project files
-include_directories(modules/nlib/src)
+include_directories(modules/nlib/src/)
 add_subdirectory(src)

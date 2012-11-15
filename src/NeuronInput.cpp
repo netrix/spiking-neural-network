@@ -20,6 +20,8 @@ void NeuronInput::process()
 	if(m_fActive)
 	{
 		m_iImpulseTime += 1;
+		// It should be done without expDrop, just assume impulse value as 1.0 and put it after delay.
+		// The relaxation drop (recursive) will slowly make it put it down.
 		m_fValue = m_fWeight * expDrop((real)m_iImpulseTime - m_fDelay, m_fDecayTime) + expDrop(1.0, 4.0) * m_fValue;
 
 		if(m_iImpulseTime > NEURON_DEACTIVATION_TIME)

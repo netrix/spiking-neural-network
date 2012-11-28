@@ -1,17 +1,21 @@
 cmake_minimum_required(VERSION 2.8)
 project(snn)
 
-# Tests
-option(BUILD_UNITTESTS "Build Unit tests" 0)
-
 #if(${BUILD_UNITTESTS})
 #	add_subdirectory(modules/gtest)
 #	include_directories(modules/gtest/include)
 #endif()
 
-# Submodules
-add_subdirectory(modules/nlib)
+# Compiling submodules
+add_subdirectory("modules/nlib")
+#add_subdirectory("modules/box2d/Box2D")
 
-# Project files
-include_directories(modules/nlib/src/)
+# NLib
+include_directories("modules/nlib/src/")
+
+# SDL
+include("modules/sdl/cmake/sdl.cmake")
+link_libraries(${SDL_LIBRARIES})
+file(COPY "${SDL_LIBRARIES_PATH}/${SDL_DLL_LIBRARY}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/src/")
+
 add_subdirectory(src)

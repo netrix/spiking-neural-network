@@ -1,86 +1,199 @@
 #include <iostream>
 #include <vector>
+#include <Box2D/Box2D.h>
 #include "SpikingNeuron.hpp"
 #include "Framework.hpp"
+
+#include "PhysicsCar.hpp"
 
 //#include "CarTest.hpp"
 
 using namespace std;
 using namespace NLib::Math;
 
+
+class MyDestructionListener
+    :  public b2DestructionListener
+{
+    void SayGoodbye(b2Fixture* fixture)
+    {
+        if ( FixtureUserData* fud = (FixtureUserData*)fixture->GetUserData() )
+            delete fud;
+    }
+
+    //(unused but must implement all pure virtual functions)
+    void SayGoodbye(b2Joint* joint) {}
+};
+
+void tire_vs_groundArea(b2Fixture* tireFixture, b2Fixture* groundAreaFixture, bool began)
+{
+    PhysicsTire* tire = (PhysicsTire*)tireFixture->GetBody()->GetUserData();
+    GroundAreaFUD* gaFud = (GroundAreaFUD*)groundAreaFixture->GetUserData();
+    if ( began )
+        tire->addGroundArea( gaFud );
+    else
+        tire->removeGroundArea( gaFud );
+}
+
+void handleContact(b2Contact* contact, bool began)
+{
+    b2Fixture* a = contact->GetFixtureA();
+    b2Fixture* b = contact->GetFixtureB();
+    FixtureUserData* fudA = (FixtureUserData*)a->GetUserData();
+    FixtureUserData* fudB = (FixtureUserData*)b->GetUserData();
+
+    if ( !fudA || !fudB )
+        return;
+
+    if ( fudA->getType() == FUD_CAR_TIRE || fudB->getType() == FUD_GROUND_AREA )
+        tire_vs_groundArea(a, b, began);
+    else if ( fudA->getType() == FUD_GROUND_AREA || fudB->getType() == FUD_CAR_TIRE )
+        tire_vs_groundArea(b, a, began);
+}
+
+class MyContactListener
+    : public b2ContactListener
+{
+    virtual void BeginContact(b2Contact* contact)
+    {
+        handleContact(contact, true);
+    }
+
+    virtual void EndContact(b2Contact* contact)
+    {
+        handleContact(contact, false);
+    }
+};
+
+void step(b2World& world, float hz)
+{
+	float32 timeStep = hz > 0.0f ? 1.0f / hz : float32(0.0f);
+
+	world.SetAllowSleeping(true);
+	world.SetWarmStarting(true);
+	world.SetContinuousPhysics(true);
+	world.SetSubStepping(false);
+
+	world.Step(timeStep, 8, 3);
+}
+
+
 int SDL_main(int argc, char* args[])
 {
-	FrameworkSettings settings = { 800, 600, 32 };
+    FrameworkSettings settings = { 800, 600, 32 };
     Framework game(settings);
 
-	SpriteAPtr car = game.createSprite("../../data/car.png");
-	SpriteAPtr background = game.createSprite("../../data/background.png");
+    MyDestructionListener destructionListener;
 
-	// Background sprite
-	NMVector2f backgroundSize = { 800, 600 };
-	background->setSize(backgroundSize);
+    b2World world(b2Vec2(0.0f, 0.0f));
+    world.SetDestructionListener(&destructionListener);
 
-	// Offset of car
-	NMVector2f offset = -car->getSize() * 0.5f;
-	car->setOffset(offset);
+    b2Body* groundBody = null;
 
-	// Car position
-	NMVector2f carPos = NMVector2fLoad(126, 578);
+    //set up ground areas
+    {
+        b2BodyDef bodyDef;
+        groundBody = world.CreateBody( &bodyDef );
 
-	typedef std::vector<NMVector2f> PositionVector;
-	PositionVector vPositions;
-	vPositions.push_back(carPos);
+        b2PolygonShape polygonShape;
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &polygonShape;
+        fixtureDef.isSensor = true;
 
-	NLib::NSize_t uIndex = 0;
-	float fProcess = 0.0f;
-	float fSpeed = 1.0f;
+        polygonShape.SetAsBox( 9, 7, b2Vec2(-10,15), 20*DEGTORAD );
+        b2Fixture* groundAreaFixture = groundBody->CreateFixture(&fixtureDef);
+        groundAreaFixture->SetUserData( new GroundAreaFUD( 0.5f, false ) );
 
-	float fAngle = 0.0f;
+        polygonShape.SetAsBox( 9, 5, b2Vec2(5,20), -40*DEGTORAD );
+        groundAreaFixture = groundBody->CreateFixture(&fixtureDef);
+        groundAreaFixture->SetUserData( new GroundAreaFUD( 0.2f, false ) );
+    }
+
+    PhysicsCar physicsCar(&world);
+    int controlState = 0;
+
+
+    SpriteAPtr car = game.createSprite("../../data/car.png");
+    SpriteAPtr background = game.createSprite("../../data/background.png");
+
+    // Background sprite
+    NMVector2f backgroundSize = { 800, 600 };
+    background->setSize(backgroundSize);
+
+    // Offset of car
+    NMVector2f offset = -car->getSize() * 0.5f;
+    car->setOffset(offset);
+
+    // Car position
+    NMVector2f carPos = NMVector2fLoad(126, 578);
+
+    typedef std::vector<NMVector2f> PositionVector;
+    PositionVector vPositions;
+    vPositions.push_back(carPos);
+
+    NLib::NSize_t uIndex = 0;
+    float fProcess = 0.0f;
+    float fSpeed = 1.0f;
+
+    float fAngle = 0.0f;
     while(game.update())
     {
-		if(game.isMouseButtonLeftClicked())
-		{
-			NMVector2f mousePos = game.getMouseCoords();
+        if(game.isMouseButtonLeftClicked())
+        {
+            NMVector2f mousePos = game.getMouseCoords();
 
-			if(NMVector2fLength(vPositions.back() - mousePos) > 0.001f)
-			{
-				vPositions.push_back(mousePos);
-			}
-		}
+            if(NMVector2fLength(vPositions.back() - mousePos) > 0.001f)
+            {
+                vPositions.push_back(mousePos);
+            }
+        }
 
-		if(uIndex < vPositions.size() - 1)
-		{
-			if(fProcess < 1.0f)
-			{
-				NMVector2f previous = vPositions[uIndex];
-				NMVector2f next = vPositions[uIndex + 1];
+        if(uIndex < vPositions.size() - 1)
+        {
+            if(fProcess < 1.0f)
+            {
+                NMVector2f previous = vPositions[uIndex];
+                NMVector2f next = vPositions[uIndex + 1];
 
-				NMVector2f direction = NMVector2fNormalize(next - previous);
-				float fLength = NMVector2fLength(next - previous);
+                NMVector2f direction = NMVector2fNormalize(next - previous);
+                float fLength = NMVector2fLength(next - previous);
 
-				fProcess += fSpeed / fLength;
-				carPos += direction * fSpeed;
+                fProcess += fSpeed / fLength;
+                carPos += direction * fSpeed;
 
-				fAngle = acosf(NMVector2fDot(NMVector2fLoad(0.0f, -1.0f), direction));
-				fAngle = (fAngle * 360.0f) / (2 * NM_PI_F);
+                fAngle = acosf(NMVector2fDot(NMVector2fLoad(0.0f, -1.0f), direction));
+                fAngle = (fAngle * 360.0f) / (2 * NM_PI_F);
 
-				if(direction.x < 0.0f)
-				{
-					fAngle = -fAngle;
-				}
+                if(direction.x < 0.0f)
+                {
+                    fAngle = -fAngle;
+                }
 
-				std::cout << carPos.x << " " << carPos.y << " " << fLength << " " << uIndex << " "  << vPositions.size() << std::endl;
-			}
-			else
-			{
-				uIndex++;
-				fProcess = 0.0f;
-			}
-		}
+                std::cout << carPos.x << " " << carPos.y << " " << fLength << " " << uIndex << " "  << vPositions.size() << std::endl;
+            }
+            else
+            {
+                uIndex++;
+                fProcess = 0.0f;
+            }
+        }
 
-		//fAngle += 1.0f;
-		game.drawSprite(0, 0, 0.0f, *background.get());
-		game.drawSprite(carPos.x, carPos.y, fAngle, *car.get());
+		controlState = 0;
+		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;
+		controlState |= game.checkKeyDown(SDLK_s) ? TDC_DOWN : 0;
+		controlState |= game.checkKeyDown(SDLK_a) ? TDC_LEFT : 0;
+		controlState |= game.checkKeyDown(SDLK_d) ? TDC_RIGHT : 0;
+
+		physicsCar.update(controlState);
+
+		step(world, 60.0f);
+
+		b2Vec2 physCarPos = physicsCar.getBody()->GetWorldCenter();
+		fAngle = physicsCar.getBody()->GetAngle() * RADTODEG + 180.0f;
+
+        //fAngle += 1.0f;
+        game.drawSprite(0, 0, 0.0f, *background.get());
+        game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
 
         game.flipScreen();
     }

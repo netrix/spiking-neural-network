@@ -117,6 +117,8 @@ public:
 
 	bool isMouseButtonLeftClicked() const;
 
+	bool checkKeyDown(SDLKey key) const;
+
 private:
 	SDL_Surface* m_pMainSurface;
 	SDL_Event m_event;

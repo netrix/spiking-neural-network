@@ -1,4 +1,7 @@
-set(HPP Common.hpp
+set(HPP PhysicsCar.hpp
+		PhysicsTire.hpp
+		PhysicsFixtureUserData.hpp
+		Common.hpp
 		Framework.hpp
 		NeuralConnection.hpp
 		NeuronInput.hpp
@@ -7,6 +10,8 @@ set(HPP Common.hpp
 		CarTest.hpp)
 
 set(CPP main.cpp
+		PhysicsCar.cpp
+		PhysicsTire.cpp
 		Framework.cpp
 		NeuralConnection.cpp
 		NeuronInput.cpp

@@ -65,19 +65,6 @@ class MyContactListener
     }
 };
 
-void step(b2World& world, float hz)
-{
-	float32 timeStep = hz > 0.0f ? 1.0f / hz : float32(0.0f);
-
-	world.SetAllowSleeping(true);
-	world.SetWarmStarting(true);
-	world.SetContinuousPhysics(true);
-	world.SetSubStepping(false);
-
-	world.Step(timeStep, 8, 3);
-}
-
-
 
 
 int SDL_main(int argc, char* args[])
@@ -113,7 +100,7 @@ int SDL_main(int argc, char* args[])
         groundAreaFixture->SetUserData( new GroundAreaFUD( 0.2f, false ) );
     }
 
-    PhysicsCar physicsCar(&world);
+    PhysicsCar physicsCar(&world, 5.0f);
     int controlState = 0;
 
     SpriteAPtr car = game.createSprite("../../data/car.png");
@@ -182,19 +169,18 @@ int SDL_main(int argc, char* args[])
         }
 
 		controlState = 0;
-		controlState |= game.checkKeyDown(SDLK_w) ? TDC_DOWN : 0;
-		controlState |= game.checkKeyDown(SDLK_s) ? TDC_UP : 0;
-		controlState |= game.checkKeyDown(SDLK_a) ? TDC_LEFT : 0;
-		controlState |= game.checkKeyDown(SDLK_d) ? TDC_RIGHT : 0;
+		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;
+		controlState |= game.checkKeyDown(SDLK_s) ? TDC_DOWN : 0;
+		controlState |= game.checkKeyDown(SDLK_a) ? TDC_RIGHT : 0;
+		controlState |= game.checkKeyDown(SDLK_d) ? TDC_LEFT : 0;
 
 		physicsCar.update(controlState);
 
-		step(world, 60.0f);
+		game.physicsStep(60.0f);
 
 		b2Vec2 physCarPos = physicsCar.getBody()->GetWorldCenter();
-		fAngle = physicsCar.getBody()->GetAngle() * RADTODEG;// + 180.0f;
+		fAngle = physicsCar.getBody()->GetAngle() * RADTODEG + 180.0f;
 
-        //fAngle += 1.0f;
         game.drawSprite(0, 0, 0.0f, *background.get());
         game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
 

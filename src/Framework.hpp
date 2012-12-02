@@ -47,6 +47,7 @@ public:
 
 	// Physics
 	b2World& getPhysicsWorld()		{ return m_b2World; }
+	void physicsStep(float hz);
 
 	// Debug
 	void setDebugDraw(bool value);

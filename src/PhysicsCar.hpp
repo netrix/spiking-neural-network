@@ -13,7 +13,7 @@
 class PhysicsCar 
 {
 public:
-    PhysicsCar(b2World* world);
+    PhysicsCar(b2World* world, float fScale);
 
     ~PhysicsCar();
 

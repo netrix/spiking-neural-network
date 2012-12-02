@@ -10,6 +10,7 @@ bool isPowOf2(NLib::NUint32 value)
 Framework::Framework(const FrameworkSettings& settings)
 	: m_b2World(b2Vec2_zero)
 {
+	// Window + Opengl
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
@@ -32,7 +33,6 @@ Framework::Framework(const FrameworkSettings& settings)
 	// Alpha blending
 	glDepthFunc(GL_LEQUAL);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
 
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -60,6 +60,9 @@ void Framework::drawSprite(float x, float y, float fAngle, Sprite& sprite) const
 	float y1 = offset.y;
 	float x2 = offset.x + size.x;
 	float y2 = offset.y + size.y;
+
+	glEnable(GL_BLEND);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 
@@ -89,6 +92,9 @@ void Framework::drawSprite(float x, float y, float fAngle, Sprite& sprite) const
     glEnd();
 
     glLoadIdentity();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_BLEND);
 }
 
 void Framework::flipScreen()
@@ -214,4 +220,16 @@ void Framework::setDebugDraw(bool value)
 
 		m_b2DebugDrawOpenGL.SetFlags(flags);
 	}
+}
+
+void Framework::physicsStep(float hz)
+{
+	float32 timeStep = hz > 0.0f ? 1.0f / hz : float32(0.0f);
+
+	m_b2World.SetAllowSleeping(true);
+	m_b2World.SetWarmStarting(true);
+	m_b2World.SetContinuousPhysics(true);
+	m_b2World.SetSubStepping(false);
+
+	m_b2World.Step(timeStep, 8, 3);
 }

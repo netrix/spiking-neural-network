@@ -8,9 +8,9 @@ bool isPowOf2(NLib::NUint32 value)
 
 
 Framework::Framework(const FrameworkSettings& settings)
+	: m_b2World(b2Vec2_zero)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
-
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     m_pMainSurface = SDL_SetVideoMode(settings.uWidth, 
@@ -40,6 +40,9 @@ Framework::Framework(const FrameworkSettings& settings)
 	// Resetting events
 	memset(&m_event, 0, sizeof(m_event));
 	m_uLastMouseButtonStateLeft = SDL_MOUSEBUTTONUP;
+
+	// Initializing physics
+	m_b2World.SetDebugDraw(&m_b2DebugDrawOpenGL);
 }
 
 Framework::~Framework()
@@ -185,4 +188,30 @@ bool Framework::isMouseButtonLeftClicked() const
 bool Framework::checkKeyDown(SDLKey key) const
 {
 	return m_event.type == SDL_KEYDOWN && m_event.key.keysym.sym == key;
+}
+
+void Framework::setDebugDraw(bool value)
+{
+	if(value)
+	{
+		uint32 flags = m_b2DebugDrawOpenGL.GetFlags();
+
+		flags |= b2Draw::e_shapeBit;
+		flags |= b2Draw::e_jointBit;
+		flags |= b2Draw::e_aabbBit;
+		flags |= b2Draw::e_centerOfMassBit;
+
+		m_b2DebugDrawOpenGL.SetFlags(flags);
+	}
+	else
+	{
+		uint32 flags = m_b2DebugDrawOpenGL.GetFlags();
+
+		flags &= ~b2Draw::e_shapeBit;
+		flags &= ~b2Draw::e_jointBit;
+		flags &= ~b2Draw::e_aabbBit;
+		flags &= ~b2Draw::e_centerOfMassBit;
+
+		m_b2DebugDrawOpenGL.SetFlags(flags);
+	}
 }

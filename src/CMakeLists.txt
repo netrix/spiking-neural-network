@@ -2,6 +2,7 @@ set(HPP DebugDrawOpenGL.hpp
 		PhysicsCar.hpp
 		PhysicsTire.hpp
 		PhysicsFixtureUserData.hpp
+		Exceptions.hpp
 		Common.hpp
 		Sprite.hpp
 		Framework.hpp

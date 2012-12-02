@@ -86,18 +86,11 @@ int SDL_main(int argc, char* args[])
     Framework game(settings);
 
     MyDestructionListener destructionListener;
-	b2Draw& debugDraw = game.getB2DebugDraw();
 
-    b2World world(b2Vec2(0.0f, 0.0f));
+	b2World& world = game.getPhysicsWorld();
+	
+	game.setDebugDraw(true);
     world.SetDestructionListener(&destructionListener);
-	world.SetDebugDraw(&debugDraw);
-
-	uint32 flags = 0;
-	flags |= b2Draw::e_shapeBit;
-	flags |= b2Draw::e_jointBit;
-	flags |= b2Draw::e_aabbBit;
-	flags |= b2Draw::e_centerOfMassBit;
-	debugDraw.SetFlags(flags);
 
     b2Body* groundBody = null;
 
@@ -122,7 +115,6 @@ int SDL_main(int argc, char* args[])
 
     PhysicsCar physicsCar(&world);
     int controlState = 0;
-
 
     SpriteAPtr car = game.createSprite("../../data/car.png");
     SpriteAPtr background = game.createSprite("../../data/background.png");

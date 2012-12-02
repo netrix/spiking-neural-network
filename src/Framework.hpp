@@ -56,6 +56,7 @@ private:
 	// SDL
 	SDL_Surface* m_pMainSurface;
 	SDL_Event m_event;
+	
 
 	// Events
 	NLib::NUint8 m_uLastMouseButtonStateLeft;

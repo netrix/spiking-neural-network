@@ -193,7 +193,7 @@ bool Framework::isMouseButtonLeftClicked() const
 
 bool Framework::checkKeyDown(SDLKey key) const
 {
-	return m_event.type == SDL_KEYDOWN && m_event.key.keysym.sym == key;
+	return SDL_GetKeyState(null)[key];
 }
 
 void Framework::setDebugDraw(bool value)

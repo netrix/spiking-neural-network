@@ -9,6 +9,9 @@
 #include <string>
 #include <exception>
 
+#include "DebugDrawOpenGL.hpp"
+#include "Sprite.hpp"
+
 /**
  *
  */
@@ -30,58 +33,12 @@ struct RGBUint8
 /**
  *
  */
-class NNonCopyable
-{
-protected:
-	NNonCopyable() {}
-	~NNonCopyable() {}
-
-private:
-	NNonCopyable(const NNonCopyable&) {}
-	const NNonCopyable& operator=(const NNonCopyable&) {}
-};
-
-/**
- *
- */
 struct NSize
 {
 	NLib::NUint32 width;
 	NLib::NUint32 height;
 };
 
-/**
- *
- */
-class Sprite
-	: NNonCopyable
-{
-public:
-	Sprite(GLuint uTexture, const NLib::Math::NMVector2f& size)
-		: m_uTexture(uTexture)
-		, m_offset(NLib::Math::NMVector2fLoadZeros())
-		, m_size(size)
-
-	{}
-
-	~Sprite()	{  glDeleteTextures(1, &m_uTexture); }
-
-	GLuint getTexture() const { return m_uTexture; }
-
-	const NLib::Math::NMVector2f& getSize() const { return m_size; }
-
-	void setSize(const NLib::Math::NMVector2f& size)	{ m_size = size; }
-
-	void setOffset(const NLib::Math::NMVector2f& offset)	{ m_offset = offset; }
-
-	const NLib::Math::NMVector2f& getOffset() const { return m_offset; }
-
-private:
-	GLuint m_uTexture;
-	NLib::Math::NMVector2f m_offset;
-	NLib::Math::NMVector2f m_size;
-};
-typedef std::auto_ptr<Sprite> SpriteAPtr;
 
 /**
  *
@@ -95,6 +52,8 @@ public:
 	{}
 };
 
+typedef std::auto_ptr<Sprite> SpriteAPtr;
+
 /**
  *
  */
@@ -104,6 +63,8 @@ public:
 	Framework(const FrameworkSettings& settings);
 	
 	~Framework();
+
+	b2Draw& getB2DebugDraw()		{ return m_b2DebugDrawOpenGL; }
 
 	SpriteAPtr createSprite(const std::string& filePath) const;
 
@@ -124,6 +85,8 @@ private:
 	SDL_Event m_event;
 
 	NLib::NUint8 m_uLastMouseButtonStateLeft;
+
+	DebugDrawOpenGL m_b2DebugDrawOpenGL;
 };
 
 #endif

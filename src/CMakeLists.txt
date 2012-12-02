@@ -1,17 +1,20 @@
-set(HPP PhysicsCar.hpp
+set(HPP DebugDrawOpenGL.hpp
+		PhysicsCar.hpp
 		PhysicsTire.hpp
 		PhysicsFixtureUserData.hpp
 		Common.hpp
+		Sprite.hpp
 		Framework.hpp
 		NeuralConnection.hpp
 		NeuronInput.hpp
 		SpikingNeuron.hpp
-		TestEnvironment.hpp
-		CarTest.hpp)
+		TestEnvironment.hpp)
 
 set(CPP main.cpp
+		DebugDrawOpenGL.cpp
 		PhysicsCar.cpp
 		PhysicsTire.cpp
+		Sprite.cpp
 		Framework.cpp
 		NeuralConnection.cpp
 		NeuronInput.cpp

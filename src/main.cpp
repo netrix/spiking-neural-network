@@ -78,15 +78,26 @@ void step(b2World& world, float hz)
 }
 
 
+
+
 int SDL_main(int argc, char* args[])
 {
     FrameworkSettings settings = { 800, 600, 32 };
     Framework game(settings);
 
     MyDestructionListener destructionListener;
+	b2Draw& debugDraw = game.getB2DebugDraw();
 
     b2World world(b2Vec2(0.0f, 0.0f));
     world.SetDestructionListener(&destructionListener);
+	world.SetDebugDraw(&debugDraw);
+
+	uint32 flags = 0;
+	flags |= b2Draw::e_shapeBit;
+	flags |= b2Draw::e_jointBit;
+	flags |= b2Draw::e_aabbBit;
+	flags |= b2Draw::e_centerOfMassBit;
+	debugDraw.SetFlags(flags);
 
     b2Body* groundBody = null;
 
@@ -179,8 +190,8 @@ int SDL_main(int argc, char* args[])
         }
 
 		controlState = 0;
-		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;
-		controlState |= game.checkKeyDown(SDLK_s) ? TDC_DOWN : 0;
+		controlState |= game.checkKeyDown(SDLK_w) ? TDC_DOWN : 0;
+		controlState |= game.checkKeyDown(SDLK_s) ? TDC_UP : 0;
 		controlState |= game.checkKeyDown(SDLK_a) ? TDC_LEFT : 0;
 		controlState |= game.checkKeyDown(SDLK_d) ? TDC_RIGHT : 0;
 
@@ -189,11 +200,13 @@ int SDL_main(int argc, char* args[])
 		step(world, 60.0f);
 
 		b2Vec2 physCarPos = physicsCar.getBody()->GetWorldCenter();
-		fAngle = physicsCar.getBody()->GetAngle() * RADTODEG + 180.0f;
+		fAngle = physicsCar.getBody()->GetAngle() * RADTODEG;// + 180.0f;
 
         //fAngle += 1.0f;
         game.drawSprite(0, 0, 0.0f, *background.get());
         game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
+
+		world.DrawDebugData();
 
         game.flipScreen();
     }

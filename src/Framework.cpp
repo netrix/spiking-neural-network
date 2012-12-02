@@ -1,6 +1,5 @@
 #include "Framework.hpp"
 #include <SDL_image.h>
-//#include <SDL_opengl.h>
 
 bool isPowOf2(NLib::NUint32 value)
 {

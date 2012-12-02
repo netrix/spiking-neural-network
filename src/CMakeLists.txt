@@ -1,5 +1,5 @@
 set(HPP Common.hpp
-		Game.hpp
+		Framework.hpp
 		NeuralConnection.hpp
 		NeuronInput.hpp
 		SpikingNeuron.hpp
@@ -7,7 +7,7 @@ set(HPP Common.hpp
 		CarTest.hpp)
 
 set(CPP main.cpp
-		Game.cpp
+		Framework.cpp
 		NeuralConnection.cpp
 		NeuronInput.cpp
 		SpikingNeuron.cpp)

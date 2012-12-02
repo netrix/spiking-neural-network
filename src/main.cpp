@@ -1,7 +1,7 @@
 #include <iostream>
 #include <SDL.h>
 #include "SpikingNeuron.hpp"
-#include "Game.hpp"
+#include "Framework.hpp"
 
 //#include "CarTest.hpp"
 
@@ -9,18 +9,26 @@ using namespace std;
 
 int SDL_main(int argc, char* args[])
 {
-	GameSettings settings = { 800, 600, 32 };
+	FrameworkSettings settings = { 800, 600, 32 };
+    Framework game(settings);
 
-    Game game(settings);
+	SpriteAPtr car = game.createSprite("../../data/car.png");
+	SpriteAPtr background = game.createSprite("../../data/background.png");
 
-    //RGBUint8 colorKey = { 255
+	// Background sprite
+	NLib::Math::NMVector2f backgroundSize = { 800, 600 };
+	background->setSize(backgroundSize);
 
-    ImageAPtr car = game.createImage("../../data/car.png");
-	//ImageAPtr car = game.createImage("C:\\Users\\Netrix\\Documents\\Programming\\C++\\current\\snn\\data\\car.png");
+	// Offset of car
+	NLib::Math::NMVector2f offset = -car->getSize() * 0.5f;
+	car->setOffset(offset);
 
+	float fAngle = 0.0f;
     while(game.update())
     {
-		game.drawImage(50, 50, *car.get());
+		//fAngle += 1.0f;
+		game.drawSprite(0, 0, 0.0f, *background.get());
+		game.drawSprite(126, 578, fAngle, *car.get());
 
         game.flipScreen();
     }

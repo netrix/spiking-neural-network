@@ -1,11 +1,12 @@
 #include <iostream>
-#include <SDL.h>
+#include <vector>
 #include "SpikingNeuron.hpp"
 #include "Framework.hpp"
 
 //#include "CarTest.hpp"
 
 using namespace std;
+using namespace NLib::Math;
 
 int SDL_main(int argc, char* args[])
 {
@@ -16,19 +17,70 @@ int SDL_main(int argc, char* args[])
 	SpriteAPtr background = game.createSprite("../../data/background.png");
 
 	// Background sprite
-	NLib::Math::NMVector2f backgroundSize = { 800, 600 };
+	NMVector2f backgroundSize = { 800, 600 };
 	background->setSize(backgroundSize);
 
 	// Offset of car
-	NLib::Math::NMVector2f offset = -car->getSize() * 0.5f;
+	NMVector2f offset = -car->getSize() * 0.5f;
 	car->setOffset(offset);
+
+	// Car position
+	NMVector2f carPos = NMVector2fLoad(126, 578);
+
+	typedef std::vector<NMVector2f> PositionVector;
+	PositionVector vPositions;
+	vPositions.push_back(carPos);
+
+	NLib::NSize_t uIndex = 0;
+	float fProcess = 0.0f;
+	float fSpeed = 1.0f;
 
 	float fAngle = 0.0f;
     while(game.update())
     {
+		if(game.isMouseButtonLeftClicked())
+		{
+			NMVector2f mousePos = game.getMouseCoords();
+
+			if(NMVector2fLength(vPositions.back() - mousePos) > 0.001f)
+			{
+				vPositions.push_back(mousePos);
+			}
+		}
+
+		if(uIndex < vPositions.size() - 1)
+		{
+			if(fProcess < 1.0f)
+			{
+				NMVector2f previous = vPositions[uIndex];
+				NMVector2f next = vPositions[uIndex + 1];
+
+				NMVector2f direction = NMVector2fNormalize(next - previous);
+				float fLength = NMVector2fLength(next - previous);
+
+				fProcess += fSpeed / fLength;
+				carPos += direction * fSpeed;
+
+				fAngle = acosf(NMVector2fDot(NMVector2fLoad(0.0f, -1.0f), direction));
+				fAngle = (fAngle * 360.0f) / (2 * NM_PI_F);
+
+				if(direction.x < 0.0f)
+				{
+					fAngle = -fAngle;
+				}
+
+				std::cout << carPos.x << " " << carPos.y << " " << fLength << " " << uIndex << " "  << vPositions.size() << std::endl;
+			}
+			else
+			{
+				uIndex++;
+				fProcess = 0.0f;
+			}
+		}
+
 		//fAngle += 1.0f;
 		game.drawSprite(0, 0, 0.0f, *background.get());
-		game.drawSprite(126, 578, fAngle, *car.get());
+		game.drawSprite(carPos.x, carPos.y, fAngle, *car.get());
 
         game.flipScreen();
     }

@@ -37,6 +37,10 @@ Framework::Framework(const FrameworkSettings& settings)
 
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+	// Resetting events
+	memset(&m_event, 0, sizeof(m_event));
+	m_uLastMouseButtonStateLeft = SDL_MOUSEBUTTONUP;
 }
 
 Framework::~Framework()
@@ -142,6 +146,12 @@ SpriteAPtr Framework::createSprite(const std::string& filePath) const
 
 bool Framework::update()
 {
+	// Last state of left button
+	if(m_event.button.button == SDL_BUTTON_LEFT)
+	{
+		m_uLastMouseButtonStateLeft = m_event.type;
+	}
+
     if(SDL_PollEvent(&m_event))
     {
         if(m_event.type == SDL_KEYDOWN)
@@ -158,4 +168,17 @@ bool Framework::update()
     }
 
     return true;
+}
+
+NLib::Math::NMVector2f Framework::getMouseCoords() const
+{
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+
+	return NLib::Math::NMVector2fLoad((float)x, (float)y);
+}
+
+bool Framework::isMouseButtonLeftClicked() const
+{
+	return m_event.type == SDL_MOUSEBUTTONDOWN && m_event.button.button == SDL_BUTTON_LEFT && m_uLastMouseButtonStateLeft != SDL_MOUSEBUTTONDOWN;
 }

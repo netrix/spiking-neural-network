@@ -113,9 +113,15 @@ public:
 
 	bool update();
 
+	NLib::Math::NMVector2f getMouseCoords() const;
+
+	bool isMouseButtonLeftClicked() const;
+
 private:
 	SDL_Surface* m_pMainSurface;
 	SDL_Event m_event;
+
+	NLib::NUint8 m_uLastMouseButtonStateLeft;
 };
 
 #endif

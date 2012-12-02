@@ -3,7 +3,7 @@
 	url = gl@ah.netrix.org.pl:nlib
 [submodule "modules/box2d"]
 	path = modules/box2d
-	url = gl@ah.netrix.org.pl:foreign/box2d
+	url = gl@ah.netrix.org.pl:box2d
 [submodule "modules/sdl"]
 	path = modules/sdl
 	url = gl@ah.netrix.org.pl:foreign/sdl

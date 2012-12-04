@@ -1,3 +1,5 @@
+/* http://www.iforce2d.net/b2dtut/top-down-car
+*/
 #ifndef SNN_PHYSICS_CAR
 #define SNN_PHYSICS_CAR
 
@@ -13,9 +15,11 @@
 class PhysicsCar 
 {
 public:
-    PhysicsCar(b2World* world, float fScale);
+    PhysicsCar(b2World* world);
 
     ~PhysicsCar();
+
+	void setPosition(const b2Vec2& pos, float fAngle= 0.0f);
 
     void update(int controlState);
 

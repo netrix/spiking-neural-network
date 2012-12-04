@@ -1,5 +1,6 @@
 set(HPP DebugDrawOpenGL.hpp
 		PhysicsCar.hpp
+		PhysicsContacts.hpp
 		PhysicsTire.hpp
 		PhysicsFixtureUserData.hpp
 		Exceptions.hpp
@@ -14,6 +15,7 @@ set(HPP DebugDrawOpenGL.hpp
 set(CPP main.cpp
 		DebugDrawOpenGL.cpp
 		PhysicsCar.cpp
+		PhysicsContacts.cpp
 		PhysicsTire.cpp
 		Sprite.cpp
 		Framework.cpp

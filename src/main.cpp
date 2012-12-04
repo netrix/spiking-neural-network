@@ -5,72 +5,19 @@
 #include "Framework.hpp"
 
 #include "PhysicsCar.hpp"
+#include "PhysicsContacts.hpp"
 
-//#include "CarTest.hpp"
 
 using namespace std;
 using namespace NLib::Math;
 
-
-class MyDestructionListener
-    :  public b2DestructionListener
-{
-    void SayGoodbye(b2Fixture* fixture)
-    {
-        if ( FixtureUserData* fud = (FixtureUserData*)fixture->GetUserData() )
-            delete fud;
-    }
-
-    //(unused but must implement all pure virtual functions)
-    void SayGoodbye(b2Joint* joint) {}
-};
-
-void tire_vs_groundArea(b2Fixture* tireFixture, b2Fixture* groundAreaFixture, bool began)
-{
-    PhysicsTire* tire = (PhysicsTire*)tireFixture->GetBody()->GetUserData();
-    GroundAreaFUD* gaFud = (GroundAreaFUD*)groundAreaFixture->GetUserData();
-    if ( began )
-        tire->addGroundArea( gaFud );
-    else
-        tire->removeGroundArea( gaFud );
-}
-
-void handleContact(b2Contact* contact, bool began)
-{
-    b2Fixture* a = contact->GetFixtureA();
-    b2Fixture* b = contact->GetFixtureB();
-    FixtureUserData* fudA = (FixtureUserData*)a->GetUserData();
-    FixtureUserData* fudB = (FixtureUserData*)b->GetUserData();
-
-    if ( !fudA || !fudB )
-        return;
-
-    if ( fudA->getType() == FUD_CAR_TIRE || fudB->getType() == FUD_GROUND_AREA )
-        tire_vs_groundArea(a, b, began);
-    else if ( fudA->getType() == FUD_GROUND_AREA || fudB->getType() == FUD_CAR_TIRE )
-        tire_vs_groundArea(b, a, began);
-}
-
-class MyContactListener
-    : public b2ContactListener
-{
-    virtual void BeginContact(b2Contact* contact)
-    {
-        handleContact(contact, true);
-    }
-
-    virtual void EndContact(b2Contact* contact)
-    {
-        handleContact(contact, false);
-    }
-};
-
+const float WORLD_SCALE = 0.2f;
 
 
 int SDL_main(int argc, char* args[])
 {
     FrameworkSettings settings = { 800, 600, 32 };
-    Framework game(settings);
+    Framework game(settings, WORLD_SCALE);
 
     MyDestructionListener destructionListener;
 
@@ -82,37 +29,41 @@ int SDL_main(int argc, char* args[])
     b2Body* groundBody = null;
 
     //set up ground areas
-    {
-        b2BodyDef bodyDef;
-        groundBody = world.CreateBody( &bodyDef );
+    //{
+    //    b2BodyDef bodyDef;
+    //    groundBody = world.CreateBody( &bodyDef );
 
-        b2PolygonShape polygonShape;
-        b2FixtureDef fixtureDef;
-        fixtureDef.shape = &polygonShape;
-        fixtureDef.isSensor = true;
+    //    b2PolygonShape polygonShape;
+    //    b2FixtureDef fixtureDef;
+    //    fixtureDef.shape = &polygonShape;
+    //    fixtureDef.isSensor = true;
 
-        polygonShape.SetAsBox( 9, 7, b2Vec2(-10,15), 20*DEGTORAD );
-        b2Fixture* groundAreaFixture = groundBody->CreateFixture(&fixtureDef);
-        groundAreaFixture->SetUserData( new GroundAreaFUD( 0.5f, false ) );
+    //    polygonShape.SetAsBox( 9, 7, b2Vec2(-10,15), 20*DEGTORAD );
+    //    b2Fixture* groundAreaFixture = groundBody->CreateFixture(&fixtureDef);
+    //    groundAreaFixture->SetUserData( new GroundAreaFUD( 0.5f, false ) );
 
-        polygonShape.SetAsBox( 9, 5, b2Vec2(5,20), -40*DEGTORAD );
-        groundAreaFixture = groundBody->CreateFixture(&fixtureDef);
-        groundAreaFixture->SetUserData( new GroundAreaFUD( 0.2f, false ) );
-    }
+    //    polygonShape.SetAsBox( 9, 5, b2Vec2(5,20), -40*DEGTORAD );
+    //    groundAreaFixture = groundBody->CreateFixture(&fixtureDef);
+    //    groundAreaFixture->SetUserData( new GroundAreaFUD( WORLD_SCALE, false ) );
+    //}
 
-    PhysicsCar physicsCar(&world, 5.0f);
+    //PhysicsCar physicsCar(&world, 5.0f);
+	PhysicsCar physicsCar(&world);
+	physicsCar.setPosition(b2Vec2(126 * WORLD_SCALE, 578 * WORLD_SCALE) , 180.0f * DEGTORAD);
+
     int controlState = 0;
 
     SpriteAPtr car = game.createSprite("../../data/car.png");
     SpriteAPtr background = game.createSprite("../../data/background.png");
 
     // Background sprite
-    NMVector2f backgroundSize = { 800, 600 };
+    NMVector2f backgroundSize = { 800 * WORLD_SCALE, 600 * WORLD_SCALE};
     background->setSize(backgroundSize);
 
     // Offset of car
-    NMVector2f offset = -car->getSize() * 0.5f;
+    NMVector2f offset = -car->getSize() * 0.1f;
     car->setOffset(offset);
+	car->setSize(car->getSize() * WORLD_SCALE);
 
     // Car position
     NMVector2f carPos = NMVector2fLoad(126, 578);
@@ -128,6 +79,14 @@ int SDL_main(int argc, char* args[])
     float fAngle = 0.0f;
     while(game.update())
     {
+		b2Vec2 physCarPos = physicsCar.getBody()->GetWorldCenter();
+		fAngle = physicsCar.getBody()->GetAngle() * RADTODEG + 180.0f;
+
+        game.drawSprite(0, 0, 0.0f, *background.get());
+        game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
+
+
+
         if(game.isMouseButtonLeftClicked())
         {
             NMVector2f mousePos = game.getMouseCoords();
@@ -178,13 +137,9 @@ int SDL_main(int argc, char* args[])
 
 		game.physicsStep(60.0f);
 
-		b2Vec2 physCarPos = physicsCar.getBody()->GetWorldCenter();
-		fAngle = physicsCar.getBody()->GetAngle() * RADTODEG + 180.0f;
-
-        game.drawSprite(0, 0, 0.0f, *background.get());
-        game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
-
-		world.DrawDebugData();
+//		printf("car velocity: %f\n", physicsCar.getBody()->GetLinearVelocity());
+//		printf("force %f\n", m_currentTraction * force * currentForwardNormal);
+//		printf("velocity %f\n", m_body->GetLinearVelocity());
 
         game.flipScreen();
     }

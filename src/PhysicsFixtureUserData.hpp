@@ -1,3 +1,5 @@
+/* http://www.iforce2d.net/b2dtut/top-down-car
+*/
 #ifndef SNN_PHYSICS_FIXTURE_USER_DATA
 #define SNN_PHYSICS_FIXTURE_USER_DATA
 
@@ -47,6 +49,20 @@ public:
         frictionModifier = fm;
         outOfCourse = ooc;
     }
+};
+
+// Destruction listener for FUD defined above
+class MyDestructionListener
+    :  public b2DestructionListener
+{
+    void SayGoodbye(b2Fixture* fixture)
+    {
+        if ( FixtureUserData* fud = (FixtureUserData*)fixture->GetUserData() )
+            delete fud;
+    }
+
+    //(unused but must implement all pure virtual functions)
+    void SayGoodbye(b2Joint* joint) {}
 };
 
 #endif // SNN_PHYSICS_FIXTURE_USER_DATA

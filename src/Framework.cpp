@@ -7,8 +7,9 @@ bool isPowOf2(NLib::NUint32 value)
 }
 
 
-Framework::Framework(const FrameworkSettings& settings)
+Framework::Framework(const FrameworkSettings& settings, float fWorldScale)
 	: m_b2World(b2Vec2_zero)
+	, m_bDrawDebug(false)
 {
 	// Window + Opengl
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -27,7 +28,7 @@ Framework::Framework(const FrameworkSettings& settings)
  
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0f, settings.uWidth, settings.uHeight, 0.0f, -1.0f, 1.0f);
+    glOrtho(0.0f, settings.uWidth * fWorldScale, settings.uHeight * fWorldScale, 0.0f, -1.0f, 1.0f);
 	//glOrtho(-settings.uWidth*0.5f, settings.uWidth*0.5f, settings.uHeight*.5f, -settings.uHeight*0.5f, -1.0f, 1.0f);
  
 	// Alpha blending
@@ -43,6 +44,15 @@ Framework::Framework(const FrameworkSettings& settings)
 
 	// Initializing physics
 	m_b2World.SetDebugDraw(&m_b2DebugDrawOpenGL);
+
+	uint32 flags = m_b2DebugDrawOpenGL.GetFlags();
+
+	flags |= b2Draw::e_shapeBit;
+	flags |= b2Draw::e_jointBit;
+	flags |= b2Draw::e_aabbBit;
+	flags |= b2Draw::e_centerOfMassBit;
+
+	m_b2DebugDrawOpenGL.SetFlags(flags);
 }
 
 Framework::~Framework()
@@ -99,6 +109,11 @@ void Framework::drawSprite(float x, float y, float fAngle, Sprite& sprite) const
 
 void Framework::flipScreen()
 {
+	if(m_bDrawDebug)
+	{
+		m_b2World.DrawDebugData();
+	}
+
     SDL_GL_SwapBuffers();
 
     glClear(GL_COLOR_BUFFER_BIT);
@@ -198,28 +213,7 @@ bool Framework::checkKeyDown(SDLKey key) const
 
 void Framework::setDebugDraw(bool value)
 {
-	if(value)
-	{
-		uint32 flags = m_b2DebugDrawOpenGL.GetFlags();
-
-		flags |= b2Draw::e_shapeBit;
-		flags |= b2Draw::e_jointBit;
-		flags |= b2Draw::e_aabbBit;
-		flags |= b2Draw::e_centerOfMassBit;
-
-		m_b2DebugDrawOpenGL.SetFlags(flags);
-	}
-	else
-	{
-		uint32 flags = m_b2DebugDrawOpenGL.GetFlags();
-
-		flags &= ~b2Draw::e_shapeBit;
-		flags &= ~b2Draw::e_jointBit;
-		flags &= ~b2Draw::e_aabbBit;
-		flags &= ~b2Draw::e_centerOfMassBit;
-
-		m_b2DebugDrawOpenGL.SetFlags(flags);
-	}
+	m_bDrawDebug = value;
 }
 
 void Framework::physicsStep(float hz)

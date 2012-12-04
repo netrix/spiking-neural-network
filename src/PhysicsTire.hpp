@@ -1,3 +1,5 @@
+/* http://www.iforce2d.net/b2dtut/top-down-car
+*/
 #ifndef SNN_PHYSICS_TIRE
 #define SNN_PHYSICS_TIRE
 
@@ -17,7 +19,7 @@ enum
 class PhysicsTire 
 {
 public:
-	PhysicsTire(b2World* world, float fScale);
+	PhysicsTire(b2World* world);
 	~PhysicsTire();
 
 	void setCharacteristics(float maxForwardSpeed, float maxBackwardSpeed, float maxDriveForce, float maxLateralImpulse);

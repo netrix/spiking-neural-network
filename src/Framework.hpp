@@ -31,7 +31,7 @@ struct FrameworkSettings
 class Framework
 {
 public:
-	Framework(const FrameworkSettings& settings);
+	Framework(const FrameworkSettings& settings, float fWorldScale);
 	~Framework();
 
 	// Graphics
@@ -65,6 +65,7 @@ private:
 	b2World m_b2World;
 
 	// Debug
+	bool m_bDrawDebug;
 	DebugDrawOpenGL m_b2DebugDrawOpenGL;
 };
 

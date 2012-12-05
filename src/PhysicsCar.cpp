@@ -23,7 +23,7 @@ PhysicsCar::PhysicsCar(b2World* world)
 
 	float maxForwardSpeed = 250 ;
 	float maxBackwardSpeed = -40 ;
-	float backTireMaxDriveForce = 300 ;
+	float backTireMaxDriveForce = 300;
 	float frontTireMaxDriveForce = 500 ;
 	float backTireMaxLateralImpulse = 8.5 ;
 	float frontTireMaxLateralImpulse = 7.5 ;
@@ -80,9 +80,13 @@ void PhysicsCar::setPosition(const b2Vec2& pos, float fAngle)
 void PhysicsCar::update(int controlState) 
 {
 	for (int i = 0; i < m_tires.size(); i++)
+	{
 		m_tires[i]->updateFriction();
+	}
 	for (int i = 0; i < m_tires.size(); i++)
+	{
 		m_tires[i]->updateDrive(controlState);
+	}
 
 	//control steering
 	float lockAngle = 35 * DEGTORAD;

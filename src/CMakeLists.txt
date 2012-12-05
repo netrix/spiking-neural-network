@@ -10,7 +10,8 @@ set(HPP DebugDrawOpenGL.hpp
 		NeuralConnection.hpp
 		NeuronInput.hpp
 		SpikingNeuron.hpp
-		TestEnvironment.hpp)
+		TestEnvironment.hpp
+		Track.hpp)
 
 set(CPP main.cpp
 		DebugDrawOpenGL.cpp
@@ -21,7 +22,8 @@ set(CPP main.cpp
 		Framework.cpp
 		NeuralConnection.cpp
 		NeuronInput.cpp
-		SpikingNeuron.cpp)
+		SpikingNeuron.cpp
+		Track.cpp)
 
 set(NAME "snn")
 

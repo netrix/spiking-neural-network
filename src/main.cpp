@@ -6,6 +6,7 @@
 
 #include "PhysicsCar.hpp"
 #include "PhysicsContacts.hpp"
+#include "Track.hpp"
 
 
 using namespace std;
@@ -66,11 +67,11 @@ int SDL_main(int argc, char* args[])
 	car->setSize(car->getSize() * WORLD_SCALE);
 
     // Car position
-    NMVector2f carPos = NMVector2fLoad(126, 578);
+    NMVector2f carPos = NMVector2fLoad(126, 578) * WORLD_SCALE;
 
-    typedef std::vector<NMVector2f> PositionVector;
-    PositionVector vPositions;
-    vPositions.push_back(carPos);
+	Track track;
+	track.addPoint(carPos);
+	track.setTrackWidth(10.0f);
 
     NLib::NSize_t uIndex = 0;
     float fProcess = 0.0f;
@@ -84,25 +85,25 @@ int SDL_main(int argc, char* args[])
 
         game.drawSprite(0, 0, 0.0f, *background.get());
         game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
-
-
-
+		game.drawLineStrip(track.getTrackLineStripPoints());
+		game.drawTriangleStrip(track.getTrackTriangleStripPoints());
+		
         if(game.isMouseButtonLeftClicked())
         {
-            NMVector2f mousePos = game.getMouseCoords();
+            NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
 
-            if(NMVector2fLength(vPositions.back() - mousePos) > 0.001f)
+			if(NMVector2fLength(track.last() - mousePos) > 0.001f)
             {
-                vPositions.push_back(mousePos);
+				track.addPoint(mousePos);
             }
         }
 
-        if(uIndex < vPositions.size() - 1)
+		if(uIndex < track.getSize() - 1)
         {
             if(fProcess < 1.0f)
             {
-                NMVector2f previous = vPositions[uIndex];
-                NMVector2f next = vPositions[uIndex + 1];
+				NMVector2f previous = track.getPoint(uIndex);
+                NMVector2f next = track.getPoint(uIndex + 1);
 
                 NMVector2f direction = NMVector2fNormalize(next - previous);
                 float fLength = NMVector2fLength(next - previous);
@@ -118,7 +119,7 @@ int SDL_main(int argc, char* args[])
                     fAngle = -fAngle;
                 }
 
-                std::cout << carPos.x << " " << carPos.y << " " << fLength << " " << uIndex << " "  << vPositions.size() << std::endl;
+                std::cout << carPos.x << " " << carPos.y << " " << fLength << " " << uIndex << " "  << track.getSize() << std::endl;
             }
             else
             {
@@ -126,6 +127,8 @@ int SDL_main(int argc, char* args[])
                 fProcess = 0.0f;
             }
         }
+
+//		 game.drawSprite(carPos.x, carPos.y, fAngle, *car.get());
 
 		controlState = 0;
 		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;
@@ -136,10 +139,6 @@ int SDL_main(int argc, char* args[])
 		physicsCar.update(controlState);
 
 		game.physicsStep(60.0f);
-
-//		printf("car velocity: %f\n", physicsCar.getBody()->GetLinearVelocity());
-//		printf("force %f\n", m_currentTraction * force * currentForwardNormal);
-//		printf("velocity %f\n", m_body->GetLinearVelocity());
 
         game.flipScreen();
     }

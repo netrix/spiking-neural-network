@@ -10,6 +10,8 @@ bool isPowOf2(NLib::NUint32 value)
 Framework::Framework(const FrameworkSettings& settings, float fWorldScale)
 	: m_b2World(b2Vec2_zero)
 	, m_bDrawDebug(false)
+	, m_uLastMouseButtonStateRight(0)
+	, m_uLastMouseButtonStateLeft(0)
 {
 	// Window + Opengl
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -107,6 +109,34 @@ void Framework::drawSprite(float x, float y, float fAngle, Sprite& sprite) const
 	glDisable(GL_BLEND);
 }
 
+void Framework::drawLineStrip(const PointVector& vPoints) const
+{
+	glBegin(GL_LINE_STRIP);
+	glColor3f(1.0f, 1.0f, 1.0f);
+    {
+		for(NLib::NSize_t i = 0; i < vPoints.size(); ++i)
+		{
+			const NLib::Math::NMVector2f& p = vPoints[i];
+			glVertex2f(p.x, p.y);
+		}
+    }
+    glEnd();
+}
+
+void Framework::drawTriangleStrip(const PointVector& vPoints) const
+{
+	glBegin(GL_TRIANGLE_STRIP);
+	glColor3f(1.0f, 1.0f, 1.0f);
+    {
+		for(NLib::NSize_t i = 0; i < vPoints.size(); ++i)
+		{
+			const NLib::Math::NMVector2f& p = vPoints[i];
+			glVertex2f(p.x, p.y);
+		}
+    }
+    glEnd();
+}
+
 void Framework::flipScreen()
 {
 	if(m_bDrawDebug)
@@ -174,6 +204,10 @@ bool Framework::update()
 	{
 		m_uLastMouseButtonStateLeft = m_event.type;
 	}
+	if(m_event.button.button == SDL_BUTTON_RIGHT)
+	{
+		m_uLastMouseButtonStateRight = m_event.type;
+	}
 
     if(SDL_PollEvent(&m_event))
     {
@@ -204,6 +238,11 @@ NLib::Math::NMVector2f Framework::getMouseCoords() const
 bool Framework::isMouseButtonLeftClicked() const
 {
 	return m_event.type == SDL_MOUSEBUTTONDOWN && m_event.button.button == SDL_BUTTON_LEFT && m_uLastMouseButtonStateLeft != SDL_MOUSEBUTTONDOWN;
+}
+
+bool Framework::isMouseButtonRightClicked() const
+{
+	return m_event.type == SDL_MOUSEBUTTONDOWN && m_event.button.button == SDL_BUTTON_RIGHT && m_uLastMouseButtonStateLeft != SDL_MOUSEBUTTONDOWN;
 }
 
 bool Framework::checkKeyDown(SDLKey key) const

@@ -7,6 +7,7 @@
 #include <SDL_opengl.h>
 #include <memory>
 #include <string>
+#include <vector>
 #include <Box2D/Box2D.h>
 
 #include "Exceptions.hpp"
@@ -14,6 +15,7 @@
 #include "Sprite.hpp"
 
 typedef std::auto_ptr<Sprite> SpriteAPtr;
+typedef std::vector<NLib::Math::NMVector2f> PointVector;
 
 /**
  *
@@ -37,12 +39,15 @@ public:
 	// Graphics
 	SpriteAPtr createSprite(const std::string& filePath) const;
 	void drawSprite(float x, float y, float fAngle, Sprite& sprite) const;
+	void drawLineStrip(const PointVector& vPoints) const;
+	void drawTriangleStrip(const PointVector& vPoints) const;
 	void flipScreen();
 
 	// Events
 	bool update();
 	NLib::Math::NMVector2f getMouseCoords() const;
 	bool isMouseButtonLeftClicked() const;
+	bool isMouseButtonRightClicked() const;
 	bool checkKeyDown(SDLKey key) const;
 
 	// Physics
@@ -60,6 +65,7 @@ private:
 
 	// Events
 	NLib::NUint8 m_uLastMouseButtonStateLeft;
+	NLib::NUint8 m_uLastMouseButtonStateRight;
 
 	// Box2D
 	b2World m_b2World;

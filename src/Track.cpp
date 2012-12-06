@@ -197,50 +197,19 @@ void Track::setCurrentPosition(const NLib::Math::NMVector2f& point)
 			}
 		}
 	}
-
-	//// Closest point on path to given point
-	//NLib::NSize_t uClosestPoint = findClosestPoint(point);
-	//float fDistanceToPoint = NMVector2fLength(point - m_vPathPoints[uClosestPoint]);
-	//
-	//// Closest vector on path to given point
-	//NLib::NSize_t uClosestVector = NMAX_SIZE_T;
-	//float fDistanceToVector = fDistanceToPoint;
-	//NMVector2f closestProjection = m_vPathPoints[uClosestPoint];
-	//for(NLib::NSize_t i = 1; i < m_vPathPoints.size(); ++i)
-	//{
-	//	NMVector2f pA = m_vPathPoints[i - 1];
-	//	NMVector2f pB = m_vPathPoints[i];
-
-	//	NMVector2f projection = getProjectedPointOnVector(pA, pB, point);
-	//	float fAB = NMVector2fLength(pA - pB);
-	//	float fAP = NMVector2fLength(pA - projection);
-	//	float fBP = NMVector2fLength(pB - projection);
-
-	//	if(fAP < fAB && fBP < fAB)
-	//	{
-	//		float fPP = NMVector2fLength(point - projection);
-
-	//		if(fPP < fDistanceToVector)
-	//		{
-	//			fDistanceToVector = fPP;
-	//			uClosestVector = i;
-	//			closestProjection = projection;
-	//		}
-	//	}
-	//}
-
+	
 	// Choose closest vector or point
-	if(fDistanceToPoint < fDistanceToVector)
-	{
-		m_bIsPointCloser = true;
-		m_currentPointOnTrack = m_vPathPoints[uClosestPoint];
-		m_uCurrentPoint = uClosestPoint;
-	}
-	else
+	if(fDistanceToPoint > fDistanceToVector)
 	{
 		m_bIsPointCloser = false;
 		m_currentPointOnTrack = closestProjection;
 		m_uCurrentPoint = uClosestVector;
+	}
+	else
+	{
+		m_bIsPointCloser = true;
+		m_currentPointOnTrack = m_vPathPoints[uClosestPoint];
+		m_uCurrentPoint = uClosestPoint;
 	}
 }
 

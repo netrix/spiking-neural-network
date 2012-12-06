@@ -40,6 +40,8 @@ public:
 private:
 	NLib::NSize_t findClosestPoint(const NLib::Math::NMVector2f& point);
 
+	NLib::NSize_t findClosestPointAround(NLib::NSize_t uIndex, const NLib::Math::NMVector2f& point);
+
 private:
 	PointVector m_vPathPoints;
 	NLib::NSize_t m_uCurrentPoint;

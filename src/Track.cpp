@@ -86,16 +86,51 @@ NLib::NSize_t Track::findClosestPoint(const NMVector2f& point)
 	NAssert(!m_vPathPoints.empty(), "m_vPathPoints cannot be empty");
 
 	NLib::NSize_t uMinIndex = 0;
-	float fMinLenght = NMVector2fLength(point - m_vPathPoints[uMinIndex]);
+	float fMinLength = NMVector2fLength(point - m_vPathPoints[uMinIndex]);
 
 	for(NLib::NSize_t i = 1; i < m_vPathPoints.size(); ++i)
 	{
 		float fLength = NMVector2fLength(point - m_vPathPoints[i]);
 
-		if(fLength < fMinLenght)
+		if(fLength < fMinLength)
 		{
-			fMinLenght = fLength;
+			fMinLength = fLength;
 			uMinIndex = i;
+		}
+	}
+
+	return uMinIndex;
+}
+
+NLib::NSize_t Track::findClosestPointAround(NLib::NSize_t uIndex, const NMVector2f& point)
+{
+	NAssert(!m_vPathPoints.empty(), "m_vPathPoints cannot be empty");
+
+	// Current point
+	NLib::NSize_t uMinIndex = uIndex;
+	float fMinLength = NMVector2fLength(point - m_vPathPoints[uMinIndex]);
+
+	// Previous point
+	if(uIndex != 0)
+	{
+		float fLength = NMVector2fLength(point - m_vPathPoints[uIndex - 1]);
+
+		if(fLength < fMinLength)
+		{
+			fMinLength = fLength;
+			uMinIndex = uIndex - 1;
+		}
+	}
+
+	// Next point
+	if(uIndex + 1 != m_vPathPoints.size())
+	{
+		float fLength = NMVector2fLength(point - m_vPathPoints[uIndex + 1]);
+
+		if(fLength < fMinLength)
+		{
+			//fMinLength = fLength;
+			uMinIndex = uIndex + 1;
 		}
 	}
 
@@ -106,18 +141,20 @@ void Track::setCurrentPosition(const NLib::Math::NMVector2f& point)
 {
 	m_currentPosition = point;
 
-	// Closest point on path to given point
-	NLib::NSize_t uClosestPoint = findClosestPoint(point);
+	// Closest point around on path to given point
+	NLib::NSize_t uClosestPoint = findClosestPointAround(m_uCurrentPoint, point);
 	float fDistanceToPoint = NMVector2fLength(point - m_vPathPoints[uClosestPoint]);
-	
-	// Closest vector on path to given point
-	NLib::NSize_t uClosestVector = NMAX_SIZE_T;
+
+	// Closest vector around on path to given point
+	NLib::NSize_t uClosestVector = m_uCurrentPoint;
 	float fDistanceToVector = fDistanceToPoint;
 	NMVector2f closestProjection = m_vPathPoints[uClosestPoint];
-	for(NLib::NSize_t i = 1; i < m_vPathPoints.size(); ++i)
+
+	// Check previous vector
+	if(m_uCurrentPoint != 0)
 	{
-		NMVector2f pA = m_vPathPoints[i - 1];
-		NMVector2f pB = m_vPathPoints[i];
+		NMVector2f pA = m_vPathPoints[m_uCurrentPoint - 1];
+		NMVector2f pB = m_vPathPoints[m_uCurrentPoint];
 
 		NMVector2f projection = getProjectedPointOnVector(pA, pB, point);
 		float fAB = NMVector2fLength(pA - pB);
@@ -131,11 +168,66 @@ void Track::setCurrentPosition(const NLib::Math::NMVector2f& point)
 			if(fPP < fDistanceToVector)
 			{
 				fDistanceToVector = fPP;
-				uClosestVector = i;
+				uClosestVector = m_uCurrentPoint;
 				closestProjection = projection;
 			}
 		}
 	}
+
+	// Check next vector
+	if(m_uCurrentPoint + 1 < m_vPathPoints.size())
+	{
+		NMVector2f pA = m_vPathPoints[m_uCurrentPoint];
+		NMVector2f pB = m_vPathPoints[m_uCurrentPoint + 1];
+
+		NMVector2f projection = getProjectedPointOnVector(pA, pB, point);
+		float fAB = NMVector2fLength(pA - pB);
+		float fAP = NMVector2fLength(pA - projection);
+		float fBP = NMVector2fLength(pB - projection);
+
+		if(fAP < fAB && fBP < fAB)
+		{
+			float fPP = NMVector2fLength(point - projection);
+
+			if(fPP < fDistanceToVector)
+			{
+				fDistanceToVector = fPP;
+				uClosestVector = m_uCurrentPoint + 1;
+				closestProjection = projection;
+			}
+		}
+	}
+
+	//// Closest point on path to given point
+	//NLib::NSize_t uClosestPoint = findClosestPoint(point);
+	//float fDistanceToPoint = NMVector2fLength(point - m_vPathPoints[uClosestPoint]);
+	//
+	//// Closest vector on path to given point
+	//NLib::NSize_t uClosestVector = NMAX_SIZE_T;
+	//float fDistanceToVector = fDistanceToPoint;
+	//NMVector2f closestProjection = m_vPathPoints[uClosestPoint];
+	//for(NLib::NSize_t i = 1; i < m_vPathPoints.size(); ++i)
+	//{
+	//	NMVector2f pA = m_vPathPoints[i - 1];
+	//	NMVector2f pB = m_vPathPoints[i];
+
+	//	NMVector2f projection = getProjectedPointOnVector(pA, pB, point);
+	//	float fAB = NMVector2fLength(pA - pB);
+	//	float fAP = NMVector2fLength(pA - projection);
+	//	float fBP = NMVector2fLength(pB - projection);
+
+	//	if(fAP < fAB && fBP < fAB)
+	//	{
+	//		float fPP = NMVector2fLength(point - projection);
+
+	//		if(fPP < fDistanceToVector)
+	//		{
+	//			fDistanceToVector = fPP;
+	//			uClosestVector = i;
+	//			closestProjection = projection;
+	//		}
+	//	}
+	//}
 
 	// Choose closest vector or point
 	if(fDistanceToPoint < fDistanceToVector)

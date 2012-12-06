@@ -109,10 +109,21 @@ void Framework::drawSprite(float x, float y, float fAngle, Sprite& sprite) const
 	glDisable(GL_BLEND);
 }
 
-void Framework::drawLineStrip(const PointVector& vPoints) const
+void Framework::drawLine(NLib::Math::NMVector2f pA, NLib::Math::NMVector2f pB, Color color) const
+{
+	glBegin(GL_LINES);
+	glColor3f(color.x, color.y, color.z);
+    {
+		glVertex2f(pA.x, pA.y);
+		glVertex2f(pB.x, pB.y);
+    }
+    glEnd();
+}
+
+void Framework::drawLineStrip(const PointVector& vPoints, Color color) const
 {
 	glBegin(GL_LINE_STRIP);
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor3f(color.x, color.y, color.z);
     {
 		for(NLib::NSize_t i = 0; i < vPoints.size(); ++i)
 		{
@@ -123,10 +134,13 @@ void Framework::drawLineStrip(const PointVector& vPoints) const
     glEnd();
 }
 
-void Framework::drawTriangleStrip(const PointVector& vPoints) const
+void Framework::drawTriangleStrip(const PointVector& vPoints, Color color) const
 {
+	glEnable(GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(color.x, color.y, color.z, 0.5f);
+
 	glBegin(GL_TRIANGLE_STRIP);
-	glColor3f(1.0f, 1.0f, 1.0f);
     {
 		for(NLib::NSize_t i = 0; i < vPoints.size(); ++i)
 		{
@@ -135,6 +149,7 @@ void Framework::drawTriangleStrip(const PointVector& vPoints) const
 		}
     }
     glEnd();
+	glDisable(GL_BLEND);
 }
 
 void Framework::flipScreen()

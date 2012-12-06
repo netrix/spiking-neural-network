@@ -1,4 +1,5 @@
 #include "Track.hpp"
+#include <NLib/Base/nAssert.hpp>
 using namespace NLib::Math;
 
 NMVector2f getNormalizedPerpendicularVector(const NMVector2f& vec)
@@ -6,6 +7,25 @@ NMVector2f getNormalizedPerpendicularVector(const NMVector2f& vec)
 	NMVector2f v = NMVector2fNormalize(vec);
 	return NMVector2fLoad(-v.y, v.x);
 }
+
+NMVector2f getProjectedPointOnVector(const NMVector2f& pA, const NMVector2f& pB, const NMVector2f& pSrc)
+{
+	NAssert(NMVector2fLength(pB - pA) != 0.0f, "pA and pB doesn't define line");
+
+	NMVector2f vAB = pB - pA;
+	NMVector2f vASrc = pSrc - pA;
+
+	float fLengthASrc = NMVector2fLength(vASrc);
+
+	vAB = NMVector2fNormalize(vAB);
+	vASrc = NMVector2fNormalize(vASrc);
+	
+	float fCos = NMVector2fDot(vAB, vASrc);
+
+	return pA + vAB * fLengthASrc * fCos;
+}
+
+
 
 
 Track::Track()
@@ -61,18 +81,90 @@ float Track::getTrackLength() const
 	return fLength;
 }
 
-void Track::setCurrentPosition(const NLib::Math::NMVector2f& point)
+NLib::NSize_t Track::findClosestPoint(const NMVector2f& point)
 {
+	NAssert(!m_vPathPoints.empty(), "m_vPathPoints cannot be empty");
+
+	NLib::NSize_t uMinIndex = 0;
+	float fMinLenght = NMVector2fLength(point - m_vPathPoints[uMinIndex]);
+
+	for(NLib::NSize_t i = 1; i < m_vPathPoints.size(); ++i)
+	{
+		float fLength = NMVector2fLength(point - m_vPathPoints[i]);
+
+		if(fLength < fMinLenght)
+		{
+			fMinLenght = fLength;
+			uMinIndex = i;
+		}
+	}
+
+	return uMinIndex;
 }
 
-float Track::getCurrentDistance() const
+void Track::setCurrentPosition(const NLib::Math::NMVector2f& point)
 {
-	return 0.0f;
+	m_currentPosition = point;
+
+	// Closest point on path to given point
+	NLib::NSize_t uClosestPoint = findClosestPoint(point);
+	float fDistanceToPoint = NMVector2fLength(point - m_vPathPoints[uClosestPoint]);
+	
+	// Closest vector on path to given point
+	NLib::NSize_t uClosestVector = NMAX_SIZE_T;
+	float fDistanceToVector = fDistanceToPoint;
+	NMVector2f closestProjection = m_vPathPoints[uClosestPoint];
+	for(NLib::NSize_t i = 1; i < m_vPathPoints.size(); ++i)
+	{
+		NMVector2f pA = m_vPathPoints[i - 1];
+		NMVector2f pB = m_vPathPoints[i];
+
+		NMVector2f projection = getProjectedPointOnVector(pA, pB, point);
+		float fAB = NMVector2fLength(pA - pB);
+		float fAP = NMVector2fLength(pA - projection);
+		float fBP = NMVector2fLength(pB - projection);
+
+		if(fAP < fAB && fBP < fAB)
+		{
+			float fPP = NMVector2fLength(point - projection);
+
+			if(fPP < fDistanceToVector)
+			{
+				fDistanceToVector = fPP;
+				uClosestVector = i;
+				closestProjection = projection;
+			}
+		}
+	}
+
+	// Choose closest vector or point
+	if(fDistanceToPoint < fDistanceToVector)
+	{
+		m_bIsPointCloser = true;
+		m_currentPointOnTrack = m_vPathPoints[uClosestPoint];
+		m_uCurrentPoint = uClosestPoint;
+	}
+	else
+	{
+		m_bIsPointCloser = false;
+		m_currentPointOnTrack = closestProjection;
+		m_uCurrentPoint = uClosestVector;
+	}
+}
+
+float Track::getCurrentDistanceFromTrack() const
+{
+	return NMVector2fLength(m_currentPosition - m_currentPointOnTrack);
 }
 
 const PointVector& Track::getTrackLineStripPoints() const
 {
 	return m_vPathPoints;
+}
+
+const NLib::Math::NMVector2f& Track::getCurrentPointOnTrack() const
+{
+	return m_currentPointOnTrack;
 }
 
 PointVector Track::getTrackTriangleStripPoints() const

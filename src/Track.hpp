@@ -29,16 +29,23 @@ public:
 
 	void setCurrentPosition(const NLib::Math::NMVector2f& point);
 
-	float getCurrentDistance() const;
+	float getCurrentDistanceFromTrack() const;
+
+	const NLib::Math::NMVector2f& getCurrentPointOnTrack() const;
 
 	const PointVector& getTrackLineStripPoints() const;
 
 	PointVector getTrackTriangleStripPoints() const;
 
 private:
+	NLib::NSize_t findClosestPoint(const NLib::Math::NMVector2f& point);
+
+private:
 	PointVector m_vPathPoints;
 	NLib::NSize_t m_uCurrentPoint;
-	NLib::Math::NMVector2f m_uCurrentPosition;
+	NLib::Math::NMVector2f m_currentPointOnTrack;
+	NLib::Math::NMVector2f m_currentPosition;
+	bool m_bIsPointCloser;
 	float m_fTrackWidth;
 };
 

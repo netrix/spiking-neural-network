@@ -16,6 +16,7 @@
 
 typedef std::auto_ptr<Sprite> SpriteAPtr;
 typedef std::vector<NLib::Math::NMVector2f> PointVector;
+typedef NLib::Math::NMVector3f Color;
 
 /**
  *
@@ -39,8 +40,9 @@ public:
 	// Graphics
 	SpriteAPtr createSprite(const std::string& filePath) const;
 	void drawSprite(float x, float y, float fAngle, Sprite& sprite) const;
-	void drawLineStrip(const PointVector& vPoints) const;
-	void drawTriangleStrip(const PointVector& vPoints) const;
+	void drawLine(NLib::Math::NMVector2f pA, NLib::Math::NMVector2f pB, Color color=NLib::Math::NMVector3fLoad(1.0f, 1.0f, 1.0f)) const;
+	void drawLineStrip(const PointVector& vPoints, Color color=NLib::Math::NMVector3fLoad(1.0f, 1.0f, 1.0f)) const;
+	void drawTriangleStrip(const PointVector& vPoints, Color color=NLib::Math::NMVector3fLoad(1.0f, 1.0f, 1.0f)) const;
 	void flipScreen();
 
 	// Events

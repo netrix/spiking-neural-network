@@ -67,7 +67,7 @@ int SDL_main(int argc, char* args[])
 	car->setSize(car->getSize() * WORLD_SCALE);
 
     // Car position
-    NMVector2f carPos = NMVector2fLoad(126, 578) * WORLD_SCALE;
+    NMVector2f carPos = NMVector2fLoad(126, 600) * WORLD_SCALE;
 
 	Track track;
 	track.addPoint(carPos);
@@ -86,7 +86,7 @@ int SDL_main(int argc, char* args[])
         game.drawSprite(0, 0, 0.0f, *background.get());
         game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
 		game.drawLineStrip(track.getTrackLineStripPoints());
-		game.drawTriangleStrip(track.getTrackTriangleStripPoints());
+		game.drawTriangleStrip(track.getTrackTriangleStripPoints(), NMVector3fLoad(0.88f, 0.58f, 0.58f));
 		
         if(game.isMouseButtonLeftClicked())
         {
@@ -98,36 +98,13 @@ int SDL_main(int argc, char* args[])
             }
         }
 
-		if(uIndex < track.getSize() - 1)
-        {
-            if(fProcess < 1.0f)
-            {
-				NMVector2f previous = track.getPoint(uIndex);
-                NMVector2f next = track.getPoint(uIndex + 1);
 
-                NMVector2f direction = NMVector2fNormalize(next - previous);
-                float fLength = NMVector2fLength(next - previous);
+		NMVector2f carPos = NMVector2fLoad(physCarPos.x, physCarPos.y);
+		track.setCurrentPosition(carPos);
 
-                fProcess += fSpeed / fLength;
-                carPos += direction * fSpeed;
+		game.drawLine(carPos, track.getCurrentPointOnTrack(), NLib::Math::NMVector3fLoad(1.0f, 0.0f, 0.0f));
 
-                fAngle = acosf(NMVector2fDot(NMVector2fLoad(0.0f, -1.0f), direction));
-                fAngle = (fAngle * 360.0f) / (2 * NM_PI_F);
-
-                if(direction.x < 0.0f)
-                {
-                    fAngle = -fAngle;
-                }
-
-                std::cout << carPos.x << " " << carPos.y << " " << fLength << " " << uIndex << " "  << track.getSize() << std::endl;
-            }
-            else
-            {
-                uIndex++;
-                fProcess = 0.0f;
-            }
-        }
-
+		std::cout << track.getTrackLength() << std::endl;
 //		 game.drawSprite(carPos.x, carPos.y, fAngle, *car.get());
 
 		controlState = 0;

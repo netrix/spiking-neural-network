@@ -218,6 +218,30 @@ float Track::getCurrentDistanceFromTrack() const
 	return NMVector2fLength(m_currentPosition - m_currentPointOnTrack);
 }
 
+float Track::getCurrentSideFromTrack() const
+{
+	if(m_vPathPoints.size() < 2)
+	{
+		return 0.0f;
+	}
+
+	NMVector2f v1 = NMVector2fNormalize(m_currentPosition - m_currentPointOnTrack);
+	NMVector2f v2;
+
+	if(m_uCurrentPoint != 0)
+	{
+		v2 = NMVector2fNormalize(m_vPathPoints[m_uCurrentPoint] - m_vPathPoints[m_uCurrentPoint - 1]);
+	}
+	else
+	{
+		v2 = NMVector2fNormalize(m_vPathPoints[1] - m_vPathPoints[0]);
+	}
+
+	NMVector2f vW = NMVector2fLoad(-v2.y, v2.x) - v1;
+	
+	return NMVector2fLength(vW) < 1.0f ? 1.0f : -1.0f;
+}
+
 const PointVector& Track::getTrackLineStripPoints() const
 {
 	return m_vPathPoints;
@@ -226,6 +250,19 @@ const PointVector& Track::getTrackLineStripPoints() const
 const NLib::Math::NMVector2f& Track::getCurrentPointOnTrack() const
 {
 	return m_currentPointOnTrack;
+}
+
+float Track::getTravelledDistance() const
+{
+	float fCurrentLength = 0.0f;
+	NLib::NSize_t uTraveledDistance = m_bIsPointCloser ? m_uCurrentPoint + 1 : m_uCurrentPoint;
+
+	for(NLib::NSize_t i = 1; i < uTraveledDistance; ++i)
+	{
+		fCurrentLength += NMVector2fLength(m_vPathPoints[i] - m_vPathPoints[i - 1]);
+	}
+
+	return m_bIsPointCloser ? fCurrentLength : fCurrentLength + NMVector2fLength(m_vPathPoints[m_uCurrentPoint - 1] - m_currentPointOnTrack);
 }
 
 PointVector Track::getTrackTriangleStripPoints() const

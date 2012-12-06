@@ -103,9 +103,8 @@ int SDL_main(int argc, char* args[])
 		track.setCurrentPosition(carPos);
 
 		game.drawLine(carPos, track.getCurrentPointOnTrack(), NLib::Math::NMVector3fLoad(1.0f, 0.0f, 0.0f));
-
-		std::cout << track.getTrackLength() << std::endl;
-//		 game.drawSprite(carPos.x, carPos.y, fAngle, *car.get());
+		
+		std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
 
 		controlState = 0;
 		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;

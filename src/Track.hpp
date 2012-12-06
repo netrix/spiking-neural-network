@@ -30,6 +30,9 @@ public:
 	void setCurrentPosition(const NLib::Math::NMVector2f& point);
 
 	float getCurrentDistanceFromTrack() const;
+	float getCurrentSideFromTrack() const;
+
+	float getTravelledDistance() const;
 
 	const NLib::Math::NMVector2f& getCurrentPointOnTrack() const;
 

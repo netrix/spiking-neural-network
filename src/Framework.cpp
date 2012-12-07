@@ -111,7 +111,7 @@ void Framework::drawSprite(float x, float y, float fAngle, Sprite& sprite) const
 	glDisable(GL_BLEND);
 }
 
-void Framework::drawLine(NMVector2f pA, NMVector2f pB, Color color) const
+void Framework::drawLine(NMVector2f pA, NMVector2f pB, Color3f color) const
 {
 	glBegin(GL_LINES);
 	glColor3f(color.x, color.y, color.z);
@@ -122,7 +122,7 @@ void Framework::drawLine(NMVector2f pA, NMVector2f pB, Color color) const
     glEnd();
 }
 
-void Framework::drawArrow(NMVector2f origin, NMVector2f direction, Color color) const
+void Framework::drawArrow(NMVector2f origin, NMVector2f direction, Color3f color) const
 {
 	float fScale = 1.0f;
 	direction = NMVector2fNormalize(direction);
@@ -144,7 +144,7 @@ void Framework::drawArrow(NMVector2f origin, NMVector2f direction, Color color) 
     glEnd();
 }
 
-void Framework::drawLineStrip(const PointVector& vPoints, Color color) const
+void Framework::drawLineStrip(const PointVector& vPoints, Color3f color) const
 {
 	glBegin(GL_LINE_STRIP);
 	glColor3f(color.x, color.y, color.z);
@@ -158,7 +158,7 @@ void Framework::drawLineStrip(const PointVector& vPoints, Color color) const
     glEnd();
 }
 
-void Framework::drawTriangleStrip(const PointVector& vPoints, Color color) const
+void Framework::drawTriangleStrip(const PointVector& vPoints, Color3f color) const
 {
 	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -173,6 +173,17 @@ void Framework::drawTriangleStrip(const PointVector& vPoints, Color color) const
 		}
     }
     glEnd();
+	glDisable(GL_BLEND);
+}
+
+void Framework::drawRect(NLib::Math::NMVector2f origin, NLib::Math::NMVector2f size, Color4f color) const
+{
+	NLib::Math::NMVector2f p2 = origin + size;
+
+	glEnable(GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(0.5f * color.x, 0.5f * color.y, 0.5f * color.z, color.w);
+	glRectf(origin.x, origin.y, p2.x, p2.y);
 	glDisable(GL_BLEND);
 }
 
@@ -204,8 +215,8 @@ SpriteAPtr Framework::createSprite(const std::string& filePath) const
 
     // Checking alpha channel
     GLenum uTextureFormat;
-    NLib::NUint32 uColorNum = pSurface->format->BytesPerPixel;
-    if(uColorNum == 4)
+    NLib::NUint32 uColor3fNum = pSurface->format->BytesPerPixel;
+    if(uColor3fNum == 4)
     {
         if(pSurface->format->Rmask == 0x000000ff)
         {
@@ -225,7 +236,7 @@ SpriteAPtr Framework::createSprite(const std::string& filePath) const
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, uColorNum, pSurface->w, pSurface->h, 0, uTextureFormat, 
+    glTexImage2D(GL_TEXTURE_2D, 0, uColor3fNum, pSurface->w, pSurface->h, 0, uTextureFormat, 
         GL_UNSIGNED_BYTE, pSurface->pixels);
 
     // Data from texture

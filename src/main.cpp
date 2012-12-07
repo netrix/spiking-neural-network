@@ -3,6 +3,7 @@
 #include <Box2D/Box2D.h>
 #include "SpikingNeuron.hpp"
 #include "Framework.hpp"
+#include "PlotOpenGL.hpp"
 
 #include "PhysicsCar.hpp"
 #include "PhysicsContacts.hpp"
@@ -73,15 +74,15 @@ int SDL_main(int argc, char* args[])
 	track.addPoint(carPos);
 	track.setTrackWidth(10.0f);
 
-    NLib::NSize_t uIndex = 0;
-    float fProcess = 0.0f;
-    float fSpeed = 1.0f;
+	// Impulse plot
+	PlotOpenGL impulsePlot(game);
+	impulsePlot.setPosition(NMVector2fLoad(10.0f, 10.0f));
+	impulsePlot.setSize(NMVector2fLoad(75.0, 50.0f));
 
-    float fAngle = 0.0f;
     while(game.update())
     {
 		b2Vec2 physCarPos = physicsCar.getBody()->GetWorldCenter();
-		fAngle = physicsCar.getBody()->GetAngle() * RADTODEG + 180.0f;
+		float fAngle = physicsCar.getBody()->GetAngle() * RADTODEG + 180.0f;
 
         game.drawSprite(0, 0, 0.0f, *background.get());
         game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
@@ -129,6 +130,9 @@ int SDL_main(int argc, char* args[])
 		std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
 
 		game.drawArrow(track.getCurrentPointOnTrack(), track.getDirectionOfTrack(), NMVector3fLoad(0.0f, 1.0f, 0.0f));
+
+		// Plot
+		impulsePlot.drawBasics();
 
 		controlState = 0;
 		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;

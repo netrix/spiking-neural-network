@@ -9,6 +9,7 @@ set(HPP DebugDrawOpenGL.hpp
 		Framework.hpp
 		NeuralConnection.hpp
 		NeuronInput.hpp
+		PlotOpenGL.hpp
 		SpikingNeuron.hpp
 		TestEnvironment.hpp
 		Track.hpp)
@@ -22,6 +23,7 @@ set(CPP main.cpp
 		Framework.cpp
 		NeuralConnection.cpp
 		NeuronInput.cpp
+		PlotOpenGL.cpp
 		SpikingNeuron.cpp
 		Track.cpp)
 

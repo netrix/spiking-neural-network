@@ -1,5 +1,6 @@
 #include "Track.hpp"
 #include <NLib/Base/nAssert.hpp>
+#include <fstream>
 using namespace NLib::Math;
 
 NMVector2f getNormalizedPerpendicularVector(const NMVector2f& vec)
@@ -347,4 +348,33 @@ PointVector Track::getTrackTriangleStripPoints() const
 	vStripPoints.push_back(m_vPathPoints[uLastIndex] - v);
 
 	return vStripPoints;
+}
+
+void Track::saveToFile(const std::string& filePath)
+{
+	std::ofstream file(filePath);
+
+	for(NLib::NSize_t i = 0; i < m_vPathPoints.size(); ++i)
+	{
+		file << m_vPathPoints[i].x << " " << m_vPathPoints[i].y << std::endl;
+	}
+}
+
+void Track::loadFromFile(const std::string& filePath)
+{
+	m_vPathPoints.clear();
+
+	std::ifstream file(filePath);
+
+	while(file)
+	{
+		float x, y;
+		file >> x;
+		file >> y;
+
+		if(file)
+		{
+			m_vPathPoints.push_back(NMVector2fLoad(x, y));
+		}
+	}
 }

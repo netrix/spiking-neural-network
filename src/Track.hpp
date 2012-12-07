@@ -36,13 +36,15 @@ public:
 
 	const NLib::Math::NMVector2f& getCurrentPointOnTrack() const;
 	const NLib::Math::NMVector2f& getDirectionOfTrack() const;
-
-
+	
 	bool isAtStart() const;
 	bool isAtEnd() const;
 
 	const PointVector&	getTrackLineStripPoints() const;
 	PointVector			getTrackTriangleStripPoints() const;
+
+	void saveToFile(const std::string& filePath);
+	void loadFromFile(const std::string& filePath);
 
 private:
 	NLib::NSize_t findClosestPoint(const NLib::Math::NMVector2f& point);

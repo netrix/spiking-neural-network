@@ -110,6 +110,16 @@ int SDL_main(int argc, char* args[])
 			}
 		}
 
+		if(game.checkKeyDown(SDLK_F5))
+		{
+			track.saveToFile("simple.txt");
+		}
+
+		if(game.checkKeyDown(SDLK_F9))
+		{
+			track.loadFromFile("simple.txt");
+		}
+
 
 		NMVector2f carPos = NMVector2fLoad(physCarPos.x, physCarPos.y);
 		track.setCurrentPosition(carPos);

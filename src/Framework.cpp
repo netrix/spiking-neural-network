@@ -1,6 +1,8 @@
 #include "Framework.hpp"
 #include <SDL_image.h>
 
+using namespace NLib::Math;
+
 bool isPowOf2(NLib::NUint32 value)
 {
     return (value & (value - 1)) == 0;
@@ -65,8 +67,8 @@ Framework::~Framework()
 
 void Framework::drawSprite(float x, float y, float fAngle, Sprite& sprite) const
 {
-	NLib::Math::NMVector2f size = sprite.getSize();
-	NLib::Math::NMVector2f offset = sprite.getOffset();
+	NMVector2f size = sprite.getSize();
+	NMVector2f offset = sprite.getOffset();
 
 	float x1 = offset.x;
 	float y1 = offset.y;
@@ -109,13 +111,35 @@ void Framework::drawSprite(float x, float y, float fAngle, Sprite& sprite) const
 	glDisable(GL_BLEND);
 }
 
-void Framework::drawLine(NLib::Math::NMVector2f pA, NLib::Math::NMVector2f pB, Color color) const
+void Framework::drawLine(NMVector2f pA, NMVector2f pB, Color color) const
 {
 	glBegin(GL_LINES);
 	glColor3f(color.x, color.y, color.z);
     {
 		glVertex2f(pA.x, pA.y);
 		glVertex2f(pB.x, pB.y);
+    }
+    glEnd();
+}
+
+void Framework::drawArrow(NMVector2f origin, NMVector2f direction, Color color) const
+{
+	float fScale = 1.0f;
+	direction = NMVector2fNormalize(direction);
+
+	NMVector2f p2 = origin + direction * 4.0f * fScale;
+	NMVector2f d1 = (p2 - direction) * fScale + NMVector2fLoad(-direction.y, direction.x) * fScale;
+	NMVector2f d2 = (p2 - direction) * fScale + NMVector2fLoad(direction.y, -direction.x) * fScale;
+
+	glBegin(GL_LINES);
+	glColor3f(color.x, color.y, color.z);
+    {
+		glVertex2f(origin.x, origin.y);
+		glVertex2f(p2.x, p2.y);
+		glVertex2f(d1.x, d1.y);
+		glVertex2f(p2.x, p2.y);
+		glVertex2f(d2.x, d2.y);
+		glVertex2f(p2.x, p2.y);
     }
     glEnd();
 }
@@ -127,7 +151,7 @@ void Framework::drawLineStrip(const PointVector& vPoints, Color color) const
     {
 		for(NLib::NSize_t i = 0; i < vPoints.size(); ++i)
 		{
-			const NLib::Math::NMVector2f& p = vPoints[i];
+			const NMVector2f& p = vPoints[i];
 			glVertex2f(p.x, p.y);
 		}
     }
@@ -144,7 +168,7 @@ void Framework::drawTriangleStrip(const PointVector& vPoints, Color color) const
     {
 		for(NLib::NSize_t i = 0; i < vPoints.size(); ++i)
 		{
-			const NLib::Math::NMVector2f& p = vPoints[i];
+			const NMVector2f& p = vPoints[i];
 			glVertex2f(p.x, p.y);
 		}
     }
@@ -205,7 +229,7 @@ SpriteAPtr Framework::createSprite(const std::string& filePath) const
         GL_UNSIGNED_BYTE, pSurface->pixels);
 
     // Data from texture
-	NLib::Math::NMVector2f size = { pSurface->w, pSurface->h };
+	NMVector2f size = { pSurface->w, pSurface->h };
 
     SDL_FreeSurface(pSurface);
 
@@ -242,12 +266,12 @@ bool Framework::update()
     return true;
 }
 
-NLib::Math::NMVector2f Framework::getMouseCoords() const
+NMVector2f Framework::getMouseCoords() const
 {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
 
-	return NLib::Math::NMVector2fLoad((float)x, (float)y);
+	return NMVector2fLoad((float)x, (float)y);
 }
 
 bool Framework::isMouseButtonLeftClicked() const

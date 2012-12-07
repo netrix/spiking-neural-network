@@ -41,6 +41,7 @@ public:
 	SpriteAPtr createSprite(const std::string& filePath) const;
 	void drawSprite(float x, float y, float fAngle, Sprite& sprite) const;
 	void drawLine(NLib::Math::NMVector2f pA, NLib::Math::NMVector2f pB, Color color=NLib::Math::NMVector3fLoad(1.0f, 1.0f, 1.0f)) const;
+	void drawArrow(NLib::Math::NMVector2f origin, NLib::Math::NMVector2f direction, Color color=NLib::Math::NMVector3fLoad(1.0f, 1.0f, 1.0f)) const;
 	void drawLineStrip(const PointVector& vPoints, Color color=NLib::Math::NMVector3fLoad(1.0f, 1.0f, 1.0f)) const;
 	void drawTriangleStrip(const PointVector& vPoints, Color color=NLib::Math::NMVector3fLoad(1.0f, 1.0f, 1.0f)) const;
 	void flipScreen();

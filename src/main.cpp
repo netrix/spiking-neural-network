@@ -92,14 +92,22 @@ int SDL_main(int argc, char* args[])
         {
             NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
 
-			if(NMVector2fLength(track.last() - mousePos) > 0.001f)
+			if(NMVector2fLength(track.getLastPoint() - mousePos) > 0.001f)
             {
 				track.addPoint(mousePos);
             }
         }
 		else if(game.isMouseButtonRightClicked())
 		{
-			track.popPoint();
+			if(track.getSize() == 1)
+			{
+				NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
+				track.movePoint(0, mousePos);
+			}
+			else
+			{
+				track.popPoint();
+			}
 		}
 
 
@@ -109,6 +117,8 @@ int SDL_main(int argc, char* args[])
 		game.drawLine(carPos, track.getCurrentPointOnTrack(), NLib::Math::NMVector3fLoad(1.0f, 0.0f, 0.0f));
 		
 		std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
+
+		game.drawArrow(track.getCurrentPointOnTrack(), track.getDirectionOfTrack(), NMVector3fLoad(0.0f, 1.0f, 0.0f));
 
 		controlState = 0;
 		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;

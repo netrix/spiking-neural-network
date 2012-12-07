@@ -14,32 +14,35 @@ public:
 	void addPoint(const NLib::Math::NMVector2f& point);
 	void popPoint();
 
+	void movePoint(NLib::NSize_t uIndex, const NLib::Math::NMVector2f& point);
+
 	NLib::NSize_t getSize() const;
 
 	const NLib::Math::NMVector2f& getPoint(NLib::NSize_t uIndex) const;
+	const NLib::Math::NMVector2f& getLastPoint() const;
 
-	const NLib::Math::NMVector2f& last() const;
+	void	clear();
 
-	void clear();
+	void	setTrackWidth(float fTrackWidth);
+	float	getTrackWidth() const;
 
-	void setTrackWidth(float fTrackWidth);
-
-	float getTrackWidth() const;
-
-	float getTrackLength() const;
+	float	getTrackLength() const;
 
 	void setCurrentPosition(const NLib::Math::NMVector2f& point);
 
 	float getCurrentDistanceFromTrack() const;
 	float getCurrentSideFromTrack() const;
-
 	float getTravelledDistance() const;
 
 	const NLib::Math::NMVector2f& getCurrentPointOnTrack() const;
+	const NLib::Math::NMVector2f& getDirectionOfTrack() const;
 
-	const PointVector& getTrackLineStripPoints() const;
 
-	PointVector getTrackTriangleStripPoints() const;
+	bool isAtStart() const;
+	bool isAtEnd() const;
+
+	const PointVector&	getTrackLineStripPoints() const;
+	PointVector			getTrackTriangleStripPoints() const;
 
 private:
 	NLib::NSize_t findClosestPoint(const NLib::Math::NMVector2f& point);

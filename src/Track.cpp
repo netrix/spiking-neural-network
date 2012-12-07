@@ -39,6 +39,11 @@ void Track::addPoint(const NLib::Math::NMVector2f& point)
 	m_vPathPoints.push_back(point);
 }
 
+void Track::movePoint(NLib::NSize_t uIndex, const NLib::Math::NMVector2f& point)
+{
+	m_vPathPoints.at(uIndex) = point;
+}
+
 void Track::popPoint()
 {
 	if(m_vPathPoints.size() < 2)
@@ -54,6 +59,16 @@ void Track::popPoint()
 	m_vPathPoints.pop_back();
 }
 
+bool Track::isAtStart() const
+{
+	return m_bIsPointCloser && m_uCurrentPoint == 0;
+}
+
+bool Track::isAtEnd() const
+{
+	return m_bIsPointCloser && m_uCurrentPoint == m_vPathPoints.size() - 1;
+}
+
 NLib::NSize_t Track::getSize() const
 {
 	return m_vPathPoints.size();
@@ -64,7 +79,7 @@ const NLib::Math::NMVector2f& Track::getPoint(NLib::NSize_t uIndex) const
 	return m_vPathPoints.at(uIndex);
 }
 
-const NLib::Math::NMVector2f& Track::last() const
+const NLib::Math::NMVector2f& Track::getLastPoint() const
 {
 	return m_vPathPoints.back();
 }
@@ -265,6 +280,26 @@ const PointVector& Track::getTrackLineStripPoints() const
 const NLib::Math::NMVector2f& Track::getCurrentPointOnTrack() const
 {
 	return m_currentPointOnTrack;
+}
+
+const NLib::Math::NMVector2f& Track::getDirectionOfTrack() const
+{
+	if(m_vPathPoints.size() < 2 || (m_bIsPointCloser && m_uCurrentPoint == m_vPathPoints.size() - 1))
+	{
+		return NMVector2fLoadZeros();
+	}
+	else if(m_uCurrentPoint == 0)
+	{
+		return m_vPathPoints[1] - m_vPathPoints[0];
+	}
+	else if(m_bIsPointCloser)
+	{
+		return m_vPathPoints[m_uCurrentPoint + 1] - m_vPathPoints[m_uCurrentPoint];
+	}
+	else
+	{
+		return m_currentPointOnTrack - m_vPathPoints[m_uCurrentPoint - 1];
+	}
 }
 
 float Track::getTravelledDistance() const

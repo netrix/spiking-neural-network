@@ -12,6 +12,7 @@ public:
 	Track();
 
 	void addPoint(const NLib::Math::NMVector2f& point);
+	void popPoint();
 
 	NLib::NSize_t getSize() const;
 

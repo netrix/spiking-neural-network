@@ -39,6 +39,21 @@ void Track::addPoint(const NLib::Math::NMVector2f& point)
 	m_vPathPoints.push_back(point);
 }
 
+void Track::popPoint()
+{
+	if(m_vPathPoints.size() < 2)
+	{
+		return;
+	}
+
+	if(m_uCurrentPoint == m_vPathPoints.size() - 1)
+	{
+		m_uCurrentPoint--;
+	}
+
+	m_vPathPoints.pop_back();
+}
+
 NLib::NSize_t Track::getSize() const
 {
 	return m_vPathPoints.size();

@@ -97,6 +97,10 @@ int SDL_main(int argc, char* args[])
 				track.addPoint(mousePos);
             }
         }
+		else if(game.isMouseButtonRightClicked())
+		{
+			track.popPoint();
+		}
 
 
 		NMVector2f carPos = NMVector2fLoad(physCarPos.x, physCarPos.y);

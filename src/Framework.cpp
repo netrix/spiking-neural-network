@@ -257,7 +257,7 @@ bool Framework::isMouseButtonLeftClicked() const
 
 bool Framework::isMouseButtonRightClicked() const
 {
-	return m_event.type == SDL_MOUSEBUTTONDOWN && m_event.button.button == SDL_BUTTON_RIGHT && m_uLastMouseButtonStateLeft != SDL_MOUSEBUTTONDOWN;
+	return m_event.type == SDL_MOUSEBUTTONDOWN && m_event.button.button == SDL_BUTTON_RIGHT && m_uLastMouseButtonStateRight != SDL_MOUSEBUTTONDOWN;
 }
 
 bool Framework::checkKeyDown(SDLKey key) const

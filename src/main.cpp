@@ -15,17 +15,61 @@ using namespace NLib::Math;
 
 const float WORLD_SCALE = 0.2f;
 
-
-class TrackDistanceProbe
+class ISpikingNeuronInputHandler
 {
 public:
-	TrackDistanceProbe();
-
-
-
-private:
+	virtual void handleInput(NLib::NSize_t uInput) = 0;
 };
 
+
+class ImpulsePlotHandler 
+	: public ISpikingNeuronInputHandler
+	, NLib::NNonCopyable
+{
+public:
+	ImpulsePlotHandler(ImpulsePlot& plot)
+		: m_plot(plot)
+	{}
+
+	virtual void handleInput(NLib::NSize_t uInput)
+	{
+		m_plot.addImpulse();
+	}
+
+private:
+	ImpulsePlot& m_plot;
+};
+
+
+class TrackDistanceProbe
+	: NLib::NNonCopyable
+{
+public:
+	TrackDistanceProbe(Track& track, ImpulsePlotHandler& handler)
+		: m_track(track)
+		, m_handler(handler)
+		, m_fLastImpulse(0.0f)
+	{
+	}
+
+	void update(float fDelta)
+	{
+		m_fLastImpulse += fDelta;
+
+		float fTrackDistance = m_track.getCurrentDistanceFromTrack();
+
+		if(m_fLastImpulse > (1.0f / fTrackDistance))
+		{
+			m_handler.handleInput(0);
+			m_fLastImpulse  = 0.0f;
+		}
+	}
+
+private:
+	Track& m_track;
+	ImpulsePlotHandler& m_handler;
+	float m_fLastImpulse;
+};
 
 
 int SDL_main(int argc, char* args[])
@@ -67,7 +111,8 @@ int SDL_main(int argc, char* args[])
 	ImpulsePlot plot(game, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f));
 	plot.setDrawScale(true);
 
-	float fWindowTime = 0.0f;
+	ImpulsePlotHandler handler(plot);
+	TrackDistanceProbe prober(track, handler);
 
     while(game.update())
     {
@@ -113,12 +158,11 @@ int SDL_main(int argc, char* args[])
 			track.loadFromFile("simple.txt");
 		}
 
-		if(game.checkKeyDown(SDLK_i))
-		{
-			plot.addImpulse();
-		}
+		
+		// Prober
+		prober.update(game.getTimeDelta());
 
-
+		// Car
 		NMVector2f carPos = NMVector2fLoad(physCarPos.x, physCarPos.y);
 		track.setCurrentPosition(carPos);
 

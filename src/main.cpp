@@ -3,7 +3,7 @@
 #include <Box2D/Box2D.h>
 #include "SpikingNeuron.hpp"
 #include "Framework.hpp"
-#include "PlotOpenGL.hpp"
+#include "ImpulsePlot.hpp"
 
 #include "PhysicsCar.hpp"
 #include "PhysicsContacts.hpp"
@@ -16,38 +16,29 @@ using namespace NLib::Math;
 const float WORLD_SCALE = 0.2f;
 
 
+class TrackDistanceProbe
+{
+public:
+	TrackDistanceProbe();
+
+
+
+private:
+};
+
+
+
 int SDL_main(int argc, char* args[])
 {
     FrameworkSettings settings = { 800, 600, 32 };
     Framework game(settings, WORLD_SCALE);
 
-    MyDestructionListener destructionListener;
-
 	b2World& world = game.getPhysicsWorld();
 	
-	game.setDebugDraw(true);
+	MyDestructionListener destructionListener;
     world.SetDestructionListener(&destructionListener);
 
-    b2Body* groundBody = null;
-
-    //set up ground areas
-    //{
-    //    b2BodyDef bodyDef;
-    //    groundBody = world.CreateBody( &bodyDef );
-
-    //    b2PolygonShape polygonShape;
-    //    b2FixtureDef fixtureDef;
-    //    fixtureDef.shape = &polygonShape;
-    //    fixtureDef.isSensor = true;
-
-    //    polygonShape.SetAsBox( 9, 7, b2Vec2(-10,15), 20*DEGTORAD );
-    //    b2Fixture* groundAreaFixture = groundBody->CreateFixture(&fixtureDef);
-    //    groundAreaFixture->SetUserData( new GroundAreaFUD( 0.5f, false ) );
-
-    //    polygonShape.SetAsBox( 9, 5, b2Vec2(5,20), -40*DEGTORAD );
-    //    groundAreaFixture = groundBody->CreateFixture(&fixtureDef);
-    //    groundAreaFixture->SetUserData( new GroundAreaFUD( WORLD_SCALE, false ) );
-    //}
+	game.setDebugDraw(true);
 
     //PhysicsCar physicsCar(&world, 5.0f);
 	PhysicsCar physicsCar(&world);
@@ -67,17 +58,16 @@ int SDL_main(int argc, char* args[])
     car->setOffset(offset);
 	car->setSize(car->getSize() * WORLD_SCALE);
 
-    // Car position
-    NMVector2f carPos = NMVector2fLoad(126, 600) * WORLD_SCALE;
-
+	// Track
 	Track track;
-	track.addPoint(carPos);
+	track.addPoint(NMVector2fLoad(126, 600) * WORLD_SCALE);
 	track.setTrackWidth(10.0f);
 
 	// Impulse plot
-	PlotOpenGL impulsePlot(game);
-	impulsePlot.setPosition(NMVector2fLoad(10.0f, 10.0f));
-	impulsePlot.setSize(NMVector2fLoad(75.0, 50.0f));
+	ImpulsePlot plot(game, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f));
+	plot.setDrawScale(true);
+
+	float fWindowTime = 0.0f;
 
     while(game.update())
     {
@@ -89,6 +79,7 @@ int SDL_main(int argc, char* args[])
 		game.drawLineStrip(track.getTrackLineStripPoints());
 		game.drawTriangleStrip(track.getTrackTriangleStripPoints(), NMVector3fLoad(0.88f, 0.58f, 0.58f));
 		
+		// Adding new point to track
         if(game.isMouseButtonLeftClicked())
         {
             NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
@@ -98,6 +89,7 @@ int SDL_main(int argc, char* args[])
 				track.addPoint(mousePos);
             }
         }
+		// Removing point from track or moving the first point somewhere else
 		else if(game.isMouseButtonRightClicked())
 		{
 			if(track.getSize() == 1)
@@ -121,6 +113,11 @@ int SDL_main(int argc, char* args[])
 			track.loadFromFile("simple.txt");
 		}
 
+		if(game.checkKeyDown(SDLK_i))
+		{
+			plot.addImpulse();
+		}
+
 
 		NMVector2f carPos = NMVector2fLoad(physCarPos.x, physCarPos.y);
 		track.setCurrentPosition(carPos);
@@ -132,7 +129,8 @@ int SDL_main(int argc, char* args[])
 		game.drawArrow(track.getCurrentPointOnTrack(), track.getDirectionOfTrack(), NMVector3fLoad(0.0f, 1.0f, 0.0f));
 
 		// Plot
-		impulsePlot.drawBasics();
+		plot.update(game.getTimeDelta());
+		plot.draw();
 
 		controlState = 0;
 		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;

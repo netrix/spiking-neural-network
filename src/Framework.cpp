@@ -10,10 +10,11 @@ bool isPowOf2(NLib::NUint32 value)
 
 
 Framework::Framework(const FrameworkSettings& settings, float fWorldScale)
-	: m_b2World(b2Vec2_zero)
-	, m_bDrawDebug(false)
+	: m_fDelta(0.0f)
 	, m_uLastMouseButtonStateRight(0)
 	, m_uLastMouseButtonStateLeft(0)
+	, m_b2World(b2Vec2_zero)
+	, m_bDrawDebug(false)
 {
 	// Window + Opengl
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -57,6 +58,9 @@ Framework::Framework(const FrameworkSettings& settings, float fWorldScale)
 	flags |= b2Draw::e_centerOfMassBit;
 
 	m_b2DebugDrawOpenGL.SetFlags(flags);
+
+	// Time
+	m_uTicks = SDL_GetTicks();
 }
 
 Framework::~Framework()
@@ -249,6 +253,11 @@ SpriteAPtr Framework::createSprite(const std::string& filePath) const
 
 bool Framework::update()
 {
+	// Time
+	NLib::NUint32 uCurrentTics = SDL_GetTicks();
+	m_fDelta = (float)(uCurrentTics - m_uTicks) / 1000.0f;
+	m_uTicks = uCurrentTics;
+
 	// Last state of left button
 	if(m_event.button.button == SDL_BUTTON_LEFT)
 	{

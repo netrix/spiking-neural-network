@@ -7,6 +7,7 @@ set(HPP DebugDrawOpenGL.hpp
 		Common.hpp
 		Sprite.hpp
 		Framework.hpp
+		ImpulsePlot.hpp
 		NeuralConnection.hpp
 		NeuronInput.hpp
 		PlotOpenGL.hpp
@@ -21,6 +22,7 @@ set(CPP main.cpp
 		PhysicsTire.cpp
 		Sprite.cpp
 		Framework.cpp
+		ImpulsePlot.cpp
 		NeuralConnection.cpp
 		NeuronInput.cpp
 		PlotOpenGL.cpp

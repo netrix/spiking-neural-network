@@ -38,6 +38,9 @@ public:
 	Framework(const FrameworkSettings& settings, float fWorldScale);
 	~Framework();
 
+	// Time
+	float getTimeDelta() const	{ return m_fDelta; }
+
 	// Graphics
 	SpriteAPtr createSprite(const std::string& filePath) const;
 	void drawSprite(float x, float y, float fAngle, Sprite& sprite) const;
@@ -67,6 +70,9 @@ private:
 	SDL_Surface* m_pMainSurface;
 	SDL_Event m_event;
 	
+	// Time
+	NLib::NUint32 m_uTicks;
+	float m_fDelta;
 
 	// Events
 	NLib::NUint8 m_uLastMouseButtonStateLeft;

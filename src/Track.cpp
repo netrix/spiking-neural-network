@@ -354,6 +354,8 @@ void Track::saveToFile(const std::string& filePath)
 {
 	std::ofstream file(filePath);
 
+	file << m_fTrackWidth;
+
 	for(NLib::NSize_t i = 0; i < m_vPathPoints.size(); ++i)
 	{
 		file << m_vPathPoints[i].x << " " << m_vPathPoints[i].y << std::endl;
@@ -365,6 +367,8 @@ void Track::loadFromFile(const std::string& filePath)
 	m_vPathPoints.clear();
 
 	std::ifstream file(filePath);
+
+	file >> m_fTrackWidth;
 
 	while(file)
 	{

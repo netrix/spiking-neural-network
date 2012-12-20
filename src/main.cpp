@@ -74,32 +74,29 @@ private:
 
 int SDL_main(int argc, char* args[])
 {
-    FrameworkSettings settings = { 800, 600, 32 };
-    Framework game(settings, WORLD_SCALE);
+	FrameworkSettings settings = { 800, 600, 32 };
+	Framework game(settings, WORLD_SCALE);
 
 	b2World& world = game.getPhysicsWorld();
 	
 	MyDestructionListener destructionListener;
-    world.SetDestructionListener(&destructionListener);
+	world.SetDestructionListener(&destructionListener);
 
 	game.setDebugDraw(true);
 
-    //PhysicsCar physicsCar(&world, 5.0f);
-	PhysicsCar physicsCar(&world);
+	PhysicsCar physicsCar(world);
 	physicsCar.setPosition(b2Vec2(126 * WORLD_SCALE, 578 * WORLD_SCALE) , 180.0f * DEGTORAD);
 
-    int controlState = 0;
+	SpriteAPtr car = game.createSprite("../../data/car.png");
+	SpriteAPtr background = game.createSprite("../../data/background.png");
 
-    SpriteAPtr car = game.createSprite("../../data/car.png");
-    SpriteAPtr background = game.createSprite("../../data/background.png");
+	// Background sprite
+	NMVector2f backgroundSize = { 800 * WORLD_SCALE, 600 * WORLD_SCALE};
+	background->setSize(backgroundSize);
 
-    // Background sprite
-    NMVector2f backgroundSize = { 800 * WORLD_SCALE, 600 * WORLD_SCALE};
-    background->setSize(backgroundSize);
-
-    // Offset of car
-    NMVector2f offset = -car->getSize() * 0.1f;
-    car->setOffset(offset);
+	// Offset of car
+	NMVector2f offset = -car->getSize() * 0.1f;
+	car->setOffset(offset);
 	car->setSize(car->getSize() * WORLD_SCALE);
 
 	// Track
@@ -114,26 +111,26 @@ int SDL_main(int argc, char* args[])
 	ImpulsePlotHandler handler(plot);
 	TrackDistanceProbe prober(track, handler);
 
-    while(game.update())
-    {
+	while(game.update())
+	{
 		b2Vec2 physCarPos = physicsCar.getBody()->GetWorldCenter();
 		float fAngle = physicsCar.getBody()->GetAngle() * RADTODEG + 180.0f;
 
-        game.drawSprite(0, 0, 0.0f, *background.get());
-        game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
+		game.drawSprite(0, 0, 0.0f, *background.get());
+		game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
 		game.drawLineStrip(track.getTrackLineStripPoints());
 		game.drawTriangleStrip(track.getTrackTriangleStripPoints(), NMVector3fLoad(0.88f, 0.58f, 0.58f));
 		
 		// Adding new point to track
-        if(game.isMouseButtonLeftClicked())
-        {
-            NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
+		if(game.isMouseButtonLeftClicked())
+		{
+			NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
 
 			if(NMVector2fLength(track.getLastPoint() - mousePos) > 0.001f)
-            {
+			{
 				track.addPoint(mousePos);
-            }
-        }
+			}
+		}
 		// Removing point from track or moving the first point somewhere else
 		else if(game.isMouseButtonRightClicked())
 		{
@@ -148,17 +145,16 @@ int SDL_main(int argc, char* args[])
 			}
 		}
 
+		// Keys
 		if(game.checkKeyDown(SDLK_F5))
 		{
 			track.saveToFile("simple.txt");
 		}
-
 		if(game.checkKeyDown(SDLK_F9))
 		{
 			track.loadFromFile("simple.txt");
 		}
 
-		
 		// Prober
 		prober.update(game.getTimeDelta());
 
@@ -176,7 +172,7 @@ int SDL_main(int argc, char* args[])
 		plot.update(game.getTimeDelta());
 		plot.draw();
 
-		controlState = 0;
+		int controlState = 0;
 		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;
 		controlState |= game.checkKeyDown(SDLK_s) ? TDC_DOWN : 0;
 		controlState |= game.checkKeyDown(SDLK_a) ? TDC_RIGHT : 0;
@@ -186,45 +182,45 @@ int SDL_main(int argc, char* args[])
 
 		game.physicsStep(60.0f);
 
-        game.flipScreen();
-    }
+		game.flipScreen();
+	}
 
 
-    //SpikingNeuron sn(2);
-    //sn.setDecayTime(2.0);
-    //sn.setRelaxation(5.0);
-    //sn.setThreshold(10.0);
+	//SpikingNeuron sn(2);
+	//sn.setDecayTime(2.0);
+	//sn.setRelaxation(5.0);
+	//sn.setThreshold(10.0);
 
-    //sn.setInputWeight(0, -5.0);
-    //sn.setInputDecay(0, 5.0);
+	//sn.setInputWeight(0, -5.0);
+	//sn.setInputDecay(0, 5.0);
 
-    //sn.setInputWeight(1, 5.0);
-    //sn.setInputDecay(1, 5.0);
+	//sn.setInputWeight(1, 5.0);
+	//sn.setInputDecay(1, 5.0);
 
-    //std::vector<real> temp;
-    //temp.resize(sn.getParametersCount());
+	//std::vector<real> temp;
+	//temp.resize(sn.getParametersCount());
 
-    //sn.getParameters(&temp[0]);
+	//sn.getParameters(&temp[0]);
 
-    //for(int i = 0; i < 100; ++i)
-    //{
-    //	if(i == 10)
-    //	{
-    //		sn.handleInput(0);
-    //	}
-    //	if(i > 10 && (i % 4) == 0)
-    //	{
-    //		sn.handleInput(1);
-    //	}	
+	//for(int i = 0; i < 100; ++i)
+	//{
+	//	if(i == 10)
+	//	{
+	//		sn.handleInput(0);
+	//	}
+	//	if(i > 10 && (i % 4) == 0)
+	//	{
+	//		sn.handleInput(1);
+	//	}	
 
-    //	sn.process();
-    //	cout << sn.getValue() << endl;
-    //}
+	//	sn.process();
+	//	cout << sn.getValue() << endl;
+	//}
 
-    //iforce2d_TopdownCar testbed;
-    //testbed.
+	//iforce2d_TopdownCar testbed;
+	//testbed.
 
-    //SDL_S* pHelloSurface = null;
+	//SDL_S* pHelloSurface = null;
 
-    return 0;
+	return 0;
 }

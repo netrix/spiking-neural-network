@@ -1,11 +1,11 @@
 #include "PhysicsCar.hpp"
 
-PhysicsCar::PhysicsCar(b2World* world) 
+PhysicsCar::PhysicsCar(b2World& world) 
 {
 	//create car body
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
-	m_body = world->CreateBody(&bodyDef);
+	m_body = world.CreateBody(&bodyDef);
 	m_body->SetAngularDamping(3);
 	
 	
@@ -33,7 +33,7 @@ PhysicsCar::PhysicsCar(b2World* world)
 	tire->setCharacteristics(maxForwardSpeed, maxBackwardSpeed, backTireMaxDriveForce, backTireMaxLateralImpulse);
 	jointDef.bodyB = tire->getBody();
 	jointDef.localAnchorA.Set( -2.5, 0.0f );
-	world->CreateJoint( &jointDef );
+	world.CreateJoint( &jointDef );
 	m_tires.push_back(tire);
 
 	//back right tire
@@ -41,7 +41,7 @@ PhysicsCar::PhysicsCar(b2World* world)
 	tire->setCharacteristics(maxForwardSpeed, maxBackwardSpeed, backTireMaxDriveForce, backTireMaxLateralImpulse);
 	jointDef.bodyB = tire->getBody();
 	jointDef.localAnchorA.Set( 2.5, 0.0f );
-	world->CreateJoint( &jointDef );
+	world.CreateJoint( &jointDef );
 	m_tires.push_back(tire);
 
 	//front left tire
@@ -49,7 +49,7 @@ PhysicsCar::PhysicsCar(b2World* world)
 	tire->setCharacteristics(maxForwardSpeed, maxBackwardSpeed, frontTireMaxDriveForce, frontTireMaxLateralImpulse);
 	jointDef.bodyB = tire->getBody();
 	jointDef.localAnchorA.Set( -2.5, 7.5f );
-	flJoint = (b2RevoluteJoint*)world->CreateJoint( &jointDef );
+	flJoint = (b2RevoluteJoint*)world.CreateJoint( &jointDef );
 	m_tires.push_back(tire);
 
 	//front right tire
@@ -57,7 +57,7 @@ PhysicsCar::PhysicsCar(b2World* world)
 	tire->setCharacteristics(maxForwardSpeed, maxBackwardSpeed, frontTireMaxDriveForce, frontTireMaxLateralImpulse);
 	jointDef.bodyB = tire->getBody();
 	jointDef.localAnchorA.Set( 2.5, 7.5f );
-	frJoint = (b2RevoluteJoint*)world->CreateJoint( &jointDef );
+	frJoint = (b2RevoluteJoint*)world.CreateJoint( &jointDef );
 	m_tires.push_back(tire);
 }
 

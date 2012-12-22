@@ -3,11 +3,16 @@
 
 using namespace NLib::Math;
 
+namespace {
+
 bool isPowOf2(NLib::NUint32 value)
 {
     return (value & (value - 1)) == 0;
 }
 
+}
+
+namespace Framework {
 
 Framework::Framework(const FrameworkSettings& settings, float fWorldScale)
 	: m_fDelta(0.0f)
@@ -314,3 +319,5 @@ void Framework::setDebugDraw(bool value)
 
 	m_b2DebugDrawOpenGL.SetFlags(flags);
 }
+
+} // Framework

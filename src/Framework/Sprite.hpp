@@ -1,9 +1,11 @@
-#ifndef SNN_SPRITE
-#define SNN_SPRITE
+#ifndef SNN_FRAMEWORK_SPRITE
+#define SNN_FRAMEWORK_SPRITE
 
 #include <NLib/Base/nNonCopyable.hpp>
 #include <NLib/Math/nMath.hpp>
 #include <SDL_opengl.h>
+
+namespace Framework {
 
 /**
  *
@@ -32,4 +34,6 @@ private:
 	NLib::Math::NMVector2f m_size;
 };
 
-#endif // SNN_SPRITE
+} // Framework
+
+#endif // SNN_FRAMEWORK_SPRITE

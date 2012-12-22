@@ -1,10 +1,11 @@
-#include "PlotOpenGL.hpp"
+#include "PlotRenderer.hpp"
 #include <algorithm>
 
 using namespace NLib::Math;
 
+namespace Plots {
 
-PlotOpenGL::PlotOpenGL(const Framework& fw)
+PlotRenderer::PlotRenderer(const Framework::Framework& fw)
 	: m_framework(fw)
 	, m_margins(NMVector4fLoad(2.0f, 2.0f, 2.0f, 2.0f))
 	, m_bDrawScale(false)
@@ -14,7 +15,7 @@ PlotOpenGL::PlotOpenGL(const Framework& fw)
 {
 }
 
-void PlotOpenGL::drawImpulses(const FloatVector& times, const NLib::Math::NMVector2f& timeWindow)
+void PlotRenderer::drawImpulses(const FloatVector& times, const NLib::Math::NMVector2f& timeWindow)
 {
 	drawBasics();
 
@@ -37,7 +38,7 @@ void PlotOpenGL::drawImpulses(const FloatVector& times, const NLib::Math::NMVect
 	}
 }
 
-void PlotOpenGL::drawBasics()
+void PlotRenderer::drawBasics()
 {
 	if(m_bNeedRecalculation)
 	{
@@ -58,7 +59,7 @@ void PlotOpenGL::drawBasics()
 	}
 }
 
-void PlotOpenGL::calculateBasics()
+void PlotRenderer::calculateBasics()
 {
 	m_xAxisA = NMVector2fLoad(m_position.x + m_margins.w, m_position.y + m_size.y - m_margins.z);
 	m_xAxisB = NMVector2fLoad(m_position.x + m_size.x - m_margins.y, m_position.y + m_size.y - m_margins.z);
@@ -71,7 +72,7 @@ void PlotOpenGL::calculateBasics()
 	m_fScaleLengthY = NMVector2fLength(m_yAxisB - m_yAxisA);
 }
 
-void PlotOpenGL::drawArrowhead(const NLib::Math::NMVector2f& position, const NLib::Math::NMVector2f& direction)
+void PlotRenderer::drawArrowhead(const NLib::Math::NMVector2f& position, const NLib::Math::NMVector2f& direction)
 {
 	NMVector2f d1 = (position - direction) + NMVector2fLoad(-direction.y, direction.x);
 	NMVector2f d2 = (position - direction) + NMVector2fLoad(direction.y, -direction.x);
@@ -80,13 +81,13 @@ void PlotOpenGL::drawArrowhead(const NLib::Math::NMVector2f& position, const NLi
 	m_framework.drawLine(position, d2);
 }
 
-void PlotOpenGL::drawScale(const NLib::Math::NMVector2f& p1, const NLib::Math::NMVector2f& p2, int iScale)
+void PlotRenderer::drawScale(const NLib::Math::NMVector2f& p1, const NLib::Math::NMVector2f& p2, int iScale)
 {
 	float fStep = NMVector2fLength(p2 - p1) / iScale;
 	drawScaleStep(p1, p2, fStep);
 }
 
-void PlotOpenGL::drawScaleStep(const NLib::Math::NMVector2f& p1, const NLib::Math::NMVector2f& p2, float fStep)
+void PlotRenderer::drawScaleStep(const NLib::Math::NMVector2f& p1, const NLib::Math::NMVector2f& p2, float fStep)
 {
 	NMVector2f dir = NMVector2fNormalize(p2 - p1);
 	float fLength = NMVector2fLength(p2 - p1) - 1.0f;
@@ -102,3 +103,5 @@ void PlotOpenGL::drawScaleStep(const NLib::Math::NMVector2f& p1, const NLib::Mat
 		f += fStep;
 	}
 }
+
+} // Plots

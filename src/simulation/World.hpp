@@ -1,7 +1,7 @@
 #ifndef SNN_SIMULATION_WORLD
 #define SNN_SIMULATION_WORLD
 
-#include "Framework.hpp"
+#include "Framework/Framework.hpp"
 #include "Physics/Car.hpp"
 #include "Track.hpp"
 #include "Probes/TrackDistance.hpp"
@@ -13,14 +13,14 @@ class World
 	: public NLib::NNonCopyable
 {
 public:
-	World(const Framework& framework, float fWorldScale, float fDelta);
+	World(const Framework::Framework& framework, float fWorldScale, float fDelta);
 
 	void loadTrack(const std::string& filePath);
 
 	Track&			getTrack()			{ return m_track; }
 	const Track&	getTrack() const	{ return m_track; }
 		
-	void draw(Sprite& carSprite, Sprite& backgroundSprite) const;
+	void draw(Framework::Sprite& carSprite, Framework::Sprite& backgroundSprite) const;
 
 	void moveForward()	{ m_iControlState |= Physics::TDC_UP; }
 	void moveBackward()	{ m_iControlState |= Physics::TDC_DOWN; }
@@ -40,7 +40,7 @@ private:
 	void physicsStep(float hz);
 
 private:
-	const Framework& m_framework;
+	const Framework::Framework& m_framework;
 	const float m_fDelta;
 
 	int m_iControlState;

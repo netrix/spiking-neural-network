@@ -1,6 +1,8 @@
 #include "DebugDrawOpenGL.hpp"
 #include <SDL_opengl.h>
 
+namespace Framework {
+
 void DebugDrawOpenGL::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) const
 {
 	glColor3f(color.r, color.g, color.b);
@@ -115,3 +117,5 @@ void DebugDrawOpenGL::DrawTransform(const b2Transform& xf) const
 
 	glEnd();
 }
+
+} // Framework

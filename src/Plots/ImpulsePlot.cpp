@@ -2,7 +2,9 @@
 
 using namespace NLib::Math;
 
-ImpulsePlot::ImpulsePlot(Framework& framework, const NMVector2f& position, const NMVector2f& size)
+namespace Plots {
+
+ImpulsePlot::ImpulsePlot(Framework::Framework& framework, const NMVector2f& position, const NMVector2f& size)
 	: m_oglPlot(framework)
 	, m_timeWindow(NMVector2fLoad(0.0f, 2.0f))
 	, m_fTime(0.0f)
@@ -31,3 +33,5 @@ void ImpulsePlot::draw()
 {
 	m_oglPlot.drawImpulses(m_impulses, m_timeWindow);
 }
+
+} // Plots

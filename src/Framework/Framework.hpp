@@ -1,5 +1,5 @@
-#ifndef SNN_GAME
-#define SNN_GAME
+#ifndef SNN_FRAMEWORK_FRAMEWORK
+#define SNN_FRAMEWORK_FRAMEWORK
 
 #include <NLib/Base/nBase.hpp>
 #include <NLib/Math/nMath.hpp>
@@ -12,6 +12,8 @@
 #include "Exceptions.hpp"
 #include "DebugDrawOpenGL.hpp"
 #include "Sprite.hpp"
+
+namespace Framework {
 
 typedef std::auto_ptr<Sprite> SpriteAPtr;
 typedef std::vector<NLib::Math::NMVector2f> PointVector;
@@ -78,4 +80,6 @@ private:
 	DebugDrawOpenGL m_b2DebugDrawOpenGL;
 };
 
-#endif
+} // Framework
+
+#endif // SNN_FRAMEWORK_FRAMEWORK

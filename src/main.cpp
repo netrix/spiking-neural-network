@@ -2,8 +2,8 @@
 #include <vector>
 #include <Box2D/Box2D.h>
 #include "SpikingNeuron.hpp"
-#include "Framework.hpp"
-#include "ImpulsePlot.hpp"
+#include "Framework/Framework.hpp"
+#include "Plots/ImpulsePlot.hpp"
 #include "Simulation/World.hpp"
 
 using namespace std;
@@ -15,11 +15,11 @@ const float STEP = 1.0f / 60.0f;
 
 class ImpulsePlotHandler 
 	: public Simulation::Probes::IImpulseHandler
-	, public ImpulsePlot
+	, public Plots::ImpulsePlot
 {
 public:
-	ImpulsePlotHandler(Framework& framework, const NLib::Math::NMVector2f& position, const NLib::Math::NMVector2f& size)
-		: ImpulsePlot(framework, position, size)
+	ImpulsePlotHandler(Framework::Framework& framework, const NLib::Math::NMVector2f& position, const NLib::Math::NMVector2f& size)
+		: Plots::ImpulsePlot(framework, position, size)
 	{}
 
 	virtual void handleImpulse()
@@ -32,14 +32,14 @@ public:
 
 int SDL_main(int argc, char* args[])
 {
-	FrameworkSettings settings = { 800, 600, 32 };
-	Framework framework(settings, WORLD_SCALE);
+	Framework::FrameworkSettings settings = { 800, 600, 32 };
+	Framework::Framework framework(settings, WORLD_SCALE);
 	framework.setDebugDraw(true);
 
 	Simulation::World simulationWorld(framework, WORLD_SCALE, STEP);
 
-	SpriteAPtr car = framework.createSprite("../../data/car.png");
-	SpriteAPtr background = framework.createSprite("../../data/background.png");
+	Framework::SpriteAPtr car = framework.createSprite("../../data/car.png");
+	Framework::SpriteAPtr background = framework.createSprite("../../data/background.png");
 
 	// Background sprite
 	NMVector2f backgroundSize = { 800 * WORLD_SCALE, 600 * WORLD_SCALE};

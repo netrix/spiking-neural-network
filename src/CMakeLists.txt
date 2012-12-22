@@ -1,3 +1,19 @@
+set(FRAMEWORK_SOURCES
+	Framework/Framework.cpp
+	Framework/Framework.hpp
+	Framework/Sprite.cpp
+	Framework/Sprite.hpp
+	Framework/DebugDrawOpenGL.cpp
+	Framework/DebugDrawOpenGL.hpp
+)
+
+set(PLOTS_SOURCES
+	Plots/PlotRenderer.cpp
+	Plots/PlotRenderer.hpp
+	Plots/ImpulsePlot.cpp
+	Plots/ImpulsePlot.hpp
+)
+
 set(SIMULATION_PHYSICS_SOURCES
 	Simulation/Physics/Car.cpp
 	Simulation/Physics/Car.hpp
@@ -25,28 +41,20 @@ set(SIMULATION_SOURCES
 
 set(SOURCES
 	Common.hpp
-	DebugDrawOpenGL.cpp
-	DebugDrawOpenGL.hpp
 	Exceptions.hpp
-	Framework.cpp
-	Framework.hpp
-	ImpulsePlot.cpp
-	ImpulsePlot.hpp
 	main.cpp
 	NeuralConnection.hpp
 	NeuralConnection.cpp
 	NeuronInput.hpp
 	NeuronInput.cpp
-	PlotOpenGL.hpp
-	PlotOpenGL.cpp
 	SpikingNeuron.cpp
 	SpikingNeuron.hpp
-	Sprite.cpp
-	Sprite.hpp
 	TestEnvironment.hpp
 )
 
 set(ALL_SOURCES
+	${FRAMEWORK_SOURCES}
+	${PLOTS_SOURCES}
 	${SIMULATION_PHYSICS_SOURCES}
 	${SIMULATION_PROBES_SOURCES}
 	${SIMULATION_SOURCES}
@@ -62,6 +70,8 @@ target_link_libraries(${NAME} Box2D)
 
 # For Visual Studio
 source_group(src FILES ${SOURCES})
+source_group(src\\Framework FILES ${FRAMEWORK_SOURCES})
+source_group(src\\Plots FILES ${PLOTS_SOURCES})
 source_group(src\\Simulation FILES ${SIMULATION_SOURCES})
 source_group(src\\Simulation\\Physics FILES ${SIMULATION_PHYSICS_SOURCES})
 source_group(src\\Simulation\\Probes FILES ${SIMULATION_PROBES_SOURCES})

@@ -1,7 +1,9 @@
-#ifndef SNN_DEBUG_DRAW_OPENGL
-#define SNN_DEBUG_DRAW_OPENGL
+#ifndef SNN_FRAMEWORK_DEBUG_DRAW_OPENGL
+#define SNN_FRAMEWORK_DEBUG_DRAW_OPENGL
 
 #include <Box2D/Box2D.h>
+
+namespace Framework {
 
 class DebugDrawOpenGL
 	: public b2Draw
@@ -20,4 +22,6 @@ public:
 	virtual void DrawTransform(const b2Transform& xf) const;
 };
 
-#endif // SNN_DEBUG_DRAW_OPENGL
+} // Framework
+
+#endif // SNN_FRAMEWORK_DEBUG_DRAW_OPENGL

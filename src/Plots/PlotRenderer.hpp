@@ -1,15 +1,17 @@
-#ifndef SNN_PLOT_OPENGL
-#define SNN_PLOT_OPENGL
+#ifndef SNN_PLOTS_PLOT_RENDERER
+#define SNN_PLOTS_PLOT_RENDERER
 
-#include "Framework.hpp"
+#include "Framework/Framework.hpp"
+
+namespace Plots {
 
 typedef std::vector<float> FloatVector;
 
-class PlotOpenGL
+class PlotRenderer
 	: NLib::NNonCopyable
 {
 public:
-	PlotOpenGL(const Framework& fw);
+	PlotRenderer(const Framework::Framework& fw);
 
 	void setPosition(const NLib::Math::NMVector2f& position)	{ m_position = position; m_bNeedRecalculation = true; }
 	void setSize(const NLib::Math::NMVector2f& size)			{ m_size = size; m_bNeedRecalculation = true; }
@@ -29,7 +31,7 @@ private:
 	void calculateBasics();
 
 private:
-	const Framework& m_framework;
+	const Framework::Framework& m_framework;
 	NLib::Math::NMVector2f m_position;
 	NLib::Math::NMVector2f m_size;
 	NLib::Math::NMVector4f m_margins;	// top, right, bottom, left
@@ -43,4 +45,6 @@ private:
 	float m_fScaleLengthY;
 };
 
-#endif // SNN_PLOT_OPENGL
+} // Plots
+
+#endif // SNN_PLOTS_PLOT_RENDERER

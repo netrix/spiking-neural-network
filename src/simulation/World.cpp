@@ -6,7 +6,7 @@ namespace Simulation {
 
 Physics::MyDestructionListener World::s_destructionListener;
 
-World::World(const Framework& framework, float fWorldScale, float fDelta)
+World::World(const Framework::Framework& framework, float fWorldScale, float fDelta)
 	: m_framework(framework)
 	, m_iControlState(0)
 	, m_fDelta(fDelta)
@@ -37,7 +37,7 @@ void World::loadTrack(const std::string& filePath)
 	m_track.loadFromFile(filePath);
 }
 
-void World::draw(Sprite& carSprite, Sprite& backgroundSprite) const
+void World::draw(Framework::Sprite& carSprite, Framework::Sprite& backgroundSprite) const
 {
 	b2Vec2 physCarPos = m_car.getBody()->GetWorldCenter();
 	NMVector2f carPos = NMVector2fLoad(physCarPos.x, physCarPos.y);

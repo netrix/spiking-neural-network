@@ -1,5 +1,8 @@
 #include "PhysicsCar.hpp"
 
+using namespace NLib::Math;
+
+
 PhysicsCar::PhysicsCar(b2World& world) 
 {
 	//create car body
@@ -29,36 +32,36 @@ PhysicsCar::PhysicsCar(b2World& world)
 	float frontTireMaxLateralImpulse = 7.5 ;
 
 	//back left tire
-	PhysicsTire* tire = new PhysicsTire(world);
+	PhysicsTire* tire = new PhysicsTire(&world);
 	tire->setCharacteristics(maxForwardSpeed, maxBackwardSpeed, backTireMaxDriveForce, backTireMaxLateralImpulse);
 	jointDef.bodyB = tire->getBody();
 	jointDef.localAnchorA.Set( -2.5, 0.0f );
 	world.CreateJoint( &jointDef );
-	m_tires.push_back(tire);
+	m_tires[0] = tire;
 
 	//back right tire
-	tire = new PhysicsTire(world);
+	tire = new PhysicsTire(&world);
 	tire->setCharacteristics(maxForwardSpeed, maxBackwardSpeed, backTireMaxDriveForce, backTireMaxLateralImpulse);
 	jointDef.bodyB = tire->getBody();
 	jointDef.localAnchorA.Set( 2.5, 0.0f );
 	world.CreateJoint( &jointDef );
-	m_tires.push_back(tire);
+	m_tires[1] = tire;
 
 	//front left tire
-	tire = new PhysicsTire(world);
+	tire = new PhysicsTire(&world);
 	tire->setCharacteristics(maxForwardSpeed, maxBackwardSpeed, frontTireMaxDriveForce, frontTireMaxLateralImpulse);
 	jointDef.bodyB = tire->getBody();
 	jointDef.localAnchorA.Set( -2.5, 7.5f );
 	flJoint = (b2RevoluteJoint*)world.CreateJoint( &jointDef );
-	m_tires.push_back(tire);
+	m_tires[2] = tire;
 
 	//front right tire
-	tire = new PhysicsTire(world);
+	tire = new PhysicsTire(&world);
 	tire->setCharacteristics(maxForwardSpeed, maxBackwardSpeed, frontTireMaxDriveForce, frontTireMaxLateralImpulse);
 	jointDef.bodyB = tire->getBody();
 	jointDef.localAnchorA.Set( 2.5, 7.5f );
 	frJoint = (b2RevoluteJoint*)world.CreateJoint( &jointDef );
-	m_tires.push_back(tire);
+	m_tires[3] = tire;
 }
 
 PhysicsCar::~PhysicsCar() 
@@ -67,7 +70,7 @@ PhysicsCar::~PhysicsCar()
 		delete m_tires[i];
 }
 
-void PhysicsCar::setPosition(const b2Vec2& pos, float fAngle)
+void PhysicsCar::setTransform(const b2Vec2& pos, float fAngle)
 {
 	m_body->SetTransform(pos, fAngle);
 
@@ -75,6 +78,12 @@ void PhysicsCar::setPosition(const b2Vec2& pos, float fAngle)
 	{
 		m_tires[i]->getBody()->SetTransform(pos, fAngle);
 	}
+}
+
+NLib::Math::NMVector2f PhysicsCar::getPosition() const
+{
+	const b2Vec2& b2Position = m_body->GetPosition();
+	return NMVector2fLoad(b2Position.x, b2Position.y);
 }
 
 void PhysicsCar::update(int controlState) 

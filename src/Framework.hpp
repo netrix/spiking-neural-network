@@ -58,12 +58,9 @@ public:
 	bool isMouseButtonRightClicked() const;
 	bool checkKeyDown(SDLKey key) const;
 
-	// Physics
-	b2World& getPhysicsWorld()		{ return m_b2World; }
-	void physicsStep(float hz);
-
 	// Debug
 	void setDebugDraw(bool value);
+	const b2Draw& getDebugDraw() const			{ return m_b2DebugDrawOpenGL; }
 
 private:
 	// SDL
@@ -78,11 +75,7 @@ private:
 	NLib::NUint8 m_uLastMouseButtonStateLeft;
 	NLib::NUint8 m_uLastMouseButtonStateRight;
 
-	// Box2D
-	b2World m_b2World;
-
 	// Debug
-	bool m_bDrawDebug;
 	DebugDrawOpenGL m_b2DebugDrawOpenGL;
 };
 

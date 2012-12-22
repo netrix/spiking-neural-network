@@ -1,7 +1,7 @@
 #include "DebugDrawOpenGL.hpp"
 #include <SDL_opengl.h>
 
-void DebugDrawOpenGL::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+void DebugDrawOpenGL::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) const
 {
 	glColor3f(color.r, color.g, color.b);
 	glBegin(GL_LINE_LOOP);
@@ -12,7 +12,7 @@ void DebugDrawOpenGL::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, con
 	glEnd();
 }
 
-void DebugDrawOpenGL::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+void DebugDrawOpenGL::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) const
 {
 	glEnable(GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -34,7 +34,7 @@ void DebugDrawOpenGL::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount
 	glEnd();
 }
 
-void DebugDrawOpenGL::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
+void DebugDrawOpenGL::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) const
 {
 	const float32 k_segments = 16.0f;
 	const float32 k_increment = 2.0f * b2_pi / k_segments;
@@ -51,7 +51,7 @@ void DebugDrawOpenGL::DrawCircle(const b2Vec2& center, float32 radius, const b2C
 	glEnd();
 }
 	
-void DebugDrawOpenGL::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
+void DebugDrawOpenGL::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color) const
 {
 	const float32 k_segments = 16.0f;
 	const float32 k_increment = 2.0f * b2_pi / k_segments;
@@ -88,7 +88,7 @@ void DebugDrawOpenGL::DrawSolidCircle(const b2Vec2& center, float32 radius, cons
 	glEnd();
 }
 	
-void DebugDrawOpenGL::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
+void DebugDrawOpenGL::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) const
 {
 	glColor3f(color.r, color.g, color.b);
 	glBegin(GL_LINES);
@@ -97,7 +97,7 @@ void DebugDrawOpenGL::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Co
 	glEnd();
 }
 
-void DebugDrawOpenGL::DrawTransform(const b2Transform& xf)
+void DebugDrawOpenGL::DrawTransform(const b2Transform& xf) const
 {
 	b2Vec2 p1 = xf.p, p2;
 	const float32 k_axisScale = 0.4f;

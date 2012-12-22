@@ -3,9 +3,10 @@
 #ifndef SNN_PHYSICS_CAR
 #define SNN_PHYSICS_CAR
 
+#include <NLib/Math/nMath.hpp>
 #include <NLib/Base/nNonCopyable.hpp>
 #include <Box2D/Box2D.h>
-#include <vector>
+#include <array>
 #include "PhysicsTire.hpp"
 
 #ifndef DEGTORAD
@@ -15,22 +16,25 @@
 
 class PhysicsCar 
 {
+	static const NLib::NUint32 NUM_TIRES = 4;
+
 public:
     PhysicsCar(b2World& world);
 
     ~PhysicsCar();
 
-	void setPosition(const b2Vec2& pos, float fAngle= 0.0f);
+	void setTransform(const b2Vec2& pos, float fAngle= 0.0f);
+
+	NLib::Math::NMVector2f getPosition() const;
 
     void update(int controlState);
 
 	b2Body* getBody()				{ return m_body; }
-
 	const b2Body* getBody()	const	{ return m_body; }
 
 private:
     b2Body* m_body;
-    std::vector<PhysicsTire*> m_tires;
+	std::array<PhysicsTire*, NUM_TIRES> m_tires;
     b2RevoluteJoint *flJoint, *frJoint;
 };
 

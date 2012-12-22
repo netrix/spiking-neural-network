@@ -13,8 +13,6 @@ Framework::Framework(const FrameworkSettings& settings, float fWorldScale)
 	: m_fDelta(0.0f)
 	, m_uLastMouseButtonStateRight(0)
 	, m_uLastMouseButtonStateLeft(0)
-	, m_b2World(b2Vec2_zero)
-	, m_bDrawDebug(false)
 {
 	// Window + Opengl
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -47,17 +45,8 @@ Framework::Framework(const FrameworkSettings& settings, float fWorldScale)
 	memset(&m_event, 0, sizeof(m_event));
 	m_uLastMouseButtonStateLeft = SDL_MOUSEBUTTONUP;
 
-	// Initializing physics
-	m_b2World.SetDebugDraw(&m_b2DebugDrawOpenGL);
-
-	uint32 flags = m_b2DebugDrawOpenGL.GetFlags();
-
-	flags |= b2Draw::e_shapeBit;
-	flags |= b2Draw::e_jointBit;
-	flags |= b2Draw::e_aabbBit;
-	flags |= b2Draw::e_centerOfMassBit;
-
-	m_b2DebugDrawOpenGL.SetFlags(flags);
+	// Initializing debug draw for Box2D
+	setDebugDraw(false);
 
 	// Time
 	m_uTicks = SDL_GetTicks();
@@ -193,11 +182,6 @@ void Framework::drawRect(NLib::Math::NMVector2f origin, NLib::Math::NMVector2f s
 
 void Framework::flipScreen()
 {
-	if(m_bDrawDebug)
-	{
-		m_b2World.DrawDebugData();
-	}
-
     SDL_GL_SwapBuffers();
 
     glClear(GL_COLOR_BUFFER_BIT);
@@ -244,7 +228,7 @@ SpriteAPtr Framework::createSprite(const std::string& filePath) const
         GL_UNSIGNED_BYTE, pSurface->pixels);
 
     // Data from texture
-	NMVector2f size = { pSurface->w, pSurface->h };
+	NMVector2f size = { (float)pSurface->w, (float)pSurface->h };
 
     SDL_FreeSurface(pSurface);
 
@@ -306,22 +290,27 @@ bool Framework::isMouseButtonRightClicked() const
 
 bool Framework::checkKeyDown(SDLKey key) const
 {
-	return SDL_GetKeyState(null)[key];
+	return SDL_GetKeyState(null)[key] != 0;
 }
 
 void Framework::setDebugDraw(bool value)
 {
-	m_bDrawDebug = value;
-}
+	uint32 flags = m_b2DebugDrawOpenGL.GetFlags();
 
-void Framework::physicsStep(float hz)
-{
-	float32 timeStep = hz > 0.0f ? 1.0f / hz : float32(0.0f);
+	if(value)
+	{
+		flags |= b2Draw::e_shapeBit;
+		flags |= b2Draw::e_jointBit;
+		flags |= b2Draw::e_aabbBit;
+		flags |= b2Draw::e_centerOfMassBit;
+	}
+	else
+	{
+		flags &= ~b2Draw::e_shapeBit;
+		flags &= ~b2Draw::e_jointBit;
+		flags &= ~b2Draw::e_aabbBit;
+		flags &= ~b2Draw::e_centerOfMassBit;
+	}
 
-	m_b2World.SetAllowSleeping(true);
-	m_b2World.SetWarmStarting(true);
-	m_b2World.SetContinuousPhysics(true);
-	m_b2World.SetSubStepping(false);
-
-	m_b2World.Step(timeStep, 8, 3);
+	m_b2DebugDrawOpenGL.SetFlags(flags);
 }

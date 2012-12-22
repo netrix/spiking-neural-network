@@ -4,6 +4,7 @@
 #include "SpikingNeuron.hpp"
 #include "Framework.hpp"
 #include "ImpulsePlot.hpp"
+#include "SimulationWorld.hpp"
 
 #include "PhysicsCar.hpp"
 #include "PhysicsContacts.hpp"
@@ -76,16 +77,9 @@ int SDL_main(int argc, char* args[])
 {
 	FrameworkSettings settings = { 800, 600, 32 };
 	Framework game(settings, WORLD_SCALE);
-
-	b2World& world = game.getPhysicsWorld();
-	
-	MyDestructionListener destructionListener;
-	world.SetDestructionListener(&destructionListener);
-
 	game.setDebugDraw(true);
 
-	PhysicsCar physicsCar(world);
-	physicsCar.setPosition(b2Vec2(126 * WORLD_SCALE, 578 * WORLD_SCALE) , 180.0f * DEGTORAD);
+	SimulationWorld simulationWorld(game, WORLD_SCALE);
 
 	SpriteAPtr car = game.createSprite("../../data/car.png");
 	SpriteAPtr background = game.createSprite("../../data/background.png");
@@ -99,88 +93,66 @@ int SDL_main(int argc, char* args[])
 	car->setOffset(offset);
 	car->setSize(car->getSize() * WORLD_SCALE);
 
-	// Track
-	Track track;
-	track.addPoint(NMVector2fLoad(126, 600) * WORLD_SCALE);
-	track.setTrackWidth(10.0f);
-
 	// Impulse plot
 	ImpulsePlot plot(game, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f));
 	plot.setDrawScale(true);
 
 	ImpulsePlotHandler handler(plot);
-	TrackDistanceProbe prober(track, handler);
+	//TrackDistanceProbe prober(track, handler);
 
 	while(game.update())
 	{
-		b2Vec2 physCarPos = physicsCar.getBody()->GetWorldCenter();
-		float fAngle = physicsCar.getBody()->GetAngle() * RADTODEG + 180.0f;
+		simulationWorld.draw(*car, *background);
 
-		game.drawSprite(0, 0, 0.0f, *background.get());
-		game.drawSprite(physCarPos.x, physCarPos.y, fAngle, *car.get());
-		game.drawLineStrip(track.getTrackLineStripPoints());
-		game.drawTriangleStrip(track.getTrackTriangleStripPoints(), NMVector3fLoad(0.88f, 0.58f, 0.58f));
-		
 		// Adding new point to track
 		if(game.isMouseButtonLeftClicked())
 		{
 			NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
-
-			if(NMVector2fLength(track.getLastPoint() - mousePos) > 0.001f)
+		
+			if(NMVector2fLength(simulationWorld.getTrack().getLastPoint() - mousePos) > 0.001f)
 			{
-				track.addPoint(mousePos);
+				simulationWorld.getTrack().addPoint(mousePos);
 			}
 		}
 		// Removing point from track or moving the first point somewhere else
 		else if(game.isMouseButtonRightClicked())
 		{
-			if(track.getSize() == 1)
+			if(simulationWorld.getTrack().getSize() == 1)
 			{
 				NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
-				track.movePoint(0, mousePos);
+				simulationWorld.getTrack().movePoint(0, mousePos);
 			}
 			else
 			{
-				track.popPoint();
+				simulationWorld.getTrack().popPoint();
 			}
 		}
 
 		// Keys
 		if(game.checkKeyDown(SDLK_F5))
 		{
-			track.saveToFile("simple.txt");
+			simulationWorld.getTrack().saveToFile("simple.txt");
 		}
 		if(game.checkKeyDown(SDLK_F9))
 		{
-			track.loadFromFile("simple.txt");
+			simulationWorld.loadTrack("simple.txt");
 		}
 
-		// Prober
-		prober.update(game.getTimeDelta());
+		//// Prober
+		//prober.update(game.getTimeDelta());
 
-		// Car
-		NMVector2f carPos = NMVector2fLoad(physCarPos.x, physCarPos.y);
-		track.setCurrentPosition(carPos);
+		//std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
 
-		game.drawLine(carPos, track.getCurrentPointOnTrack(), NLib::Math::NMVector3fLoad(1.0f, 0.0f, 0.0f));
-		
-		std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
+		//// Plot
+		//plot.update(game.getTimeDelta());
+		//plot.draw();
 
-		game.drawArrow(track.getCurrentPointOnTrack(), track.getDirectionOfTrack(), NMVector3fLoad(0.0f, 1.0f, 0.0f));
+		if(game.checkKeyDown(SDLK_w)) simulationWorld.moveForward();
+		if(game.checkKeyDown(SDLK_s)) simulationWorld.moveBackward();
+		if(game.checkKeyDown(SDLK_d)) simulationWorld.turnLeft();
+		if(game.checkKeyDown(SDLK_a)) simulationWorld.turnRight();
 
-		// Plot
-		plot.update(game.getTimeDelta());
-		plot.draw();
-
-		int controlState = 0;
-		controlState |= game.checkKeyDown(SDLK_w) ? TDC_UP : 0;
-		controlState |= game.checkKeyDown(SDLK_s) ? TDC_DOWN : 0;
-		controlState |= game.checkKeyDown(SDLK_a) ? TDC_RIGHT : 0;
-		controlState |= game.checkKeyDown(SDLK_d) ? TDC_LEFT : 0;
-
-		physicsCar.update(controlState);
-
-		game.physicsStep(60.0f);
+		simulationWorld.update();
 
 		game.flipScreen();
 	}

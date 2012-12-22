@@ -11,7 +11,17 @@ class SimulationWorld
 public:
 	SimulationWorld(const Framework& framework, float fWorldScale);
 
+	void loadTrack(const std::string& filePath);
+
+	Track&			getTrack()			{ return m_track; }
+	const Track&	getTrack() const	{ return m_track; }
+		
 	void draw(Sprite& carSprite, Sprite& backgroundSprite) const;
+
+	void moveForward()	{ m_iControlState |= TDC_UP; }
+	void moveBackward()	{ m_iControlState |= TDC_DOWN; }
+	void turnLeft()		{ m_iControlState |= TDC_LEFT; }
+	void turnRight()	{ m_iControlState |= TDC_RIGHT; }
 
 	void update();
 

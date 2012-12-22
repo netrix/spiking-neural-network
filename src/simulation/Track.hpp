@@ -1,8 +1,10 @@
-#ifndef SNN_TRACK
-#define SNN_TRACK
+#ifndef SNN_SIMULATION_TRACK
+#define SNN_SIMULATION_TRACK
 
 #include <vector>
 #include <NLib/Math/nMath.hpp>
+
+namespace Simulation {
 
 typedef std::vector<NLib::Math::NMVector2f> PointVector;
 
@@ -35,7 +37,7 @@ public:
 	float getTravelledDistance() const;
 
 	const NLib::Math::NMVector2f& getCurrentPointOnTrack() const;
-	const NLib::Math::NMVector2f& getDirectionOfTrack() const;
+	NLib::Math::NMVector2f getDirectionOfTrack() const;
 	
 	bool isAtStart() const;
 	bool isAtEnd() const;
@@ -60,4 +62,6 @@ private:
 	float m_fTrackWidth;
 };
 
-#endif // SNN_TRACK
+} // Simulation
+
+#endif // SNN_SIMULATION_TRACK

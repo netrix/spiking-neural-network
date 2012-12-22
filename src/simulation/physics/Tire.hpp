@@ -1,11 +1,14 @@
 /* http://www.iforce2d.net/b2dtut/top-down-car
 */
-#ifndef SNN_PHYSICS_TIRE
-#define SNN_PHYSICS_TIRE
+#ifndef SNN_SIMULATION_PHYSICS_TIRE
+#define SNN_SIMULATION_PHYSICS_TIRE
 
 #include <Box2D/Box2D.h>
 #include <set>
-#include "PhysicsFixtureUserData.hpp"
+#include "FixtureUserData.hpp"
+
+namespace Simulation {
+namespace Physics {
 
 enum 
 {
@@ -15,12 +18,11 @@ enum
 	TDC_DOWN     = 0x8
 };
 
-
-class PhysicsTire 
+class Tire 
 {
 public:
-	PhysicsTire(b2World* world);
-	~PhysicsTire();
+	Tire(b2World* world);
+	~Tire();
 
 	void setCharacteristics(float maxForwardSpeed, float maxBackwardSpeed, float maxDriveForce, float maxLateralImpulse);
 
@@ -49,4 +51,7 @@ private:
 	float m_currentTraction;
 };
 
-#endif // SNN_PHYSICS_TIRE
+} // Physics
+} // Simulation
+
+#endif // SNN_SIMULATION_PHYSICS_TIRE

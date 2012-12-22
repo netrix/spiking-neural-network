@@ -2,14 +2,16 @@
 #define SNN_SIMULATION_WORLD
 
 #include "Framework.hpp"
-#include "PhysicsCar.hpp"
+#include "physics/Car.hpp"
 #include "Track.hpp"
 
-class SimulationWorld
+namespace Simulation {
+
+class World
 	: public NLib::NNonCopyable
 {
 public:
-	SimulationWorld(const Framework& framework, float fWorldScale);
+	World(const Framework& framework, float fWorldScale);
 
 	void loadTrack(const std::string& filePath);
 
@@ -18,10 +20,10 @@ public:
 		
 	void draw(Sprite& carSprite, Sprite& backgroundSprite) const;
 
-	void moveForward()	{ m_iControlState |= TDC_UP; }
-	void moveBackward()	{ m_iControlState |= TDC_DOWN; }
-	void turnLeft()		{ m_iControlState |= TDC_LEFT; }
-	void turnRight()	{ m_iControlState |= TDC_RIGHT; }
+	void moveForward()	{ m_iControlState |= Physics::TDC_UP; }
+	void moveBackward()	{ m_iControlState |= Physics::TDC_DOWN; }
+	void turnLeft()		{ m_iControlState |= Physics::TDC_LEFT; }
+	void turnRight()	{ m_iControlState |= Physics::TDC_RIGHT; }
 
 	void update();
 
@@ -37,11 +39,13 @@ private:
 	b2World m_b2World;
 
 	// Simulation
-	PhysicsCar m_car;
+	Physics::Car m_car;
 	Track m_track;
 
 private:
-	static MyDestructionListener s_destructionListener;
+	static Physics::MyDestructionListener s_destructionListener;
 };
+
+} // Simulation
 
 #endif // SNN_SIMULATION_WORLD

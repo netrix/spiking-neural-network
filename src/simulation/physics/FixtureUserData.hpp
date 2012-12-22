@@ -1,7 +1,10 @@
 /* http://www.iforce2d.net/b2dtut/top-down-car
 */
-#ifndef SNN_PHYSICS_FIXTURE_USER_DATA
-#define SNN_PHYSICS_FIXTURE_USER_DATA
+#ifndef SNN_SIMULATION_PHYSICS_FIXTURE_USER_DATA
+#define SNN_SIMULATION_PHYSICS_FIXTURE_USER_DATA
+
+namespace Simulation {
+namespace Physics {
 
 //types of fixture user data
 enum fixtureUserDataType 
@@ -65,4 +68,7 @@ class MyDestructionListener
     void SayGoodbye(b2Joint* joint) {}
 };
 
-#endif // SNN_PHYSICS_FIXTURE_USER_DATA
+} // Physics
+} // Simulation
+
+#endif // SNN_SIMULATION_PHYSICS_FIXTURE_USER_DATA

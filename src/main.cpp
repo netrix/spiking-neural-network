@@ -4,12 +4,7 @@
 #include "SpikingNeuron.hpp"
 #include "Framework.hpp"
 #include "ImpulsePlot.hpp"
-#include "SimulationWorld.hpp"
-
-#include "PhysicsCar.hpp"
-#include "PhysicsContacts.hpp"
-#include "Track.hpp"
-
+#include "simulation/World.hpp"
 
 using namespace std;
 using namespace NLib::Math;
@@ -46,7 +41,7 @@ class TrackDistanceProbe
 	: NLib::NNonCopyable
 {
 public:
-	TrackDistanceProbe(Track& track, ImpulsePlotHandler& handler)
+	TrackDistanceProbe(Simulation::Track& track, ImpulsePlotHandler& handler)
 		: m_track(track)
 		, m_handler(handler)
 		, m_fLastImpulse(0.0f)
@@ -67,7 +62,7 @@ public:
 	}
 
 private:
-	Track& m_track;
+	Simulation::Track& m_track;
 	ImpulsePlotHandler& m_handler;
 	float m_fLastImpulse;
 };
@@ -79,7 +74,7 @@ int SDL_main(int argc, char* args[])
 	Framework game(settings, WORLD_SCALE);
 	game.setDebugDraw(true);
 
-	SimulationWorld simulationWorld(game, WORLD_SCALE);
+	Simulation::World simulationWorld(game, WORLD_SCALE);
 
 	SpriteAPtr car = game.createSprite("../../data/car.png");
 	SpriteAPtr background = game.createSprite("../../data/background.png");

@@ -1,0 +1,10 @@
+#ifndef SNN_SIMULATION_PROBES_IIMPULSEHANDLER
+#define SNN_SIMULATION_PROBES_IIMPULSEHANDLER
+
+class IImpulseHandler
+{
+public:
+	virtual void handleImpulse() = 0;
+};
+
+#endif // SNN_SIMULATION_PROBES_IIMPULSEHANDLER

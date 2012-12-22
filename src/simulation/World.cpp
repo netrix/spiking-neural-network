@@ -1,10 +1,12 @@
-#include "SimulationWorld.hpp"
+#include "World.hpp"
 
 using namespace NLib::Math;
 
-MyDestructionListener SimulationWorld::s_destructionListener;
+namespace Simulation {
 
-SimulationWorld::SimulationWorld(const Framework& framework, float fWorldScale)
+Physics::MyDestructionListener World::s_destructionListener;
+
+World::World(const Framework& framework, float fWorldScale)
 	: m_framework(framework)
 	, m_iControlState(0)
 	, m_b2World(b2Vec2_zero)
@@ -26,12 +28,12 @@ SimulationWorld::SimulationWorld(const Framework& framework, float fWorldScale)
 	m_track.setTrackWidth(fTrackWidth);
 }
 
-void SimulationWorld::loadTrack(const std::string& filePath)
+void World::loadTrack(const std::string& filePath)
 {
 	m_track.loadFromFile(filePath);
 }
 
-void SimulationWorld::draw(Sprite& carSprite, Sprite& backgroundSprite) const
+void World::draw(Sprite& carSprite, Sprite& backgroundSprite) const
 {
 	b2Vec2 physCarPos = m_car.getBody()->GetWorldCenter();
 	NMVector2f carPos = NMVector2fLoad(physCarPos.x, physCarPos.y);
@@ -52,7 +54,7 @@ void SimulationWorld::draw(Sprite& carSprite, Sprite& backgroundSprite) const
 	m_b2World.DrawDebugData();
 }
 
-void SimulationWorld::update()
+void World::update()
 {
 	static const float STEP = 60.0f;
 
@@ -64,7 +66,7 @@ void SimulationWorld::update()
 	m_iControlState = 0;
 }
 
-void SimulationWorld::physicsStep(float hz)
+void World::physicsStep(float hz)
 {
 	float32 timeStep = hz > 0.0f ? 1.0f / hz : float32(0.0f);
 
@@ -75,3 +77,5 @@ void SimulationWorld::physicsStep(float hz)
 
 	m_b2World.Step(timeStep, 8, 3);
 }
+
+} // Simulation

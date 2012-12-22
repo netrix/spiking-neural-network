@@ -1,6 +1,9 @@
-#include "PhysicsTire.hpp"
+#include "Tire.hpp"
 
-PhysicsTire::PhysicsTire(b2World* world) 
+namespace Simulation {
+namespace Physics {
+
+Tire::Tire(b2World* world) 
 {
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
@@ -16,12 +19,12 @@ PhysicsTire::PhysicsTire(b2World* world)
 	m_currentTraction = 1;
 }
 
-PhysicsTire::~PhysicsTire() 
+Tire::~Tire() 
 {
 	m_body->GetWorld()->DestroyBody(m_body);
 }
 
-void PhysicsTire::setCharacteristics(float maxForwardSpeed, float maxBackwardSpeed, float maxDriveForce, float maxLateralImpulse) 
+void Tire::setCharacteristics(float maxForwardSpeed, float maxBackwardSpeed, float maxDriveForce, float maxLateralImpulse) 
 {
 	m_maxForwardSpeed = maxForwardSpeed;
 	m_maxBackwardSpeed = maxBackwardSpeed;
@@ -29,18 +32,18 @@ void PhysicsTire::setCharacteristics(float maxForwardSpeed, float maxBackwardSpe
 	m_maxLateralImpulse = maxLateralImpulse;
 }
 
-void PhysicsTire::addGroundArea(GroundAreaFUD* ga)
+void Tire::addGroundArea(GroundAreaFUD* ga)
 {
 	m_groundAreas.insert(ga); 
 	updateTraction(); 
 }
-void PhysicsTire::removeGroundArea(GroundAreaFUD* ga)
+void Tire::removeGroundArea(GroundAreaFUD* ga)
 {
 	m_groundAreas.erase(ga); 
 	updateTraction(); 
 }
 
-void PhysicsTire::updateTraction()
+void Tire::updateTraction()
 {
 	if (m_groundAreas.empty())
 	{
@@ -63,19 +66,19 @@ void PhysicsTire::updateTraction()
 	}
 }
 
-b2Vec2 PhysicsTire::getLateralVelocity() 
+b2Vec2 Tire::getLateralVelocity() 
 {
 	b2Vec2 currentRightNormal = m_body->GetWorldVector(b2Vec2(1, 0));
 	return b2Dot(currentRightNormal, m_body->GetLinearVelocity()) * currentRightNormal;
 }
 
-b2Vec2 PhysicsTire::getForwardVelocity() 
+b2Vec2 Tire::getForwardVelocity() 
 {
 	b2Vec2 currentForwardNormal = m_body->GetWorldVector( b2Vec2(0, 1) );
 	return b2Dot( currentForwardNormal, m_body->GetLinearVelocity() ) * currentForwardNormal;
 }
 
-void PhysicsTire::updateFriction() 
+void Tire::updateFriction() 
 {
 	//lateral linear velocity
 	b2Vec2 impulse = m_body->GetMass() * -getLateralVelocity();
@@ -96,7 +99,7 @@ void PhysicsTire::updateFriction()
 	m_body->ApplyForce( m_currentTraction * dragForceMagnitude * currentForwardNormal, m_body->GetWorldCenter(), true);
 }
 
-void PhysicsTire::updateDrive(int controlState) 
+void Tire::updateDrive(int controlState) 
 {
 	//find desired speed
 	float desiredSpeed = 0;
@@ -133,7 +136,7 @@ void PhysicsTire::updateDrive(int controlState)
 	m_body->ApplyForce(m_currentTraction * force * currentForwardNormal, m_body->GetWorldCenter(), true);
 }
 
-void PhysicsTire::updateTurn(int controlState) 
+void Tire::updateTurn(int controlState) 
 {
 	float desiredTorque = 0;
 	switch ( controlState & (TDC_LEFT|TDC_RIGHT) ) 
@@ -144,3 +147,6 @@ void PhysicsTire::updateTurn(int controlState)
 	}
 	m_body->ApplyTorque( desiredTorque, true);
 }
+
+} // Physics
+} // Simulation

@@ -3,6 +3,8 @@
 #include <fstream>
 using namespace NLib::Math;
 
+namespace Simulation {
+
 NMVector2f getNormalizedPerpendicularVector(const NMVector2f& vec)
 {
 	NMVector2f v = NMVector2fNormalize(vec);
@@ -283,7 +285,7 @@ const NLib::Math::NMVector2f& Track::getCurrentPointOnTrack() const
 	return m_currentPointOnTrack;
 }
 
-const NLib::Math::NMVector2f& Track::getDirectionOfTrack() const
+NLib::Math::NMVector2f Track::getDirectionOfTrack() const
 {
 	if(m_vPathPoints.size() < 2 || (m_bIsPointCloser && m_uCurrentPoint == m_vPathPoints.size() - 1))
 	{
@@ -368,7 +370,8 @@ void Track::loadFromFile(const std::string& filePath)
 
 	std::ifstream file(filePath);
 
-	file >> m_fTrackWidth;
+	// TODO: uncomment this
+	//file >> m_fTrackWidth;
 
 	while(file)
 	{
@@ -382,3 +385,5 @@ void Track::loadFromFile(const std::string& filePath)
 		}
 	}
 }
+
+} // Simulation

@@ -1,9 +1,12 @@
-#include "PhysicsContacts.hpp"
-#include "PhysicsTire.hpp"
+#include "Contacts.hpp"
+#include "Tire.hpp"
+
+namespace Simulation {
+namespace Physics {
 
 void tire_vs_groundArea(b2Fixture* tireFixture, b2Fixture* groundAreaFixture, bool began)
 {
-	PhysicsTire* tire = (PhysicsTire*)tireFixture->GetBody()->GetUserData();
+	Tire* tire = (Tire*)tireFixture->GetBody()->GetUserData();
 	GroundAreaFUD* gaFud = (GroundAreaFUD*)groundAreaFixture->GetUserData();
 	if ( began )
 	{
@@ -46,3 +49,6 @@ void MyContactListener::EndContact(b2Contact* contact)
 {
 	handleContact(contact, false);
 }
+
+} // Physics
+} // Simulation

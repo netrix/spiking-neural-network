@@ -84,8 +84,14 @@ void Car::setTransform(const b2Vec2& pos, float fAngle)
 
 NLib::Math::NMVector2f Car::getPosition() const
 {
-	const b2Vec2& b2Position = m_body->GetPosition();
+	const b2Vec2& b2Position = m_body->GetWorldCenter();
 	return NMVector2fLoad(b2Position.x, b2Position.y);
+}
+
+NLib::Math::NMVector2f Car::getDirection() const
+{
+	const b2Vec2& b2Position = m_tires[2]->getBody()->GetWorldCenter() - m_tires[0]->getBody()->GetWorldCenter();
+	return NMVector2fNormalize(NMVector2fLoad(b2Position.x, b2Position.y));
 }
 
 void Car::update(int controlState) 

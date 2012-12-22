@@ -30,7 +30,8 @@ public:
 
 	float	getTrackLength() const;
 
-	void setCurrentPosition(const NLib::Math::NMVector2f& point);
+	void							setCurrentPosition(const NLib::Math::NMVector2f& point);
+	const NLib::Math::NMVector2f&	getCurrentPosition() const		{ return m_currentPosition; }
 
 	float getCurrentDistanceFromTrack() const;
 	float getCurrentSideFromTrack() const;

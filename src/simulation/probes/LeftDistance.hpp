@@ -1,5 +1,5 @@
-#ifndef SNN_SIMULATION_PROBES_TRACK_DISTANCE
-#define SNN_SIMULATION_PROBES_TRACK_DISTANCE
+#ifndef SNN_SIMULATION_PROBES_LEFT_DISTANCE
+#define SNN_SIMULATION_PROBES_LEFT_DISTANCE
 
 #include <NLib/Base/nNonCopyable.hpp>
 #include "IImpulseHandler.hpp"
@@ -8,11 +8,11 @@
 namespace Simulation {
 namespace Probes {
 
-class TrackDistance
+class LeftDistance
 	: NLib::NNonCopyable
 {
 public:
-	TrackDistance(Track& track);
+	LeftDistance(Track& track);
 
 	void setImpulseHandler(IImpulseHandler& impulseHandler)		{ m_pImpulseHandler = &impulseHandler; }
 
@@ -27,4 +27,4 @@ private:
 } // Probes
 } // Simulation
 
-#endif // SNN_SIMULATION_PROBES_TRACK_DISTANCE
+#endif // SNN_SIMULATION_PROBES_LEFT_DISTANCE

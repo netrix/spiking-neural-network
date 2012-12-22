@@ -12,7 +12,9 @@ World::World(const Framework& framework, float fWorldScale, float fDelta)
 	, m_fDelta(fDelta)
 	, m_b2World(b2Vec2_zero)
 	, m_car(m_b2World)
-	, m_trackDistanceProbe(m_track)
+	, m_carTrackDistanceProbeA(m_track)
+	, m_carTrackDistanceProbeB(m_track)
+	, m_leftTrackDistanceProbe(m_track)
 {
 	b2Vec2 carPosition(126, 578);
 	NMVector2f trackStart = NMVector2fLoad(126, 600);
@@ -50,7 +52,7 @@ void World::draw(Sprite& carSprite, Sprite& backgroundSprite) const
 	m_framework.drawLineStrip(m_track.getTrackLineStripPoints());
 	m_framework.drawTriangleStrip(m_track.getTrackTriangleStripPoints(), TRACK_COLOR);
 		
-	m_framework.drawLine(carPos, m_track.getCurrentPointOnTrack(), CAR_TRACK_COLOR);
+	m_framework.drawLine(m_track.getCurrentPosition(), m_track.getCurrentPointOnTrack(), CAR_TRACK_COLOR);
 	m_framework.drawArrow(m_track.getCurrentPointOnTrack(), m_track.getDirectionOfTrack(), CAR_TRACK_ARROW_COLOR);
 
 	m_b2World.DrawDebugData();
@@ -59,14 +61,27 @@ void World::draw(Sprite& carSprite, Sprite& backgroundSprite) const
 void World::update()
 {
 	m_car.update(m_iControlState);
-	m_track.setCurrentPosition(m_car.getPosition());
-
+	
 	physicsStep(1.0f / m_fDelta);
-
-	// Probes
-	m_trackDistanceProbe.update(m_fDelta);
+	updateProbes();
 
 	m_iControlState = 0;
+}
+
+void World::updateProbes()
+{
+	const float PROBE_DISTANCE = 10.0f;
+
+	// Probe from the point in front of the car
+	m_track.setCurrentPosition(m_car.getPosition() + m_car.getDirection() * PROBE_DISTANCE);	// TODO: There's a bug with setting two points, track handles properly only one point
+	m_carTrackDistanceProbeB.update(m_fDelta);
+
+	// Probe from the point of car position
+	m_track.setCurrentPosition(m_car.getPosition());
+	m_carTrackDistanceProbeA.update(m_fDelta);
+
+	// Distance left probe
+	m_leftTrackDistanceProbe.update(m_fDelta);
 }
 
 void World::physicsStep(float hz)

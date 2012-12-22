@@ -30,6 +30,8 @@ public:
 
 	NLib::Math::NMVector2f getPosition() const;
 
+	NLib::Math::NMVector2f getDirection() const;
+
 	void update(int controlState);
 
 	b2Body* getBody()				{ return m_body; }

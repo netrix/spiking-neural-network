@@ -10,6 +10,8 @@ set(SIMULATION_PHYSICS_SOURCES
 
 set(SIMULATION_PROBES_SOURCES
 	Simulation/Probes/IImpulseHandler.hpp
+	Simulation/Probes/LeftDistance.cpp
+	Simulation/Probes/LeftDistance.hpp
 	Simulation/Probes/TrackDistance.cpp
 	Simulation/Probes/TrackDistance.hpp
 )

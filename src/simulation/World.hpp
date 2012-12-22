@@ -5,6 +5,7 @@
 #include "Physics/Car.hpp"
 #include "Track.hpp"
 #include "Probes/TrackDistance.hpp"
+#include "Probes/LeftDistance.hpp"
 
 namespace Simulation {
 
@@ -28,9 +29,14 @@ public:
 
 	void update();
 
-	void setTrackDistanceImpulseHandler(Probes::IImpulseHandler& impulseHandler)	{ m_trackDistanceProbe.setImpulseHandler(impulseHandler); }
+	// Probes
+	void setCarTrackDistanceProbeAImpulseHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeA.setImpulseHandler(impulseHandler); }
+	void setCarTrackDistanceProbeBImpulseHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeB.setImpulseHandler(impulseHandler); }
+	void setLeftTrackDistanceProbeImpulseHandler(Probes::IImpulseHandler& impulseHandler)	{ m_leftTrackDistanceProbe.setImpulseHandler(impulseHandler); }
 
 private:
+	void updateProbes();
+
 	void physicsStep(float hz);
 
 private:
@@ -45,7 +51,9 @@ private:
 	Track m_track;
 
 	// Probes
-	Probes::TrackDistance m_trackDistanceProbe;
+	Probes::TrackDistance m_carTrackDistanceProbeA;	// Probe from center of the car.
+	Probes::TrackDistance m_carTrackDistanceProbeB; // Probe from point in front of the car.
+	Probes::LeftDistance m_leftTrackDistanceProbe;	// Probe of the remaining distance.
 
 private:
 	static Physics::MyDestructionListener s_destructionListener;

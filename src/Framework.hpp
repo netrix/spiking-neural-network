@@ -8,7 +8,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <Box2D/Box2D.h>
 
 #include "Exceptions.hpp"
 #include "DebugDrawOpenGL.hpp"

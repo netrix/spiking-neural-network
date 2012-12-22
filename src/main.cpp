@@ -15,20 +15,17 @@ const float STEP = 1.0f / 60.0f;
 
 class ImpulsePlotHandler 
 	: public Simulation::Probes::IImpulseHandler
-	, NLib::NNonCopyable
+	, public ImpulsePlot
 {
 public:
-	ImpulsePlotHandler(ImpulsePlot& plot)
-		: m_plot(plot)
+	ImpulsePlotHandler(Framework& framework, const NLib::Math::NMVector2f& position, const NLib::Math::NMVector2f& size)
+		: ImpulsePlot(framework, position, size)
 	{}
 
 	virtual void handleImpulse()
 	{
-		m_plot.addImpulse();
+		addImpulse();
 	}
-
-private:
-	ImpulsePlot& m_plot;
 };
 
 
@@ -54,11 +51,14 @@ int SDL_main(int argc, char* args[])
 	car->setSize(car->getSize() * WORLD_SCALE);
 
 	// Impulse plot
-	ImpulsePlot plot(framework, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f));
-	plot.setDrawScale(true);
+	ImpulsePlotHandler plotA(framework, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f));
+	ImpulsePlotHandler plotB(framework, NMVector2fLoad(10.0f, 21.0f), NMVector2fLoad(75.0, 10.0f));
+	ImpulsePlotHandler plotDistance(framework, NMVector2fLoad(10.0f, 32.0f), NMVector2fLoad(75.0, 10.0f));
+	
 
-	ImpulsePlotHandler handler(plot);
-	simulationWorld.setTrackDistanceImpulseHandler(handler);
+	simulationWorld.setCarTrackDistanceProbeAImpulseHandler(plotA);
+	simulationWorld.setCarTrackDistanceProbeBImpulseHandler(plotB);
+	simulationWorld.setLeftTrackDistanceProbeImpulseHandler(plotDistance);
 
 	while(framework.update())
 	{
@@ -104,9 +104,14 @@ int SDL_main(int argc, char* args[])
 		//std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
 
 		// Plot
-		//framework.getTimeDelta()
-		plot.update(STEP);
-		plot.draw();
+		plotA.update(STEP);
+		plotA.draw();
+
+		plotB.update(STEP);
+		plotB.draw();
+
+		plotDistance.update(STEP);
+		plotDistance.draw();
 
 		if(framework.checkKeyDown(SDLK_w)) simulationWorld.moveForward();
 		if(framework.checkKeyDown(SDLK_s)) simulationWorld.moveBackward();

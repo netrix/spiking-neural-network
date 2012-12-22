@@ -7,6 +7,8 @@ namespace Probes {
 class IImpulseHandler
 {
 public:
+	virtual ~IImpulseHandler() {}
+
 	virtual void handleImpulse() = 0;
 };
 

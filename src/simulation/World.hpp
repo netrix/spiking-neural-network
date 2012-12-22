@@ -2,8 +2,9 @@
 #define SNN_SIMULATION_WORLD
 
 #include "Framework.hpp"
-#include "physics/Car.hpp"
+#include "Physics/Car.hpp"
 #include "Track.hpp"
+#include "Probes/TrackDistance.hpp"
 
 namespace Simulation {
 
@@ -11,7 +12,7 @@ class World
 	: public NLib::NNonCopyable
 {
 public:
-	World(const Framework& framework, float fWorldScale);
+	World(const Framework& framework, float fWorldScale, float fDelta);
 
 	void loadTrack(const std::string& filePath);
 
@@ -27,20 +28,24 @@ public:
 
 	void update();
 
+	void setTrackDistanceImpulseHandler(Probes::IImpulseHandler& impulseHandler)	{ m_trackDistanceProbe.setImpulseHandler(impulseHandler); }
+
 private:
 	void physicsStep(float hz);
 
 private:
 	const Framework& m_framework;
+	const float m_fDelta;
 
 	int m_iControlState;
 
-	// Box2D
 	b2World m_b2World;
 
-	// Simulation
 	Physics::Car m_car;
 	Track m_track;
+
+	// Probes
+	Probes::TrackDistance m_trackDistanceProbe;
 
 private:
 	static Physics::MyDestructionListener s_destructionListener;

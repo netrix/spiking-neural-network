@@ -4,22 +4,17 @@
 #include "SpikingNeuron.hpp"
 #include "Framework.hpp"
 #include "ImpulsePlot.hpp"
-#include "simulation/World.hpp"
+#include "Simulation/World.hpp"
 
 using namespace std;
 using namespace NLib::Math;
 
 const float WORLD_SCALE = 0.2f;
-
-class ISpikingNeuronInputHandler
-{
-public:
-	virtual void handleInput(NLib::NSize_t uInput) = 0;
-};
+const float STEP = 1.0f / 60.0f;
 
 
 class ImpulsePlotHandler 
-	: public ISpikingNeuronInputHandler
+	: public Simulation::Probes::IImpulseHandler
 	, NLib::NNonCopyable
 {
 public:
@@ -27,7 +22,7 @@ public:
 		: m_plot(plot)
 	{}
 
-	virtual void handleInput(NLib::NSize_t uInput)
+	virtual void handleImpulse()
 	{
 		m_plot.addImpulse();
 	}
@@ -37,47 +32,17 @@ private:
 };
 
 
-class TrackDistanceProbe
-	: NLib::NNonCopyable
-{
-public:
-	TrackDistanceProbe(Simulation::Track& track, ImpulsePlotHandler& handler)
-		: m_track(track)
-		, m_handler(handler)
-		, m_fLastImpulse(0.0f)
-	{
-	}
-
-	void update(float fDelta)
-	{
-		m_fLastImpulse += fDelta;
-
-		float fTrackDistance = m_track.getCurrentDistanceFromTrack();
-
-		if(m_fLastImpulse > (1.0f / fTrackDistance))
-		{
-			m_handler.handleInput(0);
-			m_fLastImpulse  = 0.0f;
-		}
-	}
-
-private:
-	Simulation::Track& m_track;
-	ImpulsePlotHandler& m_handler;
-	float m_fLastImpulse;
-};
-
 
 int SDL_main(int argc, char* args[])
 {
 	FrameworkSettings settings = { 800, 600, 32 };
-	Framework game(settings, WORLD_SCALE);
-	game.setDebugDraw(true);
+	Framework framework(settings, WORLD_SCALE);
+	framework.setDebugDraw(true);
 
-	Simulation::World simulationWorld(game, WORLD_SCALE);
+	Simulation::World simulationWorld(framework, WORLD_SCALE, STEP);
 
-	SpriteAPtr car = game.createSprite("../../data/car.png");
-	SpriteAPtr background = game.createSprite("../../data/background.png");
+	SpriteAPtr car = framework.createSprite("../../data/car.png");
+	SpriteAPtr background = framework.createSprite("../../data/background.png");
 
 	// Background sprite
 	NMVector2f backgroundSize = { 800 * WORLD_SCALE, 600 * WORLD_SCALE};
@@ -89,20 +54,20 @@ int SDL_main(int argc, char* args[])
 	car->setSize(car->getSize() * WORLD_SCALE);
 
 	// Impulse plot
-	ImpulsePlot plot(game, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f));
+	ImpulsePlot plot(framework, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f));
 	plot.setDrawScale(true);
 
 	ImpulsePlotHandler handler(plot);
-	//TrackDistanceProbe prober(track, handler);
+	simulationWorld.setTrackDistanceImpulseHandler(handler);
 
-	while(game.update())
+	while(framework.update())
 	{
 		simulationWorld.draw(*car, *background);
 
 		// Adding new point to track
-		if(game.isMouseButtonLeftClicked())
+		if(framework.isMouseButtonLeftClicked())
 		{
-			NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
+			NMVector2f mousePos = framework.getMouseCoords() * WORLD_SCALE;
 		
 			if(NMVector2fLength(simulationWorld.getTrack().getLastPoint() - mousePos) > 0.001f)
 			{
@@ -110,11 +75,11 @@ int SDL_main(int argc, char* args[])
 			}
 		}
 		// Removing point from track or moving the first point somewhere else
-		else if(game.isMouseButtonRightClicked())
+		else if(framework.isMouseButtonRightClicked())
 		{
 			if(simulationWorld.getTrack().getSize() == 1)
 			{
-				NMVector2f mousePos = game.getMouseCoords() * WORLD_SCALE;
+				NMVector2f mousePos = framework.getMouseCoords() * WORLD_SCALE;
 				simulationWorld.getTrack().movePoint(0, mousePos);
 			}
 			else
@@ -124,32 +89,33 @@ int SDL_main(int argc, char* args[])
 		}
 
 		// Keys
-		if(game.checkKeyDown(SDLK_F5))
+		if(framework.checkKeyDown(SDLK_F5))
 		{
 			simulationWorld.getTrack().saveToFile("simple.txt");
 		}
-		if(game.checkKeyDown(SDLK_F9))
+		if(framework.checkKeyDown(SDLK_F9))
 		{
 			simulationWorld.loadTrack("simple.txt");
 		}
 
 		//// Prober
-		//prober.update(game.getTimeDelta());
+		//prober.update(framework.getTimeDelta());
 
 		//std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
 
-		//// Plot
-		//plot.update(game.getTimeDelta());
-		//plot.draw();
+		// Plot
+		//framework.getTimeDelta()
+		plot.update(STEP);
+		plot.draw();
 
-		if(game.checkKeyDown(SDLK_w)) simulationWorld.moveForward();
-		if(game.checkKeyDown(SDLK_s)) simulationWorld.moveBackward();
-		if(game.checkKeyDown(SDLK_d)) simulationWorld.turnLeft();
-		if(game.checkKeyDown(SDLK_a)) simulationWorld.turnRight();
+		if(framework.checkKeyDown(SDLK_w)) simulationWorld.moveForward();
+		if(framework.checkKeyDown(SDLK_s)) simulationWorld.moveBackward();
+		if(framework.checkKeyDown(SDLK_d)) simulationWorld.turnLeft();
+		if(framework.checkKeyDown(SDLK_a)) simulationWorld.turnRight();
 
 		simulationWorld.update();
 
-		game.flipScreen();
+		framework.flipScreen();
 	}
 
 

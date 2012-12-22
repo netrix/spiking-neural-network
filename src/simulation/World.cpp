@@ -6,11 +6,13 @@ namespace Simulation {
 
 Physics::MyDestructionListener World::s_destructionListener;
 
-World::World(const Framework& framework, float fWorldScale)
+World::World(const Framework& framework, float fWorldScale, float fDelta)
 	: m_framework(framework)
 	, m_iControlState(0)
+	, m_fDelta(fDelta)
 	, m_b2World(b2Vec2_zero)
 	, m_car(m_b2World)
+	, m_trackDistanceProbe(m_track)
 {
 	b2Vec2 carPosition(126, 578);
 	NMVector2f trackStart = NMVector2fLoad(126, 600);
@@ -56,12 +58,13 @@ void World::draw(Sprite& carSprite, Sprite& backgroundSprite) const
 
 void World::update()
 {
-	static const float STEP = 60.0f;
-
 	m_car.update(m_iControlState);
 	m_track.setCurrentPosition(m_car.getPosition());
 
-	physicsStep(STEP);
+	physicsStep(1.0f / m_fDelta);
+
+	// Probes
+	m_trackDistanceProbe.update(m_fDelta);
 
 	m_iControlState = 0;
 }

@@ -1,24 +1,24 @@
 set(SIMULATION_PHYSICS_SOURCES
-	simulation/physics/Car.cpp
-	simulation/physics/Car.hpp
-	simulation/physics/Contacts.cpp
-	simulation/physics/Contacts.hpp
-	simulation/physics/FixtureUserData.hpp
-	simulation/physics/Tire.cpp
-	simulation/physics/Tire.hpp
+	Simulation/Physics/Car.cpp
+	Simulation/Physics/Car.hpp
+	Simulation/Physics/Contacts.cpp
+	Simulation/Physics/Contacts.hpp
+	Simulation/Physics/FixtureUserData.hpp
+	Simulation/Physics/Tire.cpp
+	Simulation/Physics/Tire.hpp
 )
 
 set(SIMULATION_PROBES_SOURCES
-	simulation/probes/IImpulseHandler.hpp
-	simulation/probes/TrackDistance.cpp
-	simulation/probes/TrackDistance.hpp
+	Simulation/Probes/IImpulseHandler.hpp
+	Simulation/Probes/TrackDistance.cpp
+	Simulation/Probes/TrackDistance.hpp
 )
 
 set(SIMULATION_SOURCES
-	simulation/Track.cpp
-	simulation/Track.hpp
-	simulation/World.cpp
-	simulation/World.hpp
+	Simulation/Track.cpp
+	Simulation/Track.hpp
+	Simulation/World.cpp
+	Simulation/World.hpp
 )
 
 set(SOURCES
@@ -60,6 +60,6 @@ target_link_libraries(${NAME} Box2D)
 
 # For Visual Studio
 source_group(src FILES ${SOURCES})
-source_group(src\\simulation FILES ${SIMULATION_SOURCES})
-source_group(src\\simulation\\physics FILES ${SIMULATION_PHYSICS_SOURCES})
-source_group(src\\simulation\\probes FILES ${SIMULATION_PROBES_SOURCES})
+source_group(src\\Simulation FILES ${SIMULATION_SOURCES})
+source_group(src\\Simulation\\Physics FILES ${SIMULATION_PHYSICS_SOURCES})
+source_group(src\\Simulation\\Probes FILES ${SIMULATION_PROBES_SOURCES})

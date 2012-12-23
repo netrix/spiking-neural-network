@@ -12,6 +12,7 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	, m_fDelta(fDelta)
 	, m_b2World(b2Vec2_zero)
 	, m_car(m_b2World)
+	, m_carTrackAngleProbe(m_car, m_track)
 	, m_carTrackDistanceProbeA(m_track)
 	, m_carTrackDistanceProbeB(m_track)
 	, m_leftTrackDistanceProbe(m_track)
@@ -71,6 +72,9 @@ void World::update()
 void World::updateProbes()
 {
 	const float PROBE_DISTANCE = 10.0f;
+
+	// Probe for angle between car and track
+	m_carTrackAngleProbe.update(m_fDelta);
 
 	// Probe from the point in front of the car
 	m_track.setCurrentPosition(m_car.getPosition() + m_car.getDirection() * PROBE_DISTANCE);	// TODO: There's a bug with setting two points, track handles properly only one point

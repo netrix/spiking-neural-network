@@ -293,15 +293,15 @@ NLib::Math::NMVector2f Track::getDirectionOfTrack() const
 	}
 	else if(m_uCurrentPoint == 0)
 	{
-		return m_vPathPoints[1] - m_vPathPoints[0];
+		return NMVector2fNormalize(m_vPathPoints[1] - m_vPathPoints[0]);
 	}
 	else if(m_bIsPointCloser)
 	{
-		return m_vPathPoints[m_uCurrentPoint + 1] - m_vPathPoints[m_uCurrentPoint];
+		return NMVector2fNormalize(m_vPathPoints[m_uCurrentPoint + 1] - m_vPathPoints[m_uCurrentPoint]);
 	}
 	else
 	{
-		return m_currentPointOnTrack - m_vPathPoints[m_uCurrentPoint - 1];
+		return NMVector2fNormalize(m_currentPointOnTrack - m_vPathPoints[m_uCurrentPoint - 1]);
 	}
 }
 

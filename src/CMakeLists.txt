@@ -30,6 +30,8 @@ set(SIMULATION_PROBES_SOURCES
 	Simulation/Probes/IImpulseHandler.hpp
 	Simulation/Probes/LeftDistance.cpp
 	Simulation/Probes/LeftDistance.hpp
+	Simulation/Probes/TrackAngle.cpp
+	Simulation/Probes/TrackAngle.hpp
 	Simulation/Probes/TrackDistance.cpp
 	Simulation/Probes/TrackDistance.hpp
 )

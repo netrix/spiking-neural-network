@@ -12,6 +12,8 @@ set(PLOTS_SOURCES
 	Plots/PlotRenderer.hpp
 	Plots/ImpulsePlot.cpp
 	Plots/ImpulsePlot.hpp
+	Plots/ImpulsePlotBundle.cpp
+	Plots/ImpulsePlotBundle.hpp
 )
 
 set(SIMULATION_PHYSICS_SOURCES
@@ -47,6 +49,8 @@ set(SOURCES
 	NeuralConnection.cpp
 	NeuronInput.hpp
 	NeuronInput.cpp
+	PlotImpulseHandle.cpp
+	PlotImpulseHandle.hpp
 	SpikingNeuron.cpp
 	SpikingNeuron.hpp
 	TestEnvironment.hpp

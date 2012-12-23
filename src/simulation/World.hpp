@@ -30,9 +30,9 @@ public:
 	void update();
 
 	// Probes
-	void setCarTrackDistanceProbeAImpulseHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeA.setImpulseHandler(impulseHandler); }
-	void setCarTrackDistanceProbeBImpulseHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeB.setImpulseHandler(impulseHandler); }
-	void setLeftTrackDistanceProbeImpulseHandler(Probes::IImpulseHandler& impulseHandler)	{ m_leftTrackDistanceProbe.setImpulseHandler(impulseHandler); }
+	void setCarTrackDistanceProbeAHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeA.setImpulseHandler(impulseHandler); }
+	void setCarTrackDistanceProbeBHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeB.setImpulseHandler(impulseHandler); }
+	void setLeftDistanceProbeHandler(Probes::IImpulseHandler& impulseHandler)	{ m_leftTrackDistanceProbe.setImpulseHandler(impulseHandler); }
 
 private:
 	void updateProbes();

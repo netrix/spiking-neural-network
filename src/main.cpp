@@ -3,31 +3,15 @@
 #include <Box2D/Box2D.h>
 #include "SpikingNeuron.hpp"
 #include "Framework/Framework.hpp"
-#include "Plots/ImpulsePlot.hpp"
+#include "Plots/ImpulsePlotBundle.hpp"
 #include "Simulation/World.hpp"
+#include "PlotImpulseHandle.hpp"
 
 using namespace std;
 using namespace NLib::Math;
 
 const float WORLD_SCALE = 0.2f;
 const float STEP = 1.0f / 60.0f;
-
-
-class ImpulsePlotHandler 
-	: public Simulation::Probes::IImpulseHandler
-	, public Plots::ImpulsePlot
-{
-public:
-	ImpulsePlotHandler(Framework::Framework& framework, const NLib::Math::NMVector2f& position, const NLib::Math::NMVector2f& size)
-		: Plots::ImpulsePlot(framework, position, size)
-	{}
-
-	virtual void handleImpulse()
-	{
-		addImpulse();
-	}
-};
-
 
 
 int SDL_main(int argc, char* args[])
@@ -50,19 +34,25 @@ int SDL_main(int argc, char* args[])
 	car->setOffset(offset);
 	car->setSize(car->getSize() * WORLD_SCALE);
 
-	// Impulse plot
-	ImpulsePlotHandler plotA(framework, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f));
-	ImpulsePlotHandler plotB(framework, NMVector2fLoad(10.0f, 21.0f), NMVector2fLoad(75.0, 10.0f));
-	ImpulsePlotHandler plotDistance(framework, NMVector2fLoad(10.0f, 32.0f), NMVector2fLoad(75.0, 10.0f));
+	// Plots
+	Plots::ImpulsePlotBundle plotBundle(framework);
+
+	PlotImpulseHandlerAPtr plotCarTrackDistanceA(new PlotImpulseHandler(framework, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotCarTrackDistanceB(new PlotImpulseHandler(framework, NMVector2fLoad(10.0f, 21.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotLeftDistance(new PlotImpulseHandler(framework, NMVector2fLoad(10.0f, 32.0f), NMVector2fLoad(75.0, 10.0f)));
+
+	simulationWorld.setCarTrackDistanceProbeAHandler(*plotCarTrackDistanceA.get());
+	simulationWorld.setCarTrackDistanceProbeBHandler(*plotCarTrackDistanceB.get());
+	simulationWorld.setLeftDistanceProbeHandler(*plotLeftDistance.get());
+
+	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackDistanceA));
+	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackDistanceB));
+	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotLeftDistance));
 	
-
-	simulationWorld.setCarTrackDistanceProbeAImpulseHandler(plotA);
-	simulationWorld.setCarTrackDistanceProbeBImpulseHandler(plotB);
-	simulationWorld.setLeftTrackDistanceProbeImpulseHandler(plotDistance);
-
 	while(framework.update())
 	{
 		simulationWorld.draw(*car, *background);
+		plotBundle.draw();
 
 		// Adding new point to track
 		if(framework.isMouseButtonLeftClicked())
@@ -98,20 +88,7 @@ int SDL_main(int argc, char* args[])
 			simulationWorld.loadTrack("simple.txt");
 		}
 
-		//// Prober
-		//prober.update(framework.getTimeDelta());
-
 		//std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
-
-		// Plot
-		plotA.update(STEP);
-		plotA.draw();
-
-		plotB.update(STEP);
-		plotB.draw();
-
-		plotDistance.update(STEP);
-		plotDistance.draw();
 
 		if(framework.checkKeyDown(SDLK_w)) simulationWorld.moveForward();
 		if(framework.checkKeyDown(SDLK_s)) simulationWorld.moveBackward();
@@ -119,6 +96,7 @@ int SDL_main(int argc, char* args[])
 		if(framework.checkKeyDown(SDLK_a)) simulationWorld.turnRight();
 
 		simulationWorld.update();
+		plotBundle.update(STEP);
 
 		framework.flipScreen();
 	}

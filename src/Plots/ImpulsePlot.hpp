@@ -1,6 +1,7 @@
 #ifndef SNN_PLOTS_IMPULSEPLOT
 #define SNN_PLOTS_IMPULSEPLOT
 
+#include <memory>
 #include "PlotRenderer.hpp"
 
 namespace Plots {
@@ -10,6 +11,8 @@ class ImpulsePlot
 {
 public:
 	ImpulsePlot(Framework::Framework& framework, const NLib::Math::NMVector2f& position, const NLib::Math::NMVector2f& size);
+	
+	virtual ~ImpulsePlot()	{}
 
 	void addImpulse();
 
@@ -26,6 +29,8 @@ private:
 
 	PlotRenderer m_oglPlot;
 };
+
+typedef std::auto_ptr<ImpulsePlot> ImpulsePlotAPtr;
 
 } // Plots
 

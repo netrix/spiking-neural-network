@@ -6,6 +6,7 @@
 #include "Track.hpp"
 #include "Probes/TrackAngle.hpp"
 #include "Probes/TrackDistance.hpp"
+#include "Probes/TrackSide.hpp"
 #include "Probes/LeftDistance.hpp"
 
 namespace Simulation {
@@ -34,6 +35,7 @@ public:
 	void setCarTrackAngleProbeHandle(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackAngleProbe.setImpulseHandler(impulseHandler); }
 	void setCarTrackDistanceProbeAHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeA.setImpulseHandler(impulseHandler); }
 	void setCarTrackDistanceProbeBHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeB.setImpulseHandler(impulseHandler); }
+	void setCarTrackSideProbeHandle(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackSideProbe.setImpulseHandler(impulseHandler); }
 	void setLeftDistanceProbeHandler(Probes::IImpulseHandler& impulseHandler)		{ m_leftTrackDistanceProbe.setImpulseHandler(impulseHandler); }
 
 private:
@@ -56,6 +58,7 @@ private:
 	Probes::TrackAngle m_carTrackAngleProbe;		// Probe for angle between car and track.
 	Probes::TrackDistance m_carTrackDistanceProbeA;	// Probe from center of the car.
 	Probes::TrackDistance m_carTrackDistanceProbeB; // Probe from point in front of the car.
+	Probes::TrackSide m_carTrackSideProbe;			// Probe for side of track at which car is.
 	Probes::LeftDistance m_leftTrackDistanceProbe;	// Probe of the remaining distance.
 
 private:

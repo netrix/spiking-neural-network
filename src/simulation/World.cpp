@@ -15,6 +15,7 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	, m_carTrackAngleProbe(m_car, m_track)
 	, m_carTrackDistanceProbeA(m_track)
 	, m_carTrackDistanceProbeB(m_track)
+	, m_carTrackSideProbe(m_track)
 	, m_leftTrackDistanceProbe(m_track)
 {
 	b2Vec2 carPosition(126, 578);
@@ -83,6 +84,9 @@ void World::updateProbes()
 	// Probe from the point of car position
 	m_track.setCurrentPosition(m_car.getPosition());
 	m_carTrackDistanceProbeA.update(m_fDelta);
+
+	// Probe for side between car and track
+	m_carTrackSideProbe.update(m_fDelta);
 
 	// Distance left probe
 	m_leftTrackDistanceProbe.update(m_fDelta);

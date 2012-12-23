@@ -1,5 +1,5 @@
 #include "TrackAngle.hpp"
-#include <iostream>
+
 using namespace NLib::Math;
 
 namespace Simulation {
@@ -22,9 +22,6 @@ void TrackAngle::update(float fDelta)
 
 	const float ANGLE_SCALE = 10.0f;
 	float fAngle = acosf(NMVector2fDot(carDir, trackDir)) * ANGLE_SCALE;
-
-	std::cout << fAngle << std::endl;
-
 
 	if(m_fLastImpulse > (1.0f / fAngle))
 	{

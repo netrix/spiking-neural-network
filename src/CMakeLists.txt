@@ -34,6 +34,8 @@ set(SIMULATION_PROBES_SOURCES
 	Simulation/Probes/TrackAngle.hpp
 	Simulation/Probes/TrackDistance.cpp
 	Simulation/Probes/TrackDistance.hpp
+	Simulation/Probes/TrackSide.cpp
+	Simulation/Probes/TrackSide.hpp
 )
 
 set(SIMULATION_SOURCES

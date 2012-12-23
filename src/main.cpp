@@ -57,6 +57,8 @@ int SDL_main(int argc, char* args[])
 	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackAngle));
 	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackSide));
 	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarVelocity));
+
+	const Simulation::PassageEvaluator& evaluator = simulationWorld.getPassageEvaluator();
 	
 	while(framework.update())
 	{
@@ -95,9 +97,12 @@ int SDL_main(int argc, char* args[])
 		if(framework.checkKeyDown(SDLK_F9))
 		{
 			simulationWorld.loadTrack("simple.txt");
+			simulationWorld.startEvaluation();
 		}
 
 		//std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
+		std::cout << "Time: " << evaluator.getTime() << ", points: " << evaluator.getPoints() << std::endl;
+
 
 		if(framework.checkKeyDown(SDLK_w)) simulationWorld.moveForward();
 		if(framework.checkKeyDown(SDLK_s)) simulationWorld.moveBackward();

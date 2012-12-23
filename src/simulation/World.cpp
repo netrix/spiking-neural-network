@@ -18,6 +18,7 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	, m_carTrackDistanceProbeB(m_track)
 	, m_carTrackSideProbe(m_track)
 	, m_leftTrackDistanceProbe(m_track)
+	, m_passageEvaluator(m_track)
 {
 	b2Vec2 carPosition(126, 578);
 	NMVector2f trackStart = NMVector2fLoad(126, 600);
@@ -67,6 +68,7 @@ void World::update()
 	
 	physicsStep(1.0f / m_fDelta);
 	updateProbes();
+	m_passageEvaluator.update(m_fDelta);
 
 	m_iControlState = 0;
 }

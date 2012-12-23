@@ -4,6 +4,7 @@
 #include "Framework/Framework.hpp"
 #include "Physics/Car.hpp"
 #include "Track.hpp"
+#include "PassageEvaluator.hpp"
 #include "Probes/CarVelocity.hpp"
 #include "Probes/TrackAngle.hpp"
 #include "Probes/TrackDistance.hpp"
@@ -40,6 +41,10 @@ public:
 	void setCarTrackSideProbeHandle(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackSideProbe.setImpulseHandler(impulseHandler); }
 	void setLeftDistanceProbeHandler(Probes::IImpulseHandler& impulseHandler)		{ m_leftTrackDistanceProbe.setImpulseHandler(impulseHandler); }
 
+	void startEvaluation()	{ m_passageEvaluator.start(); }
+
+	const PassageEvaluator& getPassageEvaluator() const		{ return m_passageEvaluator; }
+
 private:
 	void updateProbes();
 
@@ -63,6 +68,8 @@ private:
 	Probes::TrackDistance m_carTrackDistanceProbeB; // Probe from point in front of the car.
 	Probes::TrackSide m_carTrackSideProbe;			// Probe for side of track at which car is.
 	Probes::LeftDistance m_leftTrackDistanceProbe;	// Probe of the remaining distance.
+
+	PassageEvaluator m_passageEvaluator;
 
 private:
 	static Physics::MyDestructionListener s_destructionListener;

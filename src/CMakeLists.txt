@@ -41,6 +41,8 @@ set(SIMULATION_PROBES_SOURCES
 )
 
 set(SIMULATION_SOURCES
+	Simulation/PassageEvaluator.cpp
+	Simulation/PassageEvaluator.hpp
 	Simulation/Track.cpp
 	Simulation/Track.hpp
 	Simulation/World.cpp

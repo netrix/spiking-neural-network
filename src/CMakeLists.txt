@@ -27,6 +27,8 @@ set(SIMULATION_PHYSICS_SOURCES
 )
 
 set(SIMULATION_PROBES_SOURCES
+	Simulation/Probes/CarVelocity.cpp
+	Simulation/Probes/CarVelocity.hpp
 	Simulation/Probes/IImpulseHandler.hpp
 	Simulation/Probes/LeftDistance.cpp
 	Simulation/Probes/LeftDistance.hpp

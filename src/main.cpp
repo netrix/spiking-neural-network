@@ -42,18 +42,21 @@ int SDL_main(int argc, char* args[])
 	PlotImpulseHandlerAPtr plotLeftDistance(new PlotImpulseHandler(framework, NMVector2fLoad(10.0f, 32.0f), NMVector2fLoad(75.0, 10.0f)));
 	PlotImpulseHandlerAPtr plotCarTrackAngle(new PlotImpulseHandler(framework, NMVector2fLoad(10.0f, 43.0f), NMVector2fLoad(75.0, 10.0f)));
 	PlotImpulseHandlerAPtr plotCarTrackSide(new PlotImpulseHandler(framework, NMVector2fLoad(10.0f, 54.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotCarVelocity(new PlotImpulseHandler(framework, NMVector2fLoad(10.0f, 65.0f), NMVector2fLoad(75.0, 10.0f)));
 
 	simulationWorld.setCarTrackDistanceProbeAHandler(*plotCarTrackDistanceA.get());
 	simulationWorld.setCarTrackDistanceProbeBHandler(*plotCarTrackDistanceB.get());
 	simulationWorld.setLeftDistanceProbeHandler(*plotLeftDistance.get());
-	simulationWorld.setCarTrackAngleProbeHandle(*plotCarTrackAngle.get());
+	simulationWorld.setCarTrackAngleProbeHandler(*plotCarTrackAngle.get());
 	simulationWorld.setCarTrackSideProbeHandle(*plotCarTrackSide.get());
+	simulationWorld.setCarVelocityProbeHandler(*plotCarVelocity.get());
 
 	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackDistanceA));
 	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackDistanceB));
 	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotLeftDistance));
 	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackAngle));
 	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackSide));
+	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarVelocity));
 	
 	while(framework.update())
 	{

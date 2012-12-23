@@ -4,6 +4,7 @@
 #include "Framework/Framework.hpp"
 #include "Physics/Car.hpp"
 #include "Track.hpp"
+#include "Probes/CarVelocity.hpp"
 #include "Probes/TrackAngle.hpp"
 #include "Probes/TrackDistance.hpp"
 #include "Probes/TrackSide.hpp"
@@ -32,7 +33,8 @@ public:
 	void update();
 
 	// Probes
-	void setCarTrackAngleProbeHandle(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackAngleProbe.setImpulseHandler(impulseHandler); }
+	void setCarVelocityProbeHandler(Probes::IImpulseHandler& impulseHandler)		{ m_carVelocityProbe.setImpulseHandler(impulseHandler); }
+	void setCarTrackAngleProbeHandler(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackAngleProbe.setImpulseHandler(impulseHandler); }
 	void setCarTrackDistanceProbeAHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeA.setImpulseHandler(impulseHandler); }
 	void setCarTrackDistanceProbeBHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeB.setImpulseHandler(impulseHandler); }
 	void setCarTrackSideProbeHandle(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackSideProbe.setImpulseHandler(impulseHandler); }
@@ -55,6 +57,7 @@ private:
 	Track m_track;
 
 	// Probes
+	Probes::CarVelocity m_carVelocityProbe;			// Probe for car velocity.
 	Probes::TrackAngle m_carTrackAngleProbe;		// Probe for angle between car and track.
 	Probes::TrackDistance m_carTrackDistanceProbeA;	// Probe from center of the car.
 	Probes::TrackDistance m_carTrackDistanceProbeB; // Probe from point in front of the car.

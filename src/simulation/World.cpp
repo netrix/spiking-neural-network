@@ -12,6 +12,7 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	, m_fDelta(fDelta)
 	, m_b2World(b2Vec2_zero)
 	, m_car(m_b2World)
+	, m_carVelocityProbe(m_car)
 	, m_carTrackAngleProbe(m_car, m_track)
 	, m_carTrackDistanceProbeA(m_track)
 	, m_carTrackDistanceProbeB(m_track)
@@ -73,6 +74,9 @@ void World::update()
 void World::updateProbes()
 {
 	const float PROBE_DISTANCE = 10.0f;
+
+	// Probe for car velocity
+	m_carVelocityProbe.update(m_fDelta);
 
 	// Probe for angle between car and track
 	m_carTrackAngleProbe.update(m_fDelta);

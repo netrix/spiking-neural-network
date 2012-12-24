@@ -20,6 +20,7 @@ public:
 	void setDrawScale(bool bDrawScale)							{ m_bDrawScale = bDrawScale; m_bNeedRecalculation = true; }
 
 	void drawImpulses(const FloatVector& times, const NLib::Math::NMVector2f& timeWindow);
+	void drawLines(const FloatVector& values, const NLib::Math::NMVector2f& minMax);
 
 private:
 	void drawBasics();
@@ -43,6 +44,8 @@ private:
 	NLib::Math::NMVector2f m_yAxisA, m_yAxisB;
 	float m_fScaleLengthX;
 	float m_fScaleLengthY;
+
+	NLib::Math::NMVector3f m_plotColor;
 };
 
 } // Plots

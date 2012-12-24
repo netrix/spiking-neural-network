@@ -14,6 +14,8 @@ set(PLOTS_SOURCES
 	Plots/ImpulsePlot.hpp
 	Plots/ImpulsePlotBundle.cpp
 	Plots/ImpulsePlotBundle.hpp
+	Plots/LinePlot.cpp
+	Plots/LinePlot.hpp
 )
 
 set(SIMULATION_PHYSICS_SOURCES

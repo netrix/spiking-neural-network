@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Framework/Framework.hpp"
 #include "Plots/ImpulsePlotBundle.hpp"
+#include "Plots/LinePlot.hpp"
 #include "Simulation/World.hpp"
 #include "PlotImpulseHandle.hpp"
 
@@ -79,12 +80,16 @@ int SDL_main(int argc, char* args[])
 
 	sn.setInputWeight(1, 5.0);
 	sn.setInputDecay(1, 5.0);
+
+	// Line plot
+	Plots::LinePlot linePlot(framework,  NMVector2fLoad(90.0f, 10.0f),  NMVector2fLoad(60.0f, 50.0f), 160);
 	
 	while(framework.update())
 	{
 		// Drawing
 		simulationWorld.draw(*car, *background);
 		plotBundle.draw();
+		linePlot.draw();
 
 		// Adding new point to track
 		if(framework.isMouseButtonLeftClicked())
@@ -144,6 +149,11 @@ int SDL_main(int argc, char* args[])
 			if(framework.checkKeyDown(SDLK_a)) simulationWorld.turnRight();
 
 			sn.update();
+
+
+			// Plot test
+			linePlot.pushValue(sn.getValue());
+			
 
 			simulationWorld.update();
 			plotBundle.update(STEP);

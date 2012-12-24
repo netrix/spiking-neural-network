@@ -13,6 +13,7 @@ PlotRenderer::PlotRenderer(const Framework::Framework& fw)
 	, m_fScaleLengthX(0.0f)
 	, m_fScaleLengthY(0.0f)
 {
+	m_plotColor = NMVector3fLoad(0.5f, 0.5f, 1.0f);
 }
 
 void PlotRenderer::drawImpulses(const FloatVector& times, const NLib::Math::NMVector2f& timeWindow)
@@ -34,7 +35,38 @@ void PlotRenderer::drawImpulses(const FloatVector& times, const NLib::Math::NMVe
 	{
 		float fOffset = (*it - timeWindow.x) * fScaleFactor;
 
-		m_framework.drawLine(impulseA + NMVector2fLoad(fOffset, 0.0f), impulseB + NMVector2fLoad(fOffset, 0.0f));
+		m_framework.drawLine(impulseA + NMVector2fLoad(fOffset, 0.0f), impulseB + NMVector2fLoad(fOffset, 0.0f), m_plotColor);
+	}
+}
+
+void PlotRenderer::drawLines(const FloatVector& values, const NLib::Math::NMVector2f& minMax)
+{
+	drawBasics();
+
+	float fMin = min(minMax.x, 0.0f);
+	float fStepX = m_fScaleLengthX / values.capacity();
+	float fStepY = m_fScaleLengthY / (minMax.y - fMin);
+
+	Framework::PointVector points;
+	points.reserve(values.size());
+
+	// Basic impulse points
+	for(NLib::NSize_t i = 0; i < values.size(); ++i)
+	{
+		float fX = fStepX * i + m_xAxisA.x;
+		float fY = m_xAxisA.y - (fStepY * (values[i] - fMin));
+
+		points.push_back(NMVector2fLoad(fX, fY));
+	}
+
+	if(fMin < 0.0f)
+	{
+		m_framework.drawLine(m_xAxisA + NMVector2fLoad(0.0f, fMin * fStepY), m_xAxisB + NMVector2fLoad(0.0f, fMin * fStepY));
+	}
+
+	if(!values.empty())
+	{
+		m_framework.drawLineStrip(points, m_plotColor);
 	}
 }
 

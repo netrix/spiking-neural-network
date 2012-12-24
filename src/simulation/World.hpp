@@ -19,6 +19,7 @@ class World
 public:
 	World(const Framework::Framework& framework, float fWorldScale, float fDelta);
 
+	void saveTrack(const std::string& filePath);
 	void loadTrack(const std::string& filePath);
 
 	Track&			getTrack()			{ return m_track; }

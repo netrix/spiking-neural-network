@@ -36,6 +36,11 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	m_track.setTrackWidth(fTrackWidth);
 }
 
+void World::saveTrack(const std::string& filePath)
+{
+	m_track.saveToFile(filePath);
+}
+
 void World::loadTrack(const std::string& filePath)
 {
 	m_track.loadFromFile(filePath);

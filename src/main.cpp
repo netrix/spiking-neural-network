@@ -1,11 +1,10 @@
 #include <iostream>
-#include <vector>
-#include <Box2D/Box2D.h>
-#include "SpikingNeuron.hpp"
 #include "Framework/Framework.hpp"
 #include "Plots/ImpulsePlotBundle.hpp"
 #include "Simulation/World.hpp"
 #include "PlotImpulseHandle.hpp"
+
+#include "SNN/SpikingNeuron.hpp"
 
 using namespace std;
 using namespace NLib::Math;
@@ -37,6 +36,8 @@ void setProbesUp(Framework::Framework& framework, Simulation::World& simulationW
 	plotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarVelocity));
 }
 
+//void saveTrack(
+
 int SDL_main(int argc, char* args[])
 {
 	// Setting up framework
@@ -65,6 +66,19 @@ int SDL_main(int argc, char* args[])
 	const Simulation::PassageEvaluator& evaluator = simulationWorld.getPassageEvaluator();
 	float fTime = 0.0f;
 	float fFixedTimer = 0.0f;
+
+	// Neural network
+	SNN::SpikingNeuron sn(2);
+	sn.setDecayTime(2.0);
+	sn.setRefraction(5.0);
+	sn.setThreshold(10.0);
+	sn.setStep(STEP);
+
+	sn.setInputWeight(0, -5.0);
+	sn.setInputDecay(0, 5.0);
+
+	sn.setInputWeight(1, 5.0);
+	sn.setInputDecay(1, 5.0);
 	
 	while(framework.update())
 	{
@@ -77,29 +91,31 @@ int SDL_main(int argc, char* args[])
 		{
 			NMVector2f mousePos = framework.getMouseCoords() * WORLD_SCALE;
 		
-			if(NMVector2fLength(simulationWorld.getTrack().getLastPoint() - mousePos) > 0.001f)
-			{
-				simulationWorld.getTrack().addPoint(mousePos);
-			}
+			//if(NMVector2fLength(simulationWorld.getTrack().getLastPoint() - mousePos) > 0.001f)
+			//{
+			//	simulationWorld.getTrack().addPoint(mousePos);
+			//}
+			sn.handleImpulse(0);
 		}
 		// Removing point from track or moving the first point somewhere else
 		else if(framework.isMouseButtonRightClicked())
 		{
-			if(simulationWorld.getTrack().getSize() == 1)
-			{
-				NMVector2f mousePos = framework.getMouseCoords() * WORLD_SCALE;
-				simulationWorld.getTrack().movePoint(0, mousePos);
-			}
-			else
-			{
-				simulationWorld.getTrack().popPoint();
-			}
+			//if(simulationWorld.getTrack().getSize() == 1)
+			//{
+			//	NMVector2f mousePos = framework.getMouseCoords() * WORLD_SCALE;
+			//	simulationWorld.getTrack().movePoint(0, mousePos);
+			//}
+			//else
+			//{
+			//	simulationWorld.getTrack().popPoint();
+			//}
+			sn.handleImpulse(1);
 		}
 
 		// Keys
 		if(framework.checkKeyDown(SDLK_F5))
 		{
-			simulationWorld.getTrack().saveToFile("simple.txt");
+			simulationWorld.saveTrack("simple.txt");
 		}
 		if(framework.checkKeyDown(SDLK_F9))
 		{
@@ -111,7 +127,8 @@ int SDL_main(int argc, char* args[])
 		fTime += framework.getTimeDelta();
 
 		//std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
-		std::cout << "Time: " << evaluator.getTime() << " or " << fTime << ", points: " << evaluator.getPoints() << std::endl;
+		//std::cout << "Time: " << evaluator.getTime() << " or " << fTime << ", points: " << evaluator.getPoints() << std::endl;
+		std::cout << sn.isImpulse() << std::endl;
 
 		fFixedTimer += framework.getTimeDelta();
 
@@ -125,6 +142,8 @@ int SDL_main(int argc, char* args[])
 			if(framework.checkKeyDown(SDLK_s)) simulationWorld.moveBackward();
 			if(framework.checkKeyDown(SDLK_d)) simulationWorld.turnLeft();
 			if(framework.checkKeyDown(SDLK_a)) simulationWorld.turnRight();
+
+			sn.update();
 
 			simulationWorld.update();
 			plotBundle.update(STEP);
@@ -164,11 +183,6 @@ int SDL_main(int argc, char* args[])
 	//	sn.process();
 	//	cout << sn.getValue() << endl;
 	//}
-
-	//iforce2d_TopdownCar testbed;
-	//testbed.
-
-	//SDL_S* pHelloSurface = null;
 
 	return 0;
 }

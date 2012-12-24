@@ -40,6 +40,16 @@ set(SIMULATION_PROBES_SOURCES
 	Simulation/Probes/TrackSide.hpp
 )
 
+set(SNN_SOURCES
+	SNN/Common.hpp
+	SNN/NeuralConnection.hpp
+	SNN/NeuralConnection.cpp
+	SNN/NeuronInput.hpp
+	SNN/NeuronInput.cpp
+	SNN/SpikingNeuron.cpp
+	SNN/SpikingNeuron.hpp
+)
+
 set(SIMULATION_SOURCES
 	Simulation/PassageEvaluator.cpp
 	Simulation/PassageEvaluator.hpp
@@ -50,17 +60,10 @@ set(SIMULATION_SOURCES
 )
 
 set(SOURCES
-	Common.hpp
 	Exceptions.hpp
 	main.cpp
-	NeuralConnection.hpp
-	NeuralConnection.cpp
-	NeuronInput.hpp
-	NeuronInput.cpp
 	PlotImpulseHandle.cpp
 	PlotImpulseHandle.hpp
-	SpikingNeuron.cpp
-	SpikingNeuron.hpp
 	TestEnvironment.hpp
 )
 
@@ -70,6 +73,7 @@ set(ALL_SOURCES
 	${SIMULATION_PHYSICS_SOURCES}
 	${SIMULATION_PROBES_SOURCES}
 	${SIMULATION_SOURCES}
+	${SNN_SOURCES}
 	${SOURCES}
 )
 
@@ -87,3 +91,4 @@ source_group(src\\Plots FILES ${PLOTS_SOURCES})
 source_group(src\\Simulation FILES ${SIMULATION_SOURCES})
 source_group(src\\Simulation\\Physics FILES ${SIMULATION_PHYSICS_SOURCES})
 source_group(src\\Simulation\\Probes FILES ${SIMULATION_PROBES_SOURCES})
+source_group(src\\SNN FILES ${SNN_SOURCES})

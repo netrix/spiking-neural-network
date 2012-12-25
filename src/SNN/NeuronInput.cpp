@@ -6,18 +6,28 @@ namespace SNN {
 NeuronInput::NeuronInput()
 	: m_fInputValue(0.0f)
 	, m_fValue(0.0f)
-	, m_fRelaxationFactor(0.0f)
+	, m_fValueRelaxation(0.0f)
+	, m_fInputRelaxation(0.0f)
 	, m_fWeight(0.0f)
 	, m_fStep(0.0f)
-	, m_fDecayTime(1.0f)
+	, m_fValueDecayTime(1.0f)
+	, m_fInputDecayTime(1.0f)
 {}
 
-void NeuronInput::setDecayTime(real fDecayTime)
+void NeuronInput::setInputDecayTime(real fInputDecayTime)
 { 
-	NAssert(fDecayTime > 0.0f, "Decay time must be > 0.0f");
-	m_fDecayTime = fDecayTime;
+	NAssert(fInputDecayTime > 0.0f, "Decay time must be > 0.0f");
+	m_fInputDecayTime = fInputDecayTime;
 
-	calculateRelaxationFactor();
+	m_fInputRelaxation = calculateRelaxationFactor(m_fStep, fInputDecayTime);
+}
+
+void NeuronInput::setValueDecayTime(real fValueDecayTime)
+{ 
+	NAssert(fValueDecayTime > 0.0f, "Decay time must be > 0.0f");
+	m_fValueDecayTime = fValueDecayTime;
+
+	m_fValueRelaxation = calculateRelaxationFactor(m_fStep, fValueDecayTime);
 }
 
 void NeuronInput::setStep(real fStep)
@@ -25,12 +35,8 @@ void NeuronInput::setStep(real fStep)
 	NAssert(fStep > 0.0f, "Step must be > 0.0f");
 
 	m_fStep = fStep;
-	calculateRelaxationFactor();
-}
-
-void NeuronInput::calculateRelaxationFactor()
-{
-	m_fRelaxationFactor = expDrop(m_fStep, m_fDecayTime);
+	m_fInputRelaxation = calculateRelaxationFactor(m_fStep, m_fInputDecayTime);
+	m_fValueRelaxation = calculateRelaxationFactor(m_fStep, m_fValueDecayTime);
 }
 
 void NeuronInput::handleImpulse()
@@ -42,25 +48,30 @@ void NeuronInput::update()
 {
 	NAssert(m_fStep > 0.0f, "Step must be > 0.0f");
 			
-	m_fValue = m_fWeight * m_fInputValue + m_fRelaxationFactor * m_fValue;
-	m_fInputValue = 0.0f;
+	m_fValue = m_fWeight * m_fInputValue + m_fValueRelaxation * m_fValue;
+	m_fInputValue *= m_fInputRelaxation; //0.0f;
 }
 
 NLib::NSize_t NeuronInput::getParametersCount()
 {
-	return 2;
+	return 3;
 }
 
 void NeuronInput::getParameters(real* opParameters)
 {
 	opParameters[0] = m_fWeight;
-	opParameters[1] = m_fDecayTime;
+	opParameters[1] = m_fInputDecayTime;
+	opParameters[2] = m_fValueDecayTime;
 }
 
 void NeuronInput::setParameters(const real* pParameters)
 {
 	m_fWeight = pParameters[0];
-	m_fDecayTime = pParameters[1];
+	m_fInputDecayTime = pParameters[1];
+	m_fValueDecayTime = pParameters[2];
+
+	m_fInputRelaxation = calculateRelaxationFactor(m_fStep, m_fInputDecayTime);
+	m_fValueRelaxation = calculateRelaxationFactor(m_fStep, m_fValueDecayTime);
 }
 
 } // SNN

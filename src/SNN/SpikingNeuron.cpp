@@ -4,20 +4,15 @@
 
 namespace SNN {
 
-	real m_fRelaxation;
-
-	real m_fRefraction;		// n_0
-	real m_fStep;
-	real m_fDecayTime;
-	real m_fThreshold;
-
 SpikingNeuron::SpikingNeuron(NLib::NSize_t uInputNum)
 	: m_aInputs(uInputNum)
 	, m_fValue(0.0f)
 	, m_fOutput(0.0f)
-	, m_fRelaxation(0.0f)
+	, m_fValueRelaxation(0.0f)
+	, m_fOutputRelaxation(0.0f)
 	, m_fStep(0.0f)
-	, m_fDecayTime(1.0f)
+	, m_fValueDecayTime(1.0f)
+	, m_fOutputDecayTime(1.0f)
 	, m_fThreshold(0.0)
 {
 }
@@ -29,12 +24,20 @@ void SpikingNeuron::handleImpulse(NLib::NSize_t uInput)
 	m_aInputs[uInput].handleImpulse();
 }
 
-void SpikingNeuron::setDecayTime(real fDecayTime)
+void SpikingNeuron::setOutputDecayTime(real fDecayTime)
 { 
 	NAssert(fDecayTime > 0.0f, "Decay time must be > 0.0f");
-	m_fDecayTime = fDecayTime;
+	m_fOutputDecayTime = fDecayTime;
 
-	calculateRelaxationFactor();
+	m_fOutputRelaxation = calculateRelaxationFactor(m_fStep, fDecayTime);
+}
+
+void SpikingNeuron::setValueDecayTime(real fDecayTime)
+{ 
+	NAssert(fDecayTime > 0.0f, "Decay time must be > 0.0f");
+	m_fValueDecayTime = fDecayTime;
+
+	m_fValueRelaxation = calculateRelaxationFactor(m_fStep, fDecayTime);
 }
 
 void SpikingNeuron::setStep(real fStep)
@@ -42,7 +45,9 @@ void SpikingNeuron::setStep(real fStep)
 	NAssert(fStep > 0.0f, "Step must be > 0.0f");
 
 	m_fStep = fStep;
-	calculateRelaxationFactor();
+
+	m_fOutputRelaxation = calculateRelaxationFactor(m_fStep, m_fOutputDecayTime);
+	m_fValueRelaxation = calculateRelaxationFactor(m_fStep, m_fValueDecayTime);
 
 	std::for_each(m_aInputs.begin(), m_aInputs.end(), [fStep](NeuronInput& input)
 	{
@@ -50,11 +55,10 @@ void SpikingNeuron::setStep(real fStep)
 	});
 }
 
-void SpikingNeuron::calculateRelaxationFactor()
-{
-	m_fRelaxation = expDrop(m_fStep, m_fDecayTime);
+void SpikingNeuron::setThreshold(real fThreshold)
+{ 
+	m_fThreshold = fThreshold; 
 }
-
 
 void SpikingNeuron::update()
 {
@@ -66,21 +70,23 @@ void SpikingNeuron::update()
 		fInputValue += input.getImpulseValue();
 	});
 
-	m_fValue = -(m_fRefraction * m_fOutput + m_fRelaxation * m_fValue + m_fThreshold) + fInputValue;
+	m_fValue = m_fValueRelaxation * m_fValue + fInputValue - m_fRefraction * m_fOutput - m_fThreshold;
+	m_fOutput *= m_fOutputRelaxation;
 
-	m_fOutput = m_fValue >= 0.0f ? 1.0f : 0.0f;
+	m_fOutput = m_fValue >= 0.0f ? 1.0f : m_fOutput;
 }
 
 NLib::NSize_t SpikingNeuron::getParametersCount() const
 {
-	return NeuronInput::getParametersCount() * m_aInputs.size() + 3;
+	return NeuronInput::getParametersCount() * m_aInputs.size() + 4;
 }
 
 void SpikingNeuron::getParameters(real* opParameters)
 {
-	opParameters[0] = m_fDecayTime;
-	opParameters[1] = m_fRefraction;
-	opParameters[2] = m_fThreshold; 
+	opParameters[0] = m_fOutputDecayTime;
+	opParameters[1] = m_fValueDecayTime;
+	opParameters[2] = m_fRefraction;
+	opParameters[3] = m_fThreshold; 
 
 	for(NLib::NSize_t i = 0; i < m_aInputs.size(); ++i)
 	{
@@ -90,9 +96,10 @@ void SpikingNeuron::getParameters(real* opParameters)
 
 void SpikingNeuron::setParameters(const real* pParameters)
 {
-	m_fDecayTime = pParameters[0];
-	m_fRefraction = pParameters[1];
-	m_fThreshold = pParameters[2]; 
+	m_fOutputDecayTime = pParameters[0];
+	m_fValueDecayTime = pParameters[1];
+	m_fRefraction = pParameters[2];
+	m_fThreshold = pParameters[3]; 
 
 	for(NLib::NSize_t i = 0; i < m_aInputs.size(); ++i)
 	{

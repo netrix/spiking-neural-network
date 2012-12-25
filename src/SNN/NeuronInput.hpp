@@ -18,8 +18,8 @@ public:
 	void setWeight(real fWeight)	{ m_fWeight = fWeight; }
 	real getWeight() const			{ return m_fWeight; }
 
-	void setDecayTime(real fDecayTime);	
-	real getDecayTime() const			{ return m_fDecayTime; }
+	void setValueDecayTime(real fValueDecayTime);
+	real getValueDecayTime() const					{ return m_fValueDecayTime; }
 
 	void setStep(real fStep);
 	real getStep() const			{ return m_fStep; }
@@ -31,16 +31,15 @@ public:
 	void setParameters(const real* pParameters);
 
 private:
-	void calculateRelaxationFactor();
-
-private:
 	real m_fInputValue;
 	real m_fValue;
-	real m_fRelaxationFactor;	// r_ij = exp(-T/tau), T - step, tau - decayTime.
+	real m_fValueRelaxation;	// r_ij = exp(-T/tau), T - step, tau - valueDecayTime.
+	real m_fInputRelaxation;	// r_ij = exp(-T/tau), T - step, tau - inputDecayTime.
 
 	real m_fWeight;				// w_ij
 	real m_fStep;
-	real m_fDecayTime;	
+	real m_fValueDecayTime;
+	real m_fInputDecayTime;
 };
 
 } // SNN

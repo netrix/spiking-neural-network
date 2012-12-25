@@ -25,19 +25,26 @@ public:
 	void setStep(real fStep);
 	real getStep() const					{ return m_fStep; }
 
-	void setDecayTime(real fDecayTime);
-	real getDecayTime() const				{ return m_fDecayTime; }
+	void setOutputDecayTime(real fValueDecayTime);
+	real getOutputDecayTime() const				{ return m_fOutputDecayTime; }
 
-	void setThreshold(real fThreshold)		{ m_fThreshold = fThreshold; }
+	void setValueDecayTime(real fValueDecayTime);
+	real getValueDecayTime() const				{ return m_fValueDecayTime; }
+
+	void setThreshold(real fThreshold);
 	real getThreshold() const				{ return m_fThreshold; }
 
 	void setInputWeight(NLib::NSize_t uInput, real fInputWeight)	{ m_aInputs[uInput].setWeight(fInputWeight); }
 	real getInputWeight(NLib::NSize_t uInput) const					{ return m_aInputs[uInput].getWeight(); }
 
-	void setInputDecay(NLib::NSize_t uInput, real fInputDecay)	{ m_aInputs[uInput].setDecayTime(fInputDecay); }
-	real getInputDecay(NLib::NSize_t uInput) const				{ return m_aInputs[uInput].getDecayTime(); }
+	void setInputInputDecay(NLib::NSize_t uInput, real fInputDecay)	{ m_aInputs[uInput].setInputDecayTime(fInputDecay); }
+	real getInputInputDecay(NLib::NSize_t uInput) const				{ return m_aInputs[uInput].getInputDecayTime(); }
 
-	real getValue() const		{ return m_fValue; }
+	void setInputValueDecay(NLib::NSize_t uInput, real fValueDecay)	{ m_aInputs[uInput].setValueDecayTime(fValueDecay); }
+	real getInputValueDecay(NLib::NSize_t uInput) const				{ return m_aInputs[uInput].getValueDecayTime(); }
+
+	real getValue() const							{ return m_fValue; }
+	real getInputValue(NLib::NSize_t uInput) const	{ return m_aInputs[uInput].getImpulseValue(); }
 
 	bool isImpulse() const		{ return m_fOutput == 1.0f; }
 
@@ -46,17 +53,16 @@ public:
 	void setParameters(const real* pParameters);
 
 private:
-	void calculateRelaxationFactor();
-
-private:
 	std::vector<NeuronInput> m_aInputs;
 	real m_fValue;
 	real m_fOutput;
-	real m_fRelaxation;
+	real m_fValueRelaxation;
+	real m_fOutputRelaxation;
 
 	real m_fRefraction;		// n_0
 	real m_fStep;
-	real m_fDecayTime;
+	real m_fValueDecayTime;
+	real m_fOutputDecayTime;
 	real m_fThreshold;
 };
 

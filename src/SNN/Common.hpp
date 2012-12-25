@@ -19,6 +19,11 @@ inline real expDrop(real fTime, real fDecayTime)
 	return exp(-fTime / fDecayTime);// * H(fTime);
 }
 
+inline real calculateRelaxationFactor(real fStep, real fDecayTime)
+{
+	return expDrop(fStep, fDecayTime);
+}
+
 } // SNN
 
 #endif // SNN_SNN_COMMON

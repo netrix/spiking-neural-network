@@ -34,12 +34,10 @@ private:
 	real m_fInputValue;
 	real m_fValue;
 	real m_fValueRelaxation;	// r_ij = exp(-T/tau), T - step, tau - valueDecayTime.
-	real m_fInputRelaxation;	// r_ij = exp(-T/tau), T - step, tau - inputDecayTime.
 
 	real m_fWeight;				// w_ij
 	real m_fStep;
 	real m_fValueDecayTime;
-	real m_fInputDecayTime;
 };
 
 } // SNN

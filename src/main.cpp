@@ -70,18 +70,16 @@ int SDL_main(int argc, char* args[])
 
 	// Neural network
 	SNN::SpikingNeuron sn(2);
-	sn.setOutputDecayTime(1.0f);
+	sn.setOutputDecayTime(10.0f);
 	sn.setValueDecayTime(30.0);
-	sn.setRefraction(30.0);
+	sn.setRefraction(10.0);
 	sn.setThreshold(0.5);
 	sn.setStep(1);
 
 	sn.setInputWeight(0, 0.4);
-	sn.setInputInputDecay(0, 0.01);
 	sn.setInputValueDecay(0, 10.0);
 
 	sn.setInputWeight(1, 0.4);
-	sn.setInputInputDecay(1, 5.0);
 	sn.setInputValueDecay(1, 5.0);
 
 	// Line plot

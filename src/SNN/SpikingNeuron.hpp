@@ -37,9 +37,6 @@ public:
 	void setInputWeight(NLib::NSize_t uInput, real fInputWeight)	{ m_aInputs[uInput].setWeight(fInputWeight); }
 	real getInputWeight(NLib::NSize_t uInput) const					{ return m_aInputs[uInput].getWeight(); }
 
-	void setInputInputDecay(NLib::NSize_t uInput, real fInputDecay)	{ m_aInputs[uInput].setInputDecayTime(fInputDecay); }
-	real getInputInputDecay(NLib::NSize_t uInput) const				{ return m_aInputs[uInput].getInputDecayTime(); }
-
 	void setInputValueDecay(NLib::NSize_t uInput, real fValueDecay)	{ m_aInputs[uInput].setValueDecayTime(fValueDecay); }
 	real getInputValueDecay(NLib::NSize_t uInput) const				{ return m_aInputs[uInput].getValueDecayTime(); }
 

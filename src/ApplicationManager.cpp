@@ -1,4 +1,5 @@
 #include "ApplicationManager.hpp"
+#include "PlotImpulseHandle.hpp"
 #include <iostream>
 
 using namespace NLib::Math;
@@ -27,6 +28,7 @@ ApplicationManager::ApplicationManager()
 	, m_fWorldScale(WORLD_SCALE)
 	, m_pApplicationController(null)
 	, m_currentTrackPath(SIMPLE_TRACK_PATH)
+	, m_impulsePlotBundle(m_framework)
 	, m_testWorld(m_framework, WORLD_SCALE, STEP)
 	, m_userController(m_framework, m_testWorld)
 {
@@ -52,6 +54,26 @@ void ApplicationManager::initSprites()
 
 void ApplicationManager::initPlots()
 {
+	PlotImpulseHandlerAPtr plotCarTrackDistanceA(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotCarTrackDistanceB(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 21.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotLeftDistance(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 32.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotCarTrackAngle(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 43.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotCarTrackSide(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 54.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotCarVelocity(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 65.0f), NMVector2fLoad(75.0, 10.0f)));
+
+	m_testWorld.setCarTrackDistanceProbeAHandler(*plotCarTrackDistanceA.get());
+	m_testWorld.setCarTrackDistanceProbeBHandler(*plotCarTrackDistanceB.get());
+	m_testWorld.setLeftDistanceProbeHandler(*plotLeftDistance.get());
+	m_testWorld.setCarTrackAngleProbeHandler(*plotCarTrackAngle.get());
+	m_testWorld.setCarTrackSideProbeHandle(*plotCarTrackSide.get());
+	m_testWorld.setCarVelocityProbeHandler(*plotCarVelocity.get());
+
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackDistanceA));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackDistanceB));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotLeftDistance));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackAngle));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackSide));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarVelocity));
 }
 
 void ApplicationManager::initWorld()
@@ -67,6 +89,12 @@ bool ApplicationManager::handleApplicationKeys()
 	bool bReturn = m_pApplicationController->handleKeys();
 
 	static bool sbEscape = false;
+	static bool sbP = false;
+
+	if(!sbP && m_framework.checkKeyDown(SDLK_p))
+	{
+		m_bShowPlots = !m_bShowPlots;
+	}
 
 	if(!bReturn)
 	{
@@ -85,6 +113,7 @@ bool ApplicationManager::handleApplicationKeys()
 		}
 	}
 	sbEscape = m_framework.checkKeyDown(SDLK_ESCAPE);
+	sbP = m_framework.checkKeyDown(SDLK_p);
 
 	return bReturn;
 }
@@ -146,6 +175,16 @@ void ApplicationManager::initController()
 		<< std::endl;
 }
 
+void ApplicationManager::draw()
+{
+	m_testWorld.draw(*m_carSprite, *m_backgroundSprite);
+
+	if(m_bShowPlots)
+	{
+		m_impulsePlotBundle.draw();
+	}
+}
+
 void ApplicationManager::run()
 {
 	initSprites();
@@ -159,7 +198,7 @@ void ApplicationManager::run()
 	while(m_pApplicationController != null && m_framework.update())
 	{
 		// Drawing
-		m_testWorld.draw(*m_carSprite, *m_backgroundSprite);
+		draw();
 
 		// Handling application keys
 		if(handleApplicationKeys())
@@ -180,6 +219,7 @@ void ApplicationManager::run()
 
 			// Update with fixed step
 			m_pApplicationController->fixedStepUpdate();
+			m_impulsePlotBundle.update(STEP);
 		}
 
 		m_framework.flipScreen();

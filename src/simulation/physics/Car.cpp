@@ -82,6 +82,16 @@ void Car::setTransform(const b2Vec2& pos, float fAngle)
 	}
 }
 
+void Car::stop()
+{
+	m_body->SetLinearVelocity(b2Vec2_zero);
+
+	for(int i = 0; i < m_tires.size(); ++i)
+	{
+		m_tires[i]->getBody()->SetLinearVelocity(b2Vec2_zero);
+	}
+}
+
 NLib::Math::NMVector2f Car::getPosition() const
 {
 	const b2Vec2& b2Position = m_body->GetWorldCenter();

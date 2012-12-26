@@ -56,6 +56,8 @@ private:
 private:
 	const Framework::Framework& m_framework;
 	const float m_fDelta;
+	const b2Vec2 m_carStartPosition;
+	const float m_carStartOrientation;
 
 	int m_iControlState;
 

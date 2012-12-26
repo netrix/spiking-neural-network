@@ -170,6 +170,12 @@ NLib::NSize_t Track::findClosestPointAround(NLib::NSize_t uIndex, const NMVector
 	return uMinIndex;
 }
 
+void Track::setCurrentPositionFromStart(const NLib::Math::NMVector2f& point)
+{
+	m_uCurrentPoint = 0;
+	setCurrentPosition(point);
+}
+
 void Track::setCurrentPosition(const NLib::Math::NMVector2f& point)
 {
 	m_currentPosition = point;

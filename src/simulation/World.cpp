@@ -10,6 +10,8 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	: m_framework(framework)
 	, m_iControlState(0)
 	, m_fDelta(fDelta)
+	, m_carStartPosition(126.0f * fWorldScale, 578.0f * fWorldScale)
+	, m_carStartOrientation(180.0f * DEGTORAD)
 	, m_b2World(b2Vec2_zero)
 	, m_car(m_b2World)
 	, m_carVelocityProbe(m_car)
@@ -20,20 +22,18 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	, m_leftTrackDistanceProbe(m_track)
 	, m_passageEvaluator(m_track)
 {
-	b2Vec2 carPosition(126, 578);
 	NMVector2f trackStart = NMVector2fLoad(126, 600);
 	float fTrackWidth = 10.0f;
 
 	m_b2World.SetDestructionListener(&s_destructionListener);
 	m_b2World.SetDebugDraw(&m_framework.getDebugDraw());
 
-	// Start position of car
-	carPosition *= fWorldScale;
-	m_car.setTransform(carPosition, 180.0f * DEGTORAD);
-
 	// Track setup
 	m_track.addPoint(trackStart * fWorldScale);
 	m_track.setTrackWidth(fTrackWidth);
+
+	// Start position of car
+	resetCar();
 }
 
 void World::saveTrack(const std::string& filePath)
@@ -48,6 +48,9 @@ void World::loadTrack(const std::string& filePath)
 
 void World::resetCar()
 {
+	m_car.setTransform(m_carStartPosition, m_carStartOrientation);
+	m_car.stop();
+	m_track.setCurrentPositionFromStart(m_car.getPosition());
 }
 
 void World::draw(Framework::Sprite& carSprite, Framework::Sprite& backgroundSprite) const

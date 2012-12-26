@@ -55,12 +55,6 @@ public:
 private:
 };
 
-class UserController
-{
-public:
-private:
-};
-
 
 int SDL_main(int argc, char* args[])
 {

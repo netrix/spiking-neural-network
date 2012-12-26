@@ -70,6 +70,7 @@ set(SOURCES
 	ApplicationManager.cpp
 	ApplicationManager.hpp
 	Exceptions.hpp
+	IApplicationController.hpp
 	main.cpp
 	PlotImpulseHandle.cpp
 	PlotImpulseHandle.hpp

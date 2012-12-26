@@ -28,6 +28,8 @@ public:
 
 	void setTransform(const b2Vec2& pos, float fAngle= 0.0f);
 
+	void stop();
+
 	NLib::Math::NMVector2f getPosition() const;
 
 	NLib::Math::NMVector2f getDirection() const;

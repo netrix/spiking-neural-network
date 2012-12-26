@@ -141,8 +141,8 @@ void Tire::updateTurn(int controlState)
 	float desiredTorque = 0;
 	switch ( controlState & (TDC_LEFT|TDC_RIGHT) ) 
 	{
-		case TDC_LEFT:  desiredTorque = 15;  break;
-		case TDC_RIGHT: desiredTorque = -15; break;
+		case TDC_RIGHT:  desiredTorque = 15;  break;
+		case TDC_LEFT: desiredTorque = -15; break;
 		default: ;//nothing
 	}
 	m_body->ApplyTorque( desiredTorque, true);

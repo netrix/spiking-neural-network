@@ -122,10 +122,10 @@ void Car::update(int controlState)
 	float desiredAngle = 0;
 	switch ( controlState & (TDC_LEFT|TDC_RIGHT) ) 
 	{
-	case TDC_LEFT:  
+	case TDC_RIGHT:  
 		desiredAngle = lockAngle;  
 		break;
-	case TDC_RIGHT: 
+	case TDC_LEFT: 
 		desiredAngle = -lockAngle; 
 		break;
 	default: ;//nothing

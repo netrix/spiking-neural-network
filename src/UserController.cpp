@@ -41,10 +41,10 @@ bool UserController::handleKeys()
 
 void UserController::fixedStepUpdate()
 {
-	if(m_framework.checkKeyDown(SDLK_w)) m_world.moveForward();
-	if(m_framework.checkKeyDown(SDLK_s)) m_world.moveBackward();
-	if(m_framework.checkKeyDown(SDLK_d)) m_world.turnLeft();
-	if(m_framework.checkKeyDown(SDLK_a)) m_world.turnRight();
+	if(m_framework.checkKeyDown(SDLK_UP)) m_world.moveForward();
+	if(m_framework.checkKeyDown(SDLK_DOWN)) m_world.moveBackward();
+	if(m_framework.checkKeyDown(SDLK_LEFT)) m_world.turnLeft();
+	if(m_framework.checkKeyDown(SDLK_RIGHT)) m_world.turnRight();
 
 	m_world.update();
 }

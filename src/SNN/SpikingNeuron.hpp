@@ -1,6 +1,7 @@
 #ifndef SNN_SNN_SPIKINGNEURON
 #define SNN_SNN_SPIKINGNEURON
 
+#include <memory>
 #include <vector>
 #include <NLib/Base/nBase.hpp>
 #include <NLib/Base/nNonCopyable.hpp>
@@ -62,6 +63,8 @@ private:
 	real m_fOutputDecayTime;
 	real m_fThreshold;
 };
+
+typedef std::auto_ptr<SpikingNeuron> SpikingNeuronAPtr;
 
 } // SNN
 

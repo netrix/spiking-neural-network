@@ -53,6 +53,8 @@ set(SNN_SOURCES
 	SNN/NeuralConnection.cpp
 	SNN/NeuronInput.hpp
 	SNN/NeuronInput.cpp
+	SNN/SpikingNetwork.cpp
+	SNN/SpikingNetwork.hpp
 	SNN/SpikingNeuron.cpp
 	SNN/SpikingNeuron.hpp
 )
@@ -72,8 +74,10 @@ set(SOURCES
 	Exceptions.hpp
 	IApplicationController.hpp
 	main.cpp
-	PlotImpulseHandle.cpp
-	PlotImpulseHandle.hpp
+	NeuronImpulseHandler.cpp
+	NeuronImpulseHandler.hpp
+	PlotImpulseHandlerProxy.cpp
+	PlotImpulseHandlerProxy.hpp
 	UserController.cpp
 	UserController.hpp
 	TestEnvironment.hpp

@@ -6,29 +6,6 @@ int SDL_main(int argc, char* args[])
 	ApplicationManager app;
 	app.run();
 
-	//// Setting up framework
-	//Framework::FrameworkSettings settings = { 800, 600, 32 };
-	//Framework::Framework framework(settings, WORLD_SCALE);
-	//framework.setDebugDraw(true);
-
-	//// Setting up simulation world
-	//Simulation::World simulationWorld(framework, WORLD_SCALE, STEP);
-
-	//// Images
-	//Framework::SpriteAPtr car = framework.createSprite("../../data/car.png");
-	//Framework::SpriteAPtr background = framework.createSprite("../../data/background.png");
-
-	//NMVector2f backgroundSize = { 800 * WORLD_SCALE, 600 * WORLD_SCALE};
-	//background->setSize(backgroundSize);
-
-	//NMVector2f offset = -car->getSize() * 0.1f;
-	//car->setOffset(offset);
-	//car->setSize(car->getSize() * WORLD_SCALE);
-
-	//// Plots
-	//Plots::ImpulsePlotBundle plotBundle(framework);	
-	//setProbesUp(framework, simulationWorld, plotBundle);
-
 	//const Simulation::PassageEvaluator& evaluator = simulationWorld.getPassageEvaluator();
 	//float fTime = 0.0f;
 	//float fFixedTimer = 0.0f;

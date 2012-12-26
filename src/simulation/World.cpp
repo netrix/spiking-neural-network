@@ -46,6 +46,10 @@ void World::loadTrack(const std::string& filePath)
 	m_track.loadFromFile(filePath);
 }
 
+void World::resetCar()
+{
+}
+
 void World::draw(Framework::Sprite& carSprite, Framework::Sprite& backgroundSprite) const
 {
 	b2Vec2 physCarPos = m_car.getBody()->GetWorldCenter();

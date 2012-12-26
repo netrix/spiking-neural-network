@@ -22,6 +22,8 @@ public:
 	void saveTrack(const std::string& filePath);
 	void loadTrack(const std::string& filePath);
 
+	void resetCar();
+
 	Track&			getTrack()			{ return m_track; }
 	const Track&	getTrack() const	{ return m_track; }
 		

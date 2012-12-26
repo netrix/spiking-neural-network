@@ -1,3 +1,8 @@
+set(DE_SOURCES
+	DE/DifferentialEvolution.cpp
+	DE/DifferentialEvolution.hpp
+)
+
 set(FRAMEWORK_SOURCES
 	Framework/Framework.cpp
 	Framework/Framework.hpp
@@ -62,14 +67,19 @@ set(SIMULATION_SOURCES
 )
 
 set(SOURCES
+	ApplicationManager.cpp
+	ApplicationManager.hpp
 	Exceptions.hpp
 	main.cpp
 	PlotImpulseHandle.cpp
 	PlotImpulseHandle.hpp
+	UserController.cpp
+	UserController.hpp
 	TestEnvironment.hpp
 )
 
 set(ALL_SOURCES
+	${DE_SOURCES}
 	${FRAMEWORK_SOURCES}
 	${PLOTS_SOURCES}
 	${SIMULATION_PHYSICS_SOURCES}
@@ -88,6 +98,7 @@ target_link_libraries(${NAME} Box2D)
 
 # For Visual Studio
 source_group(src FILES ${SOURCES})
+source_group(src\\DE FILES ${DE_SOURCES})
 source_group(src\\Framework FILES ${FRAMEWORK_SOURCES})
 source_group(src\\Plots FILES ${PLOTS_SOURCES})
 source_group(src\\Simulation FILES ${SIMULATION_SOURCES})

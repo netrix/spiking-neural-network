@@ -64,6 +64,11 @@ Framework::~Framework()
 	SDL_Quit();
 }
 
+void Framework::setWindowTitle(const std::string& text)
+{
+	SDL_WM_SetCaption(text.c_str(), null);
+}
+
 void Framework::drawSprite(float x, float y, float fAngle, Sprite& sprite) const
 {
 	NMVector2f size = sprite.getSize();
@@ -262,14 +267,7 @@ bool Framework::update()
 
 	if(SDL_PollEvent(&m_event))
 	{
-		if(m_event.type == SDL_KEYDOWN)
-		{
-			if(m_event.key.keysym.sym == SDLK_ESCAPE)
-			{
-				return false;
-			}
-		}
-		else if(m_event.type == SDL_QUIT)
+		if(m_event.type == SDL_QUIT)
 		{
 			return false;
 		}

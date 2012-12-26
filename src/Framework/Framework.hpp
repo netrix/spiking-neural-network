@@ -39,6 +39,8 @@ public:
 	Framework(const FrameworkSettings& settings, float fWorldScale);
 	~Framework();
 
+	void setWindowTitle(const std::string& text);
+
 	// Time
 	float getTimeDelta() const	{ return m_fDelta; }
 

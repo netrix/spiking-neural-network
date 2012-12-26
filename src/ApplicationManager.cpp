@@ -60,6 +60,10 @@ void ApplicationManager::initPlots()
 	PlotImpulseHandlerAPtr plotCarTrackAngle(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 43.0f), NMVector2fLoad(75.0, 10.0f)));
 	PlotImpulseHandlerAPtr plotCarTrackSide(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 54.0f), NMVector2fLoad(75.0, 10.0f)));
 	PlotImpulseHandlerAPtr plotCarVelocity(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 65.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotInputForward(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 78.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotInputBackward(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 89.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotInputLeft(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 100.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerAPtr plotInputRight(new PlotImpulseHandler(m_framework, NMVector2fLoad(10.0f, 111.0f), NMVector2fLoad(75.0, 10.0f)));
 
 	m_testWorld.setCarTrackDistanceProbeAHandler(*plotCarTrackDistanceA.get());
 	m_testWorld.setCarTrackDistanceProbeBHandler(*plotCarTrackDistanceB.get());
@@ -67,6 +71,10 @@ void ApplicationManager::initPlots()
 	m_testWorld.setCarTrackAngleProbeHandler(*plotCarTrackAngle.get());
 	m_testWorld.setCarTrackSideProbeHandle(*plotCarTrackSide.get());
 	m_testWorld.setCarVelocityProbeHandler(*plotCarVelocity.get());
+	m_testWorld.setForwardImpulseHandler(*plotInputForward.get());
+	m_testWorld.setBackwardImpulseHandler(*plotInputBackward.get());
+	m_testWorld.setLeftImpulseHandler(*plotInputLeft.get());
+	m_testWorld.setRightImpulseHandler(*plotInputRight.get());
 
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackDistanceA));
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackDistanceB));
@@ -74,6 +82,10 @@ void ApplicationManager::initPlots()
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackAngle));
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackSide));
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarVelocity));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotInputForward));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotInputBackward));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotInputLeft));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotInputRight));
 }
 
 void ApplicationManager::initWorld()

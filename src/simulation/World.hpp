@@ -29,10 +29,10 @@ public:
 		
 	void draw(Framework::Sprite& carSprite, Framework::Sprite& backgroundSprite) const;
 
-	void moveForward()	{ m_iControlState |= Physics::TDC_UP; }
-	void moveBackward()	{ m_iControlState |= Physics::TDC_DOWN; }
-	void turnLeft()		{ m_iControlState |= Physics::TDC_LEFT; }
-	void turnRight()	{ m_iControlState |= Physics::TDC_RIGHT; }
+	void moveForward();
+	void moveBackward();
+	void turnLeft();
+	void turnRight();
 
 	void update();
 
@@ -44,6 +44,11 @@ public:
 	void setCarTrackSideProbeHandle(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackSideProbe.setImpulseHandler(impulseHandler); }
 	void setLeftDistanceProbeHandler(Probes::IImpulseHandler& impulseHandler)		{ m_leftTrackDistanceProbe.setImpulseHandler(impulseHandler); }
 
+	void setForwardImpulseHandler(Probes::IImpulseHandler& impulseHandler)		{ m_forwardImpulseHandler = &impulseHandler; }
+	void setBackwardImpulseHandler(Probes::IImpulseHandler& impulseHandler)		{ m_backwardImpulseHandler = &impulseHandler; }
+	void setLeftImpulseHandler(Probes::IImpulseHandler& impulseHandler)			{ m_leftImpulseHandler = &impulseHandler; }
+	void setRightImpulseHandler(Probes::IImpulseHandler& impulseHandler)		{ m_rightImpulseHandler = &impulseHandler; }
+
 	void startEvaluation()	{ m_passageEvaluator.start(); }
 
 	const PassageEvaluator& getPassageEvaluator() const		{ return m_passageEvaluator; }
@@ -52,6 +57,8 @@ private:
 	void updateProbes();
 
 	void physicsStep(float hz);
+
+	void sendImpulse(Probes::IImpulseHandler* impulseHandler);
 
 private:
 	const Framework::Framework& m_framework;
@@ -73,6 +80,12 @@ private:
 	Probes::TrackDistance m_carTrackDistanceProbeB; // Probe from point in front of the car.
 	Probes::TrackSide m_carTrackSideProbe;			// Probe for side of track at which car is.
 	Probes::LeftDistance m_leftTrackDistanceProbe;	// Probe of the remaining distance.
+
+	// Input impulse handlers
+	Probes::IImpulseHandler* m_forwardImpulseHandler;
+	Probes::IImpulseHandler* m_backwardImpulseHandler;
+	Probes::IImpulseHandler* m_leftImpulseHandler;
+	Probes::IImpulseHandler* m_rightImpulseHandler;
 
 	PassageEvaluator m_passageEvaluator;
 

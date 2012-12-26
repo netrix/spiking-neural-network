@@ -20,6 +20,11 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	, m_carTrackDistanceProbeB(m_track)
 	, m_carTrackSideProbe(m_track)
 	, m_leftTrackDistanceProbe(m_track)
+	, m_forwardImpulseHandler(null)
+	, m_backwardImpulseHandler(null)
+	, m_leftImpulseHandler(null)
+	, m_rightImpulseHandler(null)
+
 	, m_passageEvaluator(m_track)
 {
 	NMVector2f trackStart = NMVector2fLoad(126, 600);
@@ -83,6 +88,38 @@ void World::update()
 	m_passageEvaluator.update(m_fDelta);
 
 	m_iControlState = 0;
+}
+
+void World::sendImpulse(Probes::IImpulseHandler* impulseHandler)
+{
+	if(impulseHandler != null)
+	{
+		impulseHandler->handleImpulse();
+	}
+}
+
+void World::moveForward()	
+{
+	m_iControlState |= Physics::TDC_UP; 
+	sendImpulse(m_forwardImpulseHandler);
+}
+
+void World::moveBackward()	
+{ 
+	m_iControlState |= Physics::TDC_DOWN; 
+	sendImpulse(m_backwardImpulseHandler);
+}
+
+void World::turnLeft()		
+{
+	m_iControlState |= Physics::TDC_LEFT; 
+	sendImpulse(m_leftImpulseHandler);
+}
+
+void World::turnRight()	
+{ 
+	m_iControlState |= Physics::TDC_RIGHT; 
+	sendImpulse(m_rightImpulseHandler);
 }
 
 void World::updateProbes()

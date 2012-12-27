@@ -34,6 +34,8 @@ set(SIMULATION_PHYSICS_SOURCES
 )
 
 set(SIMULATION_PROBES_SOURCES
+	Simulation/Probes/BaseProbe.cpp
+	Simulation/Probes/BaseProbe.hpp
 	Simulation/Probes/CarVelocity.cpp
 	Simulation/Probes/CarVelocity.hpp
 	Simulation/Probes/IImpulseHandler.hpp

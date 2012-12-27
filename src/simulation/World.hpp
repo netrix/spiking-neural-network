@@ -44,6 +44,13 @@ public:
 	void setCarTrackSideProbeHandle(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackSideProbe.setImpulseHandler(impulseHandler); }
 	void setLeftDistanceProbeHandler(Probes::IImpulseHandler& impulseHandler)		{ m_leftTrackDistanceProbe.setImpulseHandler(impulseHandler); }
 
+	Probes::IImpulseHandler& getCarVelocityProbeHandler()			{ return m_carVelocityProbe.getImpulseHandler(); }
+	Probes::IImpulseHandler& getCarTrackAngleProbeHandler()			{ return m_carTrackAngleProbe.getImpulseHandler(); }
+	Probes::IImpulseHandler& getCarTrackDistanceProbeAHandler()		{ return m_carTrackDistanceProbeA.getImpulseHandler(); }
+	Probes::IImpulseHandler& getCarTrackDistanceProbeBHandler()		{ return m_carTrackDistanceProbeB.getImpulseHandler(); }
+	Probes::IImpulseHandler& getCarTrackSideProbeHandle()			{ return m_carTrackSideProbe.getImpulseHandler(); }
+	Probes::IImpulseHandler& getLeftDistanceProbeHandler()			{ return m_leftTrackDistanceProbe.getImpulseHandler(); }
+
 	void setForwardImpulseHandler(Probes::IImpulseHandler& impulseHandler)		{ m_forwardImpulseHandler = &impulseHandler; }
 	void setBackwardImpulseHandler(Probes::IImpulseHandler& impulseHandler)		{ m_backwardImpulseHandler = &impulseHandler; }
 	void setLeftImpulseHandler(Probes::IImpulseHandler& impulseHandler)			{ m_leftImpulseHandler = &impulseHandler; }

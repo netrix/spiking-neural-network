@@ -1,8 +1,7 @@
 #ifndef SNN_SIMULATION_PROBES_TRACKSIDE
 #define SNN_SIMULATION_PROBES_TRACKSIDE
 
-#include <NLib/Base/nNonCopyable.hpp>
-#include "IImpulseHandler.hpp"
+#include "BaseProbe.hpp"
 #include "Simulation/Track.hpp"
 
 namespace Simulation {
@@ -13,19 +12,15 @@ namespace Probes {
  * It generates an impulse with 10 Hz if car is on the left side and 100 Hz when car is on the right side.
  */
 class TrackSide
-	: NLib::NNonCopyable
+	: public BaseProbe
 {
 public:
 	TrackSide(Track& track);
 
-	void setImpulseHandler(IImpulseHandler& impulseHandler)		{ m_pImpulseHandler = &impulseHandler; }
-
-	void update(float fDelta);
+	virtual void update(float fDelta);
 
 private:
 	Track& m_track;
-	IImpulseHandler* m_pImpulseHandler;
-	float m_fLastImpulse;
 };
 
 } // Probes

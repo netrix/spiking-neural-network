@@ -4,17 +4,23 @@
 
 namespace SNN {
 
-SpikingNeuron::SpikingNeuron(NLib::NSize_t uInputNum)
+SpikingNeuron::SpikingNeuron(NLib::NSize_t uInputNum, real fStep)
 	: m_aInputs(uInputNum)
+	, m_fStep(fStep)
 	, m_fValue(0.0f)
 	, m_fOutput(0.0f)
 	, m_fValueRelaxation(0.0f)
 	, m_fOutputRelaxation(0.0f)
-	, m_fStep(0.0f)
 	, m_fValueDecayTime(1.0f)
 	, m_fOutputDecayTime(1.0f)
 	, m_fThreshold(0.0)
 {
+	NAssert(fStep > 0.0f, "Step must be > 0.0f");
+
+	std::for_each(m_aInputs.begin(), m_aInputs.end(), [fStep](NeuronInput& input)
+	{
+		input.setStep(fStep);
+	});
 }
 
 void SpikingNeuron::handleImpulse(NLib::NSize_t uInput)
@@ -38,21 +44,6 @@ void SpikingNeuron::setValueDecayTime(real fDecayTime)
 	m_fValueDecayTime = fDecayTime;
 
 	m_fValueRelaxation = calculateRelaxationFactor(m_fStep, fDecayTime);
-}
-
-void SpikingNeuron::setStep(real fStep)
-{
-	NAssert(fStep > 0.0f, "Step must be > 0.0f");
-
-	m_fStep = fStep;
-
-	m_fOutputRelaxation = calculateRelaxationFactor(m_fStep, m_fOutputDecayTime);
-	m_fValueRelaxation = calculateRelaxationFactor(m_fStep, m_fValueDecayTime);
-
-	std::for_each(m_aInputs.begin(), m_aInputs.end(), [fStep](NeuronInput& input)
-	{
-		input.setStep(fStep);
-	});
 }
 
 void SpikingNeuron::setThreshold(real fThreshold)

@@ -18,9 +18,12 @@ const float WORLD_SCALE = 0.2f;
 const std::string CAR_SPRITE_IMAGE_PATH = "../../data/car.png";
 const std::string BACKGROUND_SPRITE_IMAGE_PATH = "../../data/background.png";
 
-// Trakcs
+// Tracks
 const std::string SIMPLE_TRACK_PATH = "../../data/simple_track.txt";
 const std::string COMPLEX_TRACK_PATH = "../../data/complex_track.txt";
+
+// Neural network
+const NSize_t NETWORK_SIZE = 4;
 
 }
 
@@ -31,7 +34,7 @@ ApplicationManager::ApplicationManager()
 	, m_currentTrackPath(SIMPLE_TRACK_PATH)
 	, m_impulsePlotBundle(m_framework)
 	, m_testWorld(m_framework, WORLD_SCALE, STEP)
-	, m_spikingNetwork(STEP)								// TODO: CHANGE IT TO 1.0f (if not working of course)
+	, m_spikingNetwork(NETWORK_SIZE, NEURON_INPUT_COUNT, STEP)								// TODO: CHANGE STEP TO 1.0f (if not working of course)
 	, m_userController(m_framework, m_testWorld)
 {
 	m_framework.setDebugDraw(true);

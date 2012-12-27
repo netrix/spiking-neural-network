@@ -12,14 +12,16 @@ class SpikingNetwork
 	: NLib::NNonCopyable
 {
 public:
-	SpikingNetwork(real fStep);
+	SpikingNetwork(NLib::NSize_t uNeuronNum, NLib::NSize_t uInputNum, real fStep);
 	~SpikingNetwork();
-
-	void addNeuron(SpikingNeuronAPtr neuron);
 
 	void handleImpulse(NLib::NSize_t uIndex);
 
 	void update();
+
+	NLib::NSize_t getParametersCount() const;
+	void getParameters(real* opParameters);
+	void setParameters(const real* pParameters);
 
 private:
 	const real m_fStep;

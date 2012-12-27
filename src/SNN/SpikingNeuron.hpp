@@ -14,7 +14,7 @@ class SpikingNeuron
 	: NLib::NNonCopyable
 {
 public:
-	SpikingNeuron(NLib::NSize_t uInputNum);
+	SpikingNeuron(NLib::NSize_t uInputNum, real fStep);
 
 	void handleImpulse(NLib::NSize_t uInput);
 
@@ -23,7 +23,6 @@ public:
 	void setRefraction(real fRefraction)	{ m_fRefraction = fRefraction; }
 	real getRefraction() const				{ return m_fRefraction; }
 
-	void setStep(real fStep);
 	real getStep() const					{ return m_fStep; }
 
 	void setOutputDecayTime(real fValueDecayTime);
@@ -52,13 +51,13 @@ public:
 
 private:
 	std::vector<NeuronInput> m_aInputs;
+	const real m_fStep;
 	real m_fValue;
 	real m_fOutput;
 	real m_fValueRelaxation;
 	real m_fOutputRelaxation;
 
 	real m_fRefraction;		// n_0
-	real m_fStep;
 	real m_fValueDecayTime;
 	real m_fOutputDecayTime;
 	real m_fThreshold;

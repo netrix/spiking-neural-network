@@ -1,10 +1,13 @@
 #ifndef SNN_APPLICATIONMANAGER
 #define SNN_APPLICATIONMANAGER
 
+#include <array>
 #include <NLib/Base/nNonCopyable.hpp>
 #include "Plots/ImpulsePlotBundle.hpp"
 #include "Framework/Framework.hpp"
 #include "Simulation/World.hpp"
+#include "SNN/SpikingNetwork.hpp"
+#include "NeuronImpulseHandler.hpp"
 
 #include "IApplicationController.hpp"
 #include "UserController.hpp"
@@ -13,13 +16,17 @@ class ApplicationManager
 	: public IApplicationController
 	, NLib::NNonCopyable
 {
+	static const NLib::NSize_t NEURON_INPUT_COUNT = 6;
+
 public:
 	ApplicationManager();
+	~ApplicationManager();
 
 	void run();
 
 private:
 	void initSprites();
+	void initSpikingNetwork();
 	void initPlots();
 	void initWorld();
 
@@ -45,6 +52,9 @@ private:
 
 	Plots::ImpulsePlotBundle	m_impulsePlotBundle;
 	Simulation::World			m_testWorld;
+	SNN::SpikingNetwork			m_spikingNetwork;
+	
+	std::array<NeuronImpulseHandler*, NEURON_INPUT_COUNT> m_aNeuronImpulseHandlers;
 
 	UserController				m_userController;
 };

@@ -2,6 +2,7 @@
 #include "PlotImpulseHandlerProxy.hpp"
 #include <iostream>
 
+using namespace NLib;
 using namespace NLib::Math;
 
 namespace {
@@ -30,9 +31,23 @@ ApplicationManager::ApplicationManager()
 	, m_currentTrackPath(SIMPLE_TRACK_PATH)
 	, m_impulsePlotBundle(m_framework)
 	, m_testWorld(m_framework, WORLD_SCALE, STEP)
+	, m_spikingNetwork(STEP)								// TODO: CHANGE IT TO 1.0f (if not working of course)
 	, m_userController(m_framework, m_testWorld)
 {
 	m_framework.setDebugDraw(true);
+
+	for(NSize_t i = 0; i < m_aNeuronImpulseHandlers.size(); ++i)
+	{
+		m_aNeuronImpulseHandlers[i] = new NeuronImpulseHandler(m_spikingNetwork, i);
+	}
+}
+
+ApplicationManager::~ApplicationManager()
+{
+	for(NSize_t i = 0; i < m_aNeuronImpulseHandlers.size(); ++i)
+	{
+		delete m_aNeuronImpulseHandlers[i];
+	}
 }
 
 void ApplicationManager::initSprites()
@@ -51,6 +66,16 @@ void ApplicationManager::initSprites()
 	m_backgroundSprite->setSize(backgroundSize);
 }
 
+void ApplicationManager::initSpikingNetwork()
+{
+	m_testWorld.setCarTrackDistanceProbeAHandler(*m_aNeuronImpulseHandlers[0]);
+	m_testWorld.setCarTrackDistanceProbeBHandler(*m_aNeuronImpulseHandlers[1]);
+	m_testWorld.setLeftDistanceProbeHandler(*m_aNeuronImpulseHandlers[2]);
+	m_testWorld.setCarTrackAngleProbeHandler(*m_aNeuronImpulseHandlers[3]);
+	m_testWorld.setCarTrackSideProbeHandle(*m_aNeuronImpulseHandlers[4]);
+	m_testWorld.setCarVelocityProbeHandler(*m_aNeuronImpulseHandlers[5]);
+}
+
 void ApplicationManager::initPlots()
 {
 	PlotImpulseHandlerProxyAPtr plotCarTrackDistanceA(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f)));
@@ -64,12 +89,20 @@ void ApplicationManager::initPlots()
 	PlotImpulseHandlerProxyAPtr plotInputLeft(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 100.0f), NMVector2fLoad(75.0, 10.0f)));
 	PlotImpulseHandlerProxyAPtr plotInputRight(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 111.0f), NMVector2fLoad(75.0, 10.0f)));
 
+	plotCarTrackDistanceA->setImpulseHandler(m_testWorld.getCarTrackDistanceProbeAHandler());
+	plotCarTrackDistanceB->setImpulseHandler(m_testWorld.getCarTrackDistanceProbeBHandler());
+	plotLeftDistance->setImpulseHandler(m_testWorld.getLeftDistanceProbeHandler());
+	plotCarTrackAngle->setImpulseHandler(m_testWorld.getCarTrackAngleProbeHandler());
+	plotCarTrackSide->setImpulseHandler(m_testWorld.getCarTrackSideProbeHandle());
+	plotCarVelocity->setImpulseHandler(m_testWorld.getCarVelocityProbeHandler());
+
 	m_testWorld.setCarTrackDistanceProbeAHandler(*plotCarTrackDistanceA.get());
 	m_testWorld.setCarTrackDistanceProbeBHandler(*plotCarTrackDistanceB.get());
 	m_testWorld.setLeftDistanceProbeHandler(*plotLeftDistance.get());
 	m_testWorld.setCarTrackAngleProbeHandler(*plotCarTrackAngle.get());
 	m_testWorld.setCarTrackSideProbeHandle(*plotCarTrackSide.get());
 	m_testWorld.setCarVelocityProbeHandler(*plotCarVelocity.get());
+
 	m_testWorld.setForwardImpulseHandler(*plotInputForward.get());
 	m_testWorld.setBackwardImpulseHandler(*plotInputBackward.get());
 	m_testWorld.setLeftImpulseHandler(*plotInputLeft.get());
@@ -199,6 +232,7 @@ void ApplicationManager::draw()
 void ApplicationManager::run()
 {
 	initSprites();
+	initSpikingNetwork();
 	initPlots();
 	initWorld();
 

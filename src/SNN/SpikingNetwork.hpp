@@ -17,7 +17,12 @@ public:
 
 	void handleImpulse(NLib::NSize_t uIndex);
 
+	bool checkOutputImpulse(NLib::NSize_t uIndex) const;
+
 	void update();
+
+	NLib::NSize_t getInputCount() const;
+	NLib::NSize_t getOutputCount() const;
 
 	NLib::NSize_t getParametersCount() const;
 	void getParameters(real* opParameters);
@@ -26,6 +31,7 @@ public:
 private:
 	const real m_fStep;
 	std::vector<SpikingNeuron*> m_spikingNeurons;
+	NLib::NSize_t m_uInputCount;
 };
 
 } // SNN

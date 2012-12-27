@@ -11,6 +11,7 @@
 
 #include "IApplicationController.hpp"
 #include "UserController.hpp"
+#include "NeuralNetworkController.hpp"
 
 class ApplicationManager
 	: public IApplicationController
@@ -57,6 +58,7 @@ private:
 	std::array<NeuronImpulseHandler*, NEURON_INPUT_COUNT> m_aNeuronImpulseHandlers;
 
 	UserController				m_userController;
+	NeuralNetworkController		m_networkController;
 };
 
 #endif // SNN_APPLICATIONMANAGER

@@ -76,6 +76,8 @@ set(SOURCES
 	Exceptions.hpp
 	IApplicationController.hpp
 	main.cpp
+	NeuralNetworkController.cpp
+	NeuralNetworkController.hpp
 	NeuronImpulseHandler.cpp
 	NeuronImpulseHandler.hpp
 	PlotImpulseHandlerProxy.cpp

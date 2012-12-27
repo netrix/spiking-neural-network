@@ -8,6 +8,7 @@ namespace SNN {
 
 SpikingNetwork::SpikingNetwork(NLib::NSize_t uNeuronNum, NLib::NSize_t uInputNum, real fStep)
 	: m_fStep(fStep)
+	, m_uInputCount(uInputNum)
 {
 	NAssert(uNeuronNum > 0, "uNeuronNum must be higher than 0");
 	NAssert(uInputNum > 0, "uInputNum must be higher than 0");
@@ -36,12 +37,27 @@ void SpikingNetwork::handleImpulse(NLib::NSize_t uIndex)
 	});
 }
 
+bool SpikingNetwork::checkOutputImpulse(NLib::NSize_t uIndex) const
+{
+	return m_spikingNeurons[uIndex]->isImpulse();
+}
+
 void SpikingNetwork::update()
 {
 	std::for_each(m_spikingNeurons.begin(), m_spikingNeurons.end(), [](SpikingNeuron* ptr)
 	{
 		ptr->update();
 	});
+}
+
+NLib::NSize_t SpikingNetwork::getInputCount() const
+{
+	return m_uInputCount;
+}
+
+NLib::NSize_t SpikingNetwork::getOutputCount() const
+{
+	return m_spikingNeurons.size();
 }
 
 NSize_t SpikingNetwork::getParametersCount() const

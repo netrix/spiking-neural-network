@@ -36,6 +36,7 @@ ApplicationManager::ApplicationManager()
 	, m_testWorld(m_framework, WORLD_SCALE, STEP)
 	, m_spikingNetwork(NETWORK_SIZE, NEURON_INPUT_COUNT, STEP)								// TODO: CHANGE STEP TO 1.0f (if not working of course)
 	, m_userController(m_framework, m_testWorld)
+	, m_networkController(m_framework, m_testWorld, m_spikingNetwork)
 {
 	m_framework.setDebugDraw(true);
 
@@ -170,6 +171,7 @@ bool ApplicationManager::handleKeys()
 	bool bReturn = false;
 
 	static bool sbF1 = false;
+	static bool sbF2 = false;
 	static bool sbF11 = false;
 	static bool sbF12 = false;
 	
@@ -178,6 +180,12 @@ bool ApplicationManager::handleKeys()
 		setApplicationController(m_userController);
 		bReturn = true;
 	}
+	if(!bReturn && !sbF2 && m_framework.checkKeyDown(SDLK_F2))
+	{
+		setApplicationController(m_networkController);
+		bReturn = true;
+	}
+
 
 	// Track
 	if(!sbF11 && m_framework.checkKeyDown(SDLK_F11))
@@ -192,6 +200,7 @@ bool ApplicationManager::handleKeys()
 	}
 
 	sbF1 = m_framework.checkKeyDown(SDLK_F1);
+	sbF2 = m_framework.checkKeyDown(SDLK_F2);
 	sbF11 = m_framework.checkKeyDown(SDLK_F11);
 	sbF12 = m_framework.checkKeyDown(SDLK_F12);
 

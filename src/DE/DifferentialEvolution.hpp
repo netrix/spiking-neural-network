@@ -17,19 +17,26 @@ public:
 	DifferentialEvolution();
 
 	void			setPopulationSize(NLib::NSize_t uSize);
-	NLib::NSize_t	getPopulationSize() const						{ return m_population.size(); }
+	NLib::NSize_t	getPopulationSize() const						{ return m_uPopulationSize; }
 
 	void			setIndividualSize(NLib::NSize_t uSize);
 	NLib::NSize_t	getIndividualSize() const						{ return m_uIndividualSize; }
 
 	void calculateNextGeneration();
 
-	const SNN::real*	getIndividualData(NLib::NSize_t uIndex) const	{ return &m_population[uIndex][0]; }
-	SNN::real*	getIndividualData(NLib::NSize_t uIndex)					{ return &m_population[uIndex][0]; }
+	const SNN::real*	getIndividualData(NLib::NSize_t uIndex) const	{ return &m_pCurrentPopulation->at(m_uIndividualSize * uIndex); }
+	SNN::real*			getIndividualData(NLib::NSize_t uIndex)			{ return &m_pCurrentPopulation->at(m_uIndividualSize * uIndex); }
 
 private:
-	std::vector<RealVector> m_population;
+
+private:
+	RealVector m_aPopulations[2];
+
 	NLib::NSize_t m_uIndividualSize;
+	NLib::NSize_t m_uPopulationSize;
+
+	RealVector* m_pCurrentPopulation;
+	RealVector* m_pNextPopulation;
 };
 
 } // DE

@@ -126,7 +126,6 @@ void ApplicationManager::initPlots()
 
 void ApplicationManager::initWorld()
 {
-	m_currentTrackPath = "../../data/complex_track.txt";
 	m_testWorld.loadTrack(m_currentTrackPath);
 	m_testWorld.resetCar();
 }

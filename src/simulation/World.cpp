@@ -56,6 +56,8 @@ void World::resetCar()
 	m_car.setTransform(m_carStartPosition, m_carStartOrientation);
 	m_car.stop();
 	m_track.setCurrentPositionFromStart(m_car.getPosition());
+
+	m_passageEvaluator.start();
 }
 
 void World::draw(Framework::Sprite& carSprite, Framework::Sprite& backgroundSprite) const

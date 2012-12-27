@@ -1,5 +1,6 @@
 #include "UserController.hpp"
 #include <iostream>
+#include <iomanip>
 
 UserController::UserController(Framework::Framework& framework, Simulation::World& world)
 	: m_framework(framework)
@@ -12,7 +13,7 @@ void UserController::initController()
 	m_framework.setWindowTitle("User controlled simulation");
 	
 	std::cout << "User controlled simulation:" << std::endl
-		<< " [ ESC ] - stop simulation" << std::endl
+		<< " [ ESC ] - return to choice menu" << std::endl
 		<< " [ UP ] - move forward" << std::endl
 		<< " [ DOWN ] - move backward" << std::endl
 		<< " [ LEFT ] - turn left" << std::endl
@@ -47,4 +48,10 @@ void UserController::fixedStepUpdate()
 	if(m_framework.checkKeyDown(SDLK_RIGHT)) m_world.turnRight();
 
 	m_world.update();
+
+	const Simulation::PassageEvaluator& pe = m_world.getPassageEvaluator();
+
+	std::cout << "\r"
+		<< "Time: " << std::setw(6) << std::setprecision(4) << pe.getTime()
+		<< ", Points: " << std::setprecision(4) << pe.getPoints();
 }

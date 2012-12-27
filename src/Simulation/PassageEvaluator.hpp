@@ -25,7 +25,6 @@ private:
 private:
 	Track& m_track;
 	float m_fTime;
-	float m_fCheckTime;
 	float m_fPoints;
 	bool m_bRunning;
 };

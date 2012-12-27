@@ -22,6 +22,8 @@ private:
 	Framework::Framework& m_framework;
 	Simulation::World& m_world;
 	SNN::SpikingNetwork& m_network;
+
+	bool m_bStarted;
 };
 
 #endif // SNN_NEURALNETWORKCONTROLLER

@@ -10,7 +10,6 @@ namespace Simulation {
 PassageEvaluator::PassageEvaluator(Track& track)
 	: m_track(track)
 	, m_fTime(0.0f)
-	, m_fCheckTime(0.0f)
 	, m_fPoints(0.0f)
 	, m_bRunning(false)
 {
@@ -18,7 +17,6 @@ PassageEvaluator::PassageEvaluator(Track& track)
 
 void PassageEvaluator::start()
 {
-	m_fCheckTime = 0.0f;
 	m_fTime = 0.0f;
 	m_fPoints = 0.0f;
 	m_bRunning = true;
@@ -28,16 +26,10 @@ void PassageEvaluator::update(float fDelta)
 {
 	if(m_bRunning)
 	{
-		m_fCheckTime += fDelta;
 		m_fTime += fDelta;
 
-		if(m_fCheckTime > CHECK_DELTA)
-		{
-			m_fCheckTime -= CHECK_DELTA;
-
-			m_fPoints += evaluateCarTrackDistance();
-			m_fPoints += m_track.getTrackLength() - m_track.getTravelledDistance();
-		}
+		m_fPoints += evaluateCarTrackDistance() * fDelta;
+		m_fPoints += (m_track.getTrackLength() - m_track.getTravelledDistance()) * m_fTime;
 
 		if(m_track.getTravelledDistance() >= m_track.getTrackLength())
 		{

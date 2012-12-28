@@ -24,9 +24,12 @@ public:
 	NLib::NSize_t getInputCount() const;
 	NLib::NSize_t getOutputCount() const;
 
+	const SpikingNeuron& getNeuron(NLib::NSize_t uIndex) const		{ return *m_spikingNeurons[uIndex]; }
+
 	NLib::NSize_t getParametersCount() const;
-	void getParameters(real* opParameters);
+	void getParameters(real* opParameters) const;
 	void setParameters(const real* pParameters);
+	float evaluateParameters() const;
 
 private:
 	const real m_fStep;

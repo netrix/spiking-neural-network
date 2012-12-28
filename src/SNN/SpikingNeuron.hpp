@@ -46,8 +46,9 @@ public:
 	bool isImpulse() const		{ return m_fOutput == 1.0f; }
 
 	NLib::NSize_t getParametersCount() const;
-	void getParameters(real* opParameters);
+	void getParameters(real* opParameters) const;
 	void setParameters(const real* pParameters);
+	float evaluateParameters() const;
 
 private:
 	std::vector<NeuronInput> m_aInputs;

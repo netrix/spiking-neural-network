@@ -72,7 +72,7 @@ NLib::NSize_t SpikingNeuron::getParametersCount() const
 	return NeuronInput::getParametersCount() * m_aInputs.size() + 4;
 }
 
-void SpikingNeuron::getParameters(real* opParameters)
+void SpikingNeuron::getParameters(real* opParameters) const
 {
 	opParameters[0] = m_fOutputDecayTime;
 	opParameters[1] = m_fValueDecayTime;
@@ -99,6 +99,22 @@ void SpikingNeuron::setParameters(const real* pParameters)
 	{
 		m_aInputs[i].setParameters(pParameters + m_aInputs[i].getParametersCount() * i + 3);
 	}
+}
+
+float SpikingNeuron::evaluateParameters() const
+{
+	float fValue = 0.0f;
+	for(NLib::NSize_t i = 0; i < m_aInputs.size(); ++i)
+	{
+		fValue += m_aInputs[i].evaluateParameters();
+	}
+
+	fValue += m_fOutputDecayTime > 0.0f ? 0.0f : 1.0f;
+	fValue += m_fValueDecayTime > 0.0f ? 0.0f : 1.0f;
+	fValue += m_fRefraction > 0.0f ? 0.0f : 1.0f;
+	fValue += m_fThreshold > 0.0f ? 0.0f : 1.0f;
+
+	return fValue;
 }
 
 } // SNN

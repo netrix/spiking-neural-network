@@ -33,6 +33,7 @@ ApplicationManager::ApplicationManager()
 	, m_pApplicationController(null)
 	, m_currentTrackPath(SIMPLE_TRACK_PATH)
 	, m_impulsePlotBundle(m_framework)
+	, m_linePlot(m_framework, NMVector2fLoad(90.0f, 10.0f),  NMVector2fLoad(60.0f, 50.0f), 160)
 	, m_testWorld(m_framework, WORLD_SCALE, STEP)
 	, m_spikingNetwork(NETWORK_SIZE, NEURON_INPUT_COUNT, STEP)								// TODO: CHANGE STEP TO 1.0f (if not working of course)
 	, m_userController(m_framework, m_testWorld)
@@ -238,6 +239,7 @@ void ApplicationManager::draw()
 	if(m_bShowPlots)
 	{
 		m_impulsePlotBundle.draw();
+		m_linePlot.draw();
 	}
 }
 
@@ -277,6 +279,7 @@ void ApplicationManager::run()
 			// Update with fixed step
 			m_pApplicationController->fixedStepUpdate();
 			m_impulsePlotBundle.update(STEP);
+			m_linePlot.pushValue(m_spikingNetwork.getNeuron(0).getValue());
 		}
 
 		m_framework.flipScreen();

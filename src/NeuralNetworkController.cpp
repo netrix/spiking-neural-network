@@ -18,7 +18,9 @@ namespace
 
 	const float MAX_SIMULATION_TIME = 5.0f;	// for SIMPLE track
 
-	const NSize_t POPULATION_SIZE = 1000;
+	const float NETWORK_PENALTY = 10000.0f;
+
+	const NSize_t POPULATION_SIZE = 100;//0;
 }
 
 NeuralNetworkController::NeuralNetworkController(Framework::Framework& framework, Simulation::World& world, SNN::SpikingNetwork& network)
@@ -58,8 +60,8 @@ void NeuralNetworkController::initController()
 
 		for(NSize_t i = 0; i < m_differentialEvolution.getPopulationSize(); ++i)
 		{
-			evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
-			m_differentialEvolution.setCost(i, m_world.getPassageEvaluator().getPoints());
+			float fCost = evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
+			m_differentialEvolution.setCost(i, fCost);
 		}
 		m_bInitializated = true;
 
@@ -112,8 +114,8 @@ bool NeuralNetworkController::handleKeys()
 			m_differentialEvolution.randomizeCurrentGeneration();
 			for(NSize_t i = 0; i < m_differentialEvolution.getPopulationSize(); ++i)
 			{
-				evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
-				m_differentialEvolution.setCost(i, m_world.getPassageEvaluator().getPoints());
+				float fCost = evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
+				m_differentialEvolution.setCost(i, fCost);
 			}
 
 			m_uCurrentGeneration = 0;
@@ -150,14 +152,14 @@ void NeuralNetworkController::fixedStepUpdate()
 		m_network.update();
 		m_world.update();
 
-		if(pe.getTime() > MAX_SIMULATION_TIME)
+		if(!pe.isRunning() || pe.getTime() > MAX_SIMULATION_TIME)
 		{
 			m_bStarted = false;
 		}
 	}
 }
 
-void NeuralNetworkController::evaluateIndividual(SNN::real* pIndividual)
+float NeuralNetworkController::evaluateIndividual(SNN::real* pIndividual)
 {
 	m_network.setParameters(pIndividual);
 	m_world.resetCar();
@@ -169,6 +171,8 @@ void NeuralNetworkController::evaluateIndividual(SNN::real* pIndividual)
 		m_network.update();
 		m_world.update();
 	}
+
+	return pe.getPoints() + m_network.evaluateParameters() * NETWORK_PENALTY;
 }
 
 void NeuralNetworkController::evaluateNextGeneration()
@@ -179,8 +183,8 @@ void NeuralNetworkController::evaluateNextGeneration()
 
 	for(NSize_t i = 0; i < m_differentialEvolution.getPopulationSize(); ++i)
 	{
-		evaluateIndividual(m_differentialEvolution.getNextIndividualData(i));
-		m_differentialEvolution.updateIndividual(i, m_world.getPassageEvaluator().getPoints());
+		float fCost = evaluateIndividual(m_differentialEvolution.getNextIndividualData(i));
+		m_differentialEvolution.updateIndividual(i, fCost);
 	}
 
 	std::cout << "OK, Best score: " << m_differentialEvolution.getBestCost() 

@@ -6,10 +6,6 @@ int SDL_main(int argc, char* args[])
 	ApplicationManager app;
 	app.run();
 
-	//const Simulation::PassageEvaluator& evaluator = simulationWorld.getPassageEvaluator();
-	//float fTime = 0.0f;
-	//float fFixedTimer = 0.0f;
-
 	//// Neural network
 	//SNN::SpikingNeuron sn(2);
 	//sn.setOutputDecayTime(10.0f);

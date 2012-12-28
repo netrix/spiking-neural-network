@@ -27,8 +27,10 @@ public:
 	real getImpulseValue() const	{ return m_fValue; }
 
 	static NLib::NSize_t getParametersCount();
-	void getParameters(real* opParameters);
+	void getParameters(real* opParameters) const;
 	void setParameters(const real* pParameters);
+	
+	float evaluateParameters() const;
 
 private:
 	real m_fInputValue;

@@ -4,6 +4,7 @@
 #include <array>
 #include <NLib/Base/nNonCopyable.hpp>
 #include "Plots/ImpulsePlotBundle.hpp"
+#include "Plots/LinePlot.hpp"
 #include "Framework/Framework.hpp"
 #include "Simulation/World.hpp"
 #include "SNN/SpikingNetwork.hpp"
@@ -52,6 +53,7 @@ private:
 	std::string					m_currentTrackPath;
 
 	Plots::ImpulsePlotBundle	m_impulsePlotBundle;
+	Plots::LinePlot				m_linePlot;
 	Simulation::World			m_testWorld;
 	SNN::SpikingNetwork			m_spikingNetwork;
 	

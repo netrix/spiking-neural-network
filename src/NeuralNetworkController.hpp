@@ -20,7 +20,7 @@ public:
 	virtual void fixedStepUpdate();
 
 private:
-	void evaluateIndividual(SNN::real* pIndividual);
+	float evaluateIndividual(SNN::real* pIndividual);
 
 	void evaluateNextGeneration();
 

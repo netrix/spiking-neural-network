@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <set>
 #include <limits>
+#include <ctime>
 
 using namespace NLib;
 
@@ -47,7 +48,7 @@ void DifferentialEvolution::resizePopulations()
 
 void DifferentialEvolution::randomizeCurrentGeneration()
 {
-	std::default_random_engine generator;
+	std::default_random_engine generator(time(0));
 	std::normal_distribution<float> distribution(0.0f, 10.0f);
 
 	for(NSize_t i = 0; i < m_aPopulations[0].size(); ++i)
@@ -109,7 +110,7 @@ void DifferentialEvolution::crossIndividuals(SNN::real* pDest, SNN::real* pXi)
 {
 	NSize_t uParameter = rand() % m_uIndividualSize;
 
-	std::default_random_engine generator;
+	std::default_random_engine generator(time(0));
 	std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
 	for(NSize_t i = 0; i < m_uIndividualSize; ++i)
@@ -129,6 +130,8 @@ void DifferentialEvolution::updateIndividual(NLib::NSize_t uIndex, float fCost)
 	{
 		memcpy(getCurrentIndividualData(uIndex), getNextIndividualData(uIndex), sizeof(SNN::real) * m_uIndividualSize);
 		m_costs[uIndex] = fCost;
+
+		updateBestIndividual(uIndex, fCost);
 	}
 }
 

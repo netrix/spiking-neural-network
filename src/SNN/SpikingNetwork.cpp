@@ -71,7 +71,7 @@ NSize_t SpikingNetwork::getParametersCount() const
 	return uParameterCount;
 }
 
-void SpikingNetwork::getParameters(real* opParameters)
+void SpikingNetwork::getParameters(real* opParameters) const
 {
 	NSize_t uParameterCount = 0;
 	std::for_each(m_spikingNeurons.begin(), m_spikingNeurons.end(), [=, &uParameterCount](SpikingNeuron* ptr)
@@ -89,6 +89,17 @@ void SpikingNetwork::setParameters(const real* pParameters)
 		ptr->setParameters(pParameters + uParameterCount);
 		uParameterCount += ptr->getParametersCount();
 	});
+}
+
+float SpikingNetwork::evaluateParameters() const
+{
+	float fValue = 0.0f;
+	for(NLib::NSize_t i = 0; i < m_spikingNeurons.size(); ++i)
+	{
+		fValue += m_spikingNeurons[i]->evaluateParameters();
+	}
+
+	return fValue;
 }
 
 } // SNN

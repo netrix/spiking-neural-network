@@ -48,7 +48,7 @@ void DifferentialEvolution::resizePopulations()
 void DifferentialEvolution::randomizeCurrentGeneration()
 {
 	std::default_random_engine generator;
-	std::normal_distribution<float> distribution;
+	std::normal_distribution<float> distribution(0.0f, 10.0f);
 
 	for(NSize_t i = 0; i < m_aPopulations[0].size(); ++i)
 	{

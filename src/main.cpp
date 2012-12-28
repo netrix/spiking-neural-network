@@ -27,80 +27,22 @@ int SDL_main(int argc, char* args[])
 	//while(framework.update())
 	//{
 	//	// Drawing
-	//	simulationWorld.draw(*car, *background);
-	//	plotBundle.draw();
 	//	linePlot.draw();
 	//	linePlotInputA.draw();
 
 	//	// Adding new point to track
 	//	if(framework.isMouseButtonLeftClicked())
 	//	{
-	//		//NMVector2f mousePos = framework.getMouseCoords() * WORLD_SCALE;
-	//	
-	//		//if(NMVector2fLength(simulationWorld.getTrack().getLastPoint() - mousePos) > 0.001f)
-	//		//{
-	//		//	simulationWorld.getTrack().addPoint(mousePos);
-	//		//}
 	//		sn.handleImpulse(0);
 	//	}
 	//	// Removing point from track or moving the first point somewhere else
 	//	else if(framework.isMouseButtonRightClicked())
 	//	{
-	//		//if(simulationWorld.getTrack().getSize() == 1)
-	//		//{
-	//		//	NMVector2f mousePos = framework.getMouseCoords() * WORLD_SCALE;
-	//		//	simulationWorld.getTrack().movePoint(0, mousePos);
-	//		//}
-	//		//else
-	//		//{
-	//		//	simulationWorld.getTrack().popPoint();
-	//		//}
 	//		sn.handleImpulse(1);
 	//	}
 
-	//	// Keys
-	//	if(framework.checkKeyDown(SDLK_F5))
+		//	while(fFixedTimer > STEP)
 	//	{
-	//		simulationWorld.saveTrack("../../data/simple_track.txt");
-	//	}
-	//	if(framework.checkKeyDown(SDLK_F9))
-	//	{
-	//		simulationWorld.loadTrack("../../data/simple_track.txt");
-	//		simulationWorld.startEvaluation();
-	//		fTime = 0.0f;
-	//	}
-	//	if(framework.checkKeyDown(SDLK_ESCAPE))
-	//	{
-	//			break;
-	//	}
-
-	//	if(framework.checkKeyDown(SDLK_PLUS))
-	//	{
-	//		sn.setOutputDecayTime(sn.getOutputDecayTime() + 0.1f);
-	//	}
-	//	if(framework.checkKeyDown(SDLK_MINUS))
-	//	{
-	//		sn.setOutputDecayTime(sn.getOutputDecayTime() - 0.1f);
-	//	}
-
-	//	fTime += framework.getTimeDelta();
-
-	//	//std::cout << track.getCurrentSideFromTrack() << " " << track.getCurrentDistanceFromTrack() << " " << track.getTravelledDistance() << "/" << track.getTrackLength() << std::endl;
-	//	//std::cout << "Time: " << evaluator.getTime() << " or " << fTime << ", points: " << evaluator.getPoints() << std::endl;
-
-	//	fFixedTimer += framework.getTimeDelta();
-
-	//	if(fFixedTimer > 2.0f)	fFixedTimer += framework.getTimeDelta();
-
-	//	while(fFixedTimer > STEP)
-	//	{
-	//		fFixedTimer -= STEP;
-
-	//		if(framework.checkKeyDown(SDLK_w)) simulationWorld.moveForward();
-	//		if(framework.checkKeyDown(SDLK_s)) simulationWorld.moveBackward();
-	//		if(framework.checkKeyDown(SDLK_d)) simulationWorld.turnLeft();
-	//		if(framework.checkKeyDown(SDLK_a)) simulationWorld.turnRight();
-
 	//		sn.update();
 
 
@@ -109,12 +51,7 @@ int SDL_main(int argc, char* args[])
 	//		linePlotInputA.pushValue(sn.getInputValue(0));
 	//		
 	//		std::cout << sn.isImpulse() << " " << sn.getValue() << " " << sn.getInputValue(0) << std::endl;
-
-	//		simulationWorld.update();
-	//		plotBundle.update(STEP);
 	//	}
-
-	//	framework.flipScreen();
 	//}
 
 	return 0;

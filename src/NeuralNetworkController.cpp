@@ -20,22 +20,22 @@ namespace
 
 	const float NETWORK_PENALTY = 10000.0f;
 
-	const NSize_t POPULATION_SIZE = 100;//0;
+	const NSize_t POPULATION_SIZE = 10;//0;//0;
 }
 
 NeuralNetworkController::NeuralNetworkController(Framework::Framework& framework, Simulation::World& world, SNN::SpikingNetwork& network)
 	: m_framework(framework)
 	, m_world(world)
-	, m_network(network)
+	, m_testNetwork(network)
+	, m_learningNetwork(network.getOutputCount(), network.getInputCount(), network.getStep())
 	, m_bStarted(false)
 	, m_bInitializated(false)
 	, m_bLoopEvaluation(false)
 	, m_uCurrentGeneration(0)
 	, m_uCurrentReset(0)
 {
-	m_differentialEvolution.setIndividualSize(m_network.getParametersCount());
+	m_differentialEvolution.setIndividualSize(network.getParametersCount());
 	m_differentialEvolution.setPopulationSize(POPULATION_SIZE);
-	m_differentialEvolution.randomizeCurrentGeneration();
 }
 
 void NeuralNetworkController::initController()
@@ -56,18 +56,35 @@ void NeuralNetworkController::initController()
 	// First time initialization
 	if(!m_bInitializated)
 	{
-		std::cout << std::endl << "Initalizating first generation... ";
-
-		for(NSize_t i = 0; i < m_differentialEvolution.getPopulationSize(); ++i)
-		{
-			float fCost = evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
-			m_differentialEvolution.setCost(i, fCost);
-		}
+		initializeFirstGeneration();
 		m_bInitializated = true;
-
-		std::cout << "OK, Best score: " << m_differentialEvolution.getBestCost() 
-			<< " of individual: " << m_differentialEvolution.getBestIndividualIndex() << std::endl;
 	}
+}
+
+void NeuralNetworkController::initializeFirstGeneration()
+{
+	m_differentialEvolution.randomizeCurrentGeneration();
+
+	std::cout << std::endl << "Initalizating first generation... ";
+
+	for(NSize_t i = 0; i < m_differentialEvolution.getPopulationSize(); ++i)
+	{
+		float fCost = evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
+		m_differentialEvolution.setCost(i, fCost);
+	}
+
+	std::cout << "OK, Best score: " << m_differentialEvolution.getBestCost() 
+		<< " of individual: " << m_differentialEvolution.getBestIndividualIndex() << std::endl;
+
+	setBestIndividual();
+}
+
+void NeuralNetworkController::setBestIndividual()
+{
+	m_testNetwork.setParameters(m_differentialEvolution.getBestIndividual());
+	m_world.resetCar();
+
+	std::cout << "Best score 2nd: " << evaluateIndividual(m_differentialEvolution.getBestIndividual()) << std::endl;
 }
 
 bool NeuralNetworkController::handleKeys()
@@ -94,6 +111,8 @@ bool NeuralNetworkController::handleKeys()
 	if(!sbR && m_framework.checkKeyDown(SDLK_r))
 	{
 		m_world.resetCar();
+		m_testNetwork.reset();
+		m_bStarted = false;
 	}
 
 	sbL = m_framework.checkKeyDown(SDLK_l);
@@ -111,12 +130,7 @@ bool NeuralNetworkController::handleKeys()
 			saveBestGenerationToFile(oss.str());
 
 			// Reset
-			m_differentialEvolution.randomizeCurrentGeneration();
-			for(NSize_t i = 0; i < m_differentialEvolution.getPopulationSize(); ++i)
-			{
-				float fCost = evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
-				m_differentialEvolution.setCost(i, fCost);
-			}
+			initializeFirstGeneration();
 
 			m_uCurrentGeneration = 0;
 			m_uCurrentReset++;
@@ -140,16 +154,16 @@ void NeuralNetworkController::fixedStepUpdate()
 
 	std::cout << "\r"
 		<< "Time: " << std::setw(6) << std::setprecision(4) << pe.getTime()
-		<< ", Points: " << std::fixed << std::setprecision(4) << pe.getPoints();
+		<< ", Points: " << std::fixed << std::setprecision(4) << pe.getPoints() + NETWORK_PENALTY * m_testNetwork.evaluateParameters();
 
 	if(m_bStarted)
 	{
-		if(m_network.checkOutputImpulse(FORWARD)) m_world.moveForward();
-		if(m_network.checkOutputImpulse(BACKWARD)) m_world.moveBackward();
-		if(m_network.checkOutputImpulse(LEFT)) m_world.turnLeft();
-		if(m_network.checkOutputImpulse(RIGHT)) m_world.turnRight();
+		if(m_testNetwork.checkOutputImpulse(FORWARD)) m_world.moveForward();
+		if(m_testNetwork.checkOutputImpulse(BACKWARD)) m_world.moveBackward();
+		if(m_testNetwork.checkOutputImpulse(LEFT)) m_world.turnLeft();
+		if(m_testNetwork.checkOutputImpulse(RIGHT)) m_world.turnRight();
 
-		m_network.update();
+		m_testNetwork.update();
 		m_world.update();
 
 		if(!pe.isRunning() || pe.getTime() > MAX_SIMULATION_TIME)
@@ -159,20 +173,25 @@ void NeuralNetworkController::fixedStepUpdate()
 	}
 }
 
-float NeuralNetworkController::evaluateIndividual(SNN::real* pIndividual)
+float NeuralNetworkController::evaluateIndividual(const SNN::real* pIndividual)
 {
-	m_network.setParameters(pIndividual);
+	m_learningNetwork.setParameters(pIndividual);
 	m_world.resetCar();
 
 	const Simulation::PassageEvaluator& pe = m_world.getPassageEvaluator();
 
 	while(pe.isRunning() && pe.getTime() <= MAX_SIMULATION_TIME)
 	{
-		m_network.update();
+		if(m_learningNetwork.checkOutputImpulse(FORWARD)) m_world.moveForward();
+		if(m_learningNetwork.checkOutputImpulse(BACKWARD)) m_world.moveBackward();
+		if(m_learningNetwork.checkOutputImpulse(LEFT)) m_world.turnLeft();
+		if(m_learningNetwork.checkOutputImpulse(RIGHT)) m_world.turnRight();
+
+		m_learningNetwork.update();
 		m_world.update();
 	}
 
-	return pe.getPoints() + m_network.evaluateParameters() * NETWORK_PENALTY;
+	return pe.getPoints() + m_learningNetwork.evaluateParameters() * NETWORK_PENALTY;
 }
 
 void NeuralNetworkController::evaluateNextGeneration()
@@ -190,9 +209,7 @@ void NeuralNetworkController::evaluateNextGeneration()
 	std::cout << "OK, Best score: " << m_differentialEvolution.getBestCost() 
 		<< " of individual: " << m_differentialEvolution.getBestIndividualIndex() << std::endl;
 
-	// Setting best individual
-	m_network.setParameters(m_differentialEvolution.getBestIndividual());
-	m_world.resetCar();
+	setBestIndividual();
 }
 
 void NeuralNetworkController::saveBestGenerationToFile(const std::string& filepath)

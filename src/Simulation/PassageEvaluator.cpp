@@ -1,5 +1,7 @@
 #include "PassageEvaluator.hpp"
 
+using namespace NLib::Math;
+
 namespace {
 	const float CHECK_DELTA = 0.5f;
 	const float OUTROAD_PENALTY = 5.0f;
@@ -30,6 +32,7 @@ void PassageEvaluator::update(float fDelta)
 
 		m_fPoints += evaluateCarTrackDistance() * fDelta;
 		m_fPoints += (m_track.getTrackLength() - m_track.getTravelledDistance()) * m_fTime;
+		m_fPoints += NMVector2fLength(m_track.getCurrentPointOnTrack() - m_track.getCurrentPosition()) * m_fTime;
 
 		if(m_track.getTravelledDistance() >= m_track.getTrackLength())
 		{

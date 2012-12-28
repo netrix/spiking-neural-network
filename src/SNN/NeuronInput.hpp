@@ -15,6 +15,8 @@ public:
 
 	void update();
 
+	void reset();
+
 	void setWeight(real fWeight)	{ m_fWeight = fWeight; }
 	real getWeight() const			{ return m_fWeight; }
 

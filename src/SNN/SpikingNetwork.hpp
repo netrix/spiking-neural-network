@@ -21,8 +21,11 @@ public:
 
 	void update();
 
-	NLib::NSize_t getInputCount() const;
-	NLib::NSize_t getOutputCount() const;
+	void reset();
+
+	NLib::NSize_t	getInputCount() const;
+	NLib::NSize_t	getOutputCount() const;
+	real			getStep() const				{ return m_fStep; }
 
 	const SpikingNeuron& getNeuron(NLib::NSize_t uIndex) const		{ return *m_spikingNeurons[uIndex]; }
 

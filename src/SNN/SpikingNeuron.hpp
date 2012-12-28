@@ -20,6 +20,8 @@ public:
 
 	void update();
 
+	void reset();
+
 	void setRefraction(real fRefraction)	{ m_fRefraction = fRefraction; }
 	real getRefraction() const				{ return m_fRefraction; }
 

@@ -20,17 +20,23 @@ public:
 	virtual void fixedStepUpdate();
 
 private:
-	float evaluateIndividual(SNN::real* pIndividual);
+	void initializeFirstGeneration();
+
+	float evaluateIndividual(const SNN::real* pIndividual);
 
 	void evaluateNextGeneration();
+
+	void setBestIndividual();
 
 	void saveBestGenerationToFile(const std::string& filepath);
 
 private:
-	Framework::Framework& m_framework;
-	Simulation::World& m_world;
-	SNN::SpikingNetwork& m_network;
-	DE::DifferentialEvolution m_differentialEvolution;
+	Framework::Framework&	m_framework;
+	Simulation::World&		m_world;
+	SNN::SpikingNetwork&	m_testNetwork;
+
+	SNN::SpikingNetwork			m_learningNetwork;
+	DE::DifferentialEvolution	m_differentialEvolution;
 
 	bool m_bStarted;
 	bool m_bInitializated;

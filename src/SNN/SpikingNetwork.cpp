@@ -50,6 +50,14 @@ void SpikingNetwork::update()
 	});
 }
 
+void SpikingNetwork::reset()
+{
+	std::for_each(m_spikingNeurons.begin(), m_spikingNeurons.end(), [](SpikingNeuron* ptr)
+	{
+		ptr->reset();
+	});
+}
+
 NLib::NSize_t SpikingNetwork::getInputCount() const
 {
 	return m_uInputCount;

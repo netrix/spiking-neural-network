@@ -41,6 +41,11 @@ void NeuronInput::update()
 	m_fInputValue = 0.0f;
 }
 
+void NeuronInput::reset()
+{
+	m_fValue = 0.0f;
+}
+
 NLib::NSize_t NeuronInput::getParametersCount()
 {
 	return 2;
@@ -58,6 +63,7 @@ void NeuronInput::setParameters(const real* pParameters)
 	m_fValueDecayTime = pParameters[1];
 
 	m_fValueRelaxation = calculateRelaxationFactor(m_fStep, m_fValueDecayTime);
+	m_fValue = 0.0f;
 }
 
 float NeuronInput::evaluateParameters() const

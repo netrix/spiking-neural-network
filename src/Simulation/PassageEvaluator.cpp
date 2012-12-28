@@ -2,7 +2,7 @@
 
 namespace {
 	const float CHECK_DELTA = 0.5f;
-	const float OUTROAD_PENALTY = 100.0f;
+	const float OUTROAD_PENALTY = 5.0f;
 }
 
 namespace Simulation {

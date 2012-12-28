@@ -24,6 +24,8 @@ private:
 
 	void evaluateNextGeneration();
 
+	void saveBestGenerationToFile(const std::string& filepath);
+
 private:
 	Framework::Framework& m_framework;
 	Simulation::World& m_world;
@@ -32,6 +34,10 @@ private:
 
 	bool m_bStarted;
 	bool m_bInitializated;
+
+	bool m_bLoopEvaluation;
+	NLib::NSize_t m_uCurrentGeneration;
+	NLib::NSize_t m_uCurrentReset;
 };
 
 #endif // SNN_NEURALNETWORKCONTROLLER

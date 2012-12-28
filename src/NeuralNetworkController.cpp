@@ -1,5 +1,7 @@
 #include "NeuralNetworkController.hpp"
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 
 using namespace NLib;
@@ -16,7 +18,7 @@ namespace
 
 	const float MAX_SIMULATION_TIME = 5.0f;	// for SIMPLE track
 
-	const NSize_t POPULATION_SIZE = 100;
+	const NSize_t POPULATION_SIZE = 1000;
 }
 
 NeuralNetworkController::NeuralNetworkController(Framework::Framework& framework, Simulation::World& world, SNN::SpikingNetwork& network)
@@ -25,6 +27,9 @@ NeuralNetworkController::NeuralNetworkController(Framework::Framework& framework
 	, m_network(network)
 	, m_bStarted(false)
 	, m_bInitializated(false)
+	, m_bLoopEvaluation(false)
+	, m_uCurrentGeneration(0)
+	, m_uCurrentReset(0)
 {
 	m_differentialEvolution.setIndividualSize(m_network.getParametersCount());
 	m_differentialEvolution.setPopulationSize(POPULATION_SIZE);
@@ -40,6 +45,7 @@ void NeuralNetworkController::initController()
 		<< " [ ESC ] - return to choice menu" << std::endl
 		<< " [ s ] - start/stop simulation" << std::endl
 		<< " [ n ] - evaluate next generation" << std::endl
+		<< " [ l ] - loop learning" << std::endl
 		<< " [ r ] - reset simulation" << std::endl
 		<< std::endl;
 
@@ -66,10 +72,15 @@ bool NeuralNetworkController::handleKeys()
 {
 	bool bReturn = false;
 
+	static bool sbL = false;
 	static bool sbN = false;
 	static bool sbS = false;
 	static bool sbR = false;
 
+	if(!sbL && m_framework.checkKeyDown(SDLK_l))
+	{
+		m_bLoopEvaluation = !m_bLoopEvaluation;
+	}
 	if(!sbN && m_framework.checkKeyDown(SDLK_n))
 	{
 		evaluateNextGeneration();
@@ -83,9 +94,40 @@ bool NeuralNetworkController::handleKeys()
 		m_world.resetCar();
 	}
 
+	sbL = m_framework.checkKeyDown(SDLK_l);
 	sbN = m_framework.checkKeyDown(SDLK_n);
 	sbS = m_framework.checkKeyDown(SDLK_s);
 	sbR = m_framework.checkKeyDown(SDLK_r);
+
+	if(m_bLoopEvaluation)
+	{
+		if(m_uCurrentGeneration > 50)
+		{
+			std::ostringstream oss;
+			oss << "../../generations/generation_" << m_uCurrentReset << "_" << m_uCurrentGeneration;
+			// Save to file
+			saveBestGenerationToFile(oss.str());
+
+			// Reset
+			m_differentialEvolution.randomizeCurrentGeneration();
+			for(NSize_t i = 0; i < m_differentialEvolution.getPopulationSize(); ++i)
+			{
+				evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
+				m_differentialEvolution.setCost(i, m_world.getPassageEvaluator().getPoints());
+			}
+
+			m_uCurrentGeneration = 0;
+			m_uCurrentReset++;
+			m_bStarted = true;
+		}
+		else if(!m_bStarted)
+		{
+			std::cout << std::endl << "Evaluating generation: " << m_uCurrentGeneration << ", after reset: " << m_uCurrentReset;
+			evaluateNextGeneration();
+			m_uCurrentGeneration++;
+			m_bStarted = true;
+		}
+	}
 
 	return bReturn;
 }
@@ -143,4 +185,21 @@ void NeuralNetworkController::evaluateNextGeneration()
 
 	std::cout << "OK, Best score: " << m_differentialEvolution.getBestCost() 
 		<< " of individual: " << m_differentialEvolution.getBestIndividualIndex() << std::endl;
+
+	// Setting best individual
+	m_network.setParameters(m_differentialEvolution.getBestIndividual());
+	m_world.resetCar();
+}
+
+void NeuralNetworkController::saveBestGenerationToFile(const std::string& filepath)
+{
+	// full of hacks, move it to DE class
+	std::ofstream out(filepath);
+
+	NSize_t uValueCount = m_differentialEvolution.getIndividualSize() * m_differentialEvolution.getPopulationSize();
+	SNN::real* pGeneration = m_differentialEvolution.getCurrentIndividualData(0);
+	for(NSize_t i = 0; i < uValueCount; ++i)
+	{
+		out << pGeneration[i] << std::endl;
+	}
 }

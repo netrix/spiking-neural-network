@@ -1,5 +1,5 @@
 #include "ImpulsePlot.hpp"
-
+#include <algorithm>
 using namespace NLib::Math;
 
 namespace Plots {
@@ -15,7 +15,17 @@ ImpulsePlot::ImpulsePlot(Framework::Framework& framework, const NMVector2f& posi
 
 void ImpulsePlot::addImpulse()
 {
-	m_impulses.push_back(m_fTime);
+	if(m_impulses.empty() || m_fTime > m_impulses.back())
+	{
+		m_impulses.push_back(m_fTime);
+
+		auto firstInWindow = std::find_if(m_impulses.begin(), m_impulses.end(), [=](float fTime)
+		{
+			return fTime >= m_timeWindow.x;
+		});
+
+		m_impulses.erase(m_impulses.begin(), firstInWindow);
+	}
 }
 
 void ImpulsePlot::update(float fDelta)

@@ -38,7 +38,7 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	m_track.setTrackWidth(fTrackWidth);
 
 	// Start position of car
-	resetCar();
+	reset();
 }
 
 void World::saveTrack(const std::string& filePath)
@@ -51,7 +51,7 @@ void World::loadTrack(const std::string& filePath)
 	m_track.loadFromFile(filePath);
 }
 
-void World::resetCar()
+void World::reset()
 {
 	m_car.setTransform(m_carStartPosition, m_carStartOrientation);
 	m_car.stop();

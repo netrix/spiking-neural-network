@@ -128,7 +128,7 @@ void ApplicationManager::initPlots()
 void ApplicationManager::initWorld()
 {
 	m_testWorld.loadTrack(m_currentTrackPath);
-	m_testWorld.resetCar();
+	m_testWorld.reset();
 }
 
 bool ApplicationManager::handleApplicationKeys()

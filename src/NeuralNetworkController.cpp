@@ -51,7 +51,7 @@ void NeuralNetworkController::initController()
 		<< " [ r ] - reset simulation" << std::endl
 		<< std::endl;
 
-	m_world.resetCar();
+	m_world.reset();
 
 	// First time initialization
 	if(!m_bInitializated)
@@ -82,7 +82,7 @@ void NeuralNetworkController::initializeFirstGeneration()
 void NeuralNetworkController::setBestIndividual()
 {
 	m_testNetwork.setParameters(m_differentialEvolution.getBestIndividual());
-	m_world.resetCar();
+	m_world.reset();
 
 	std::cout << "Best score 2nd: " << evaluateIndividual(m_differentialEvolution.getBestIndividual()) << std::endl;
 }
@@ -110,8 +110,8 @@ bool NeuralNetworkController::handleKeys()
 	}
 	if(!sbR && m_framework.checkKeyDown(SDLK_r))
 	{
-		m_world.resetCar();
 		m_testNetwork.reset();
+		m_world.reset();
 		m_bStarted = false;
 	}
 
@@ -176,7 +176,7 @@ void NeuralNetworkController::fixedStepUpdate()
 float NeuralNetworkController::evaluateIndividual(const SNN::real* pIndividual)
 {
 	m_learningNetwork.setParameters(pIndividual);
-	m_world.resetCar();
+	m_world.reset();
 
 	const Simulation::PassageEvaluator& pe = m_world.getPassageEvaluator();
 

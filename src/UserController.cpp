@@ -22,7 +22,7 @@ void UserController::initController()
 		<< " [ r ] - reset simulation" << std::endl
 		<< std::endl;
 
-	m_world.resetCar();
+	m_world.reset();
 }
 
 bool UserController::handleKeys()
@@ -33,7 +33,7 @@ bool UserController::handleKeys()
 
 	if(!sbR && m_framework.checkKeyDown(SDLK_r))
 	{
-		m_world.resetCar();
+		m_world.reset();
 	}
 
 	sbR = m_framework.checkKeyDown(SDLK_r);

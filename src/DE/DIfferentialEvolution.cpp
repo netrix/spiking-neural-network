@@ -19,6 +19,7 @@ DifferentialEvolution::DifferentialEvolution()
 	, m_uPopulationSize(0)
 	, m_fWeight(DEFAULT_WEIGHT)
 	, m_fCR(DEFAULT_CR)
+	, m_uBestIndividual(0)
 {
 }
 
@@ -53,6 +54,8 @@ void DifferentialEvolution::randomizeCurrentGeneration()
 	{
 		m_aPopulations[0].at(i) = distribution(generator);
 	}
+
+	m_uBestIndividual = 0;	// Reset of best individual
 }
 
 void DifferentialEvolution::prepareNextGeneration()
@@ -127,6 +130,20 @@ void DifferentialEvolution::updateIndividual(NLib::NSize_t uIndex, float fCost)
 		memcpy(getCurrentIndividualData(uIndex), getNextIndividualData(uIndex), sizeof(SNN::real) * m_uIndividualSize);
 		m_costs[uIndex] = fCost;
 	}
+}
+
+void DifferentialEvolution::updateBestIndividual(NSize_t uIndex, float fCost)
+{
+	if(fCost < m_costs[m_uBestIndividual])
+	{
+		m_uBestIndividual = uIndex;
+	}
+}
+
+void DifferentialEvolution::setCost(NLib::NSize_t uIndex, float fCost)
+{ 
+	m_costs[uIndex] = fCost;
+	updateBestIndividual(uIndex, fCost);
 }
 
 } // DE

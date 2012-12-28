@@ -12,7 +12,8 @@ void UserController::initController()
 {
 	m_framework.setWindowTitle("User controlled simulation");
 	
-	std::cout << "User controlled simulation:" << std::endl
+	std::cout << std::endl
+		<< "User controlled simulation:" << std::endl
 		<< " [ ESC ] - return to choice menu" << std::endl
 		<< " [ UP ] - move forward" << std::endl
 		<< " [ DOWN ] - move backward" << std::endl

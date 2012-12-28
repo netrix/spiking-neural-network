@@ -92,6 +92,9 @@ void SpikingNeuron::setParameters(const real* pParameters)
 	m_fRefraction = pParameters[2];
 	m_fThreshold = pParameters[3]; 
 
+	m_fOutputRelaxation = calculateRelaxationFactor(m_fStep, m_fOutputDecayTime);
+	m_fValueRelaxation = calculateRelaxationFactor(m_fStep, m_fValueDecayTime);
+
 	for(NLib::NSize_t i = 0; i < m_aInputs.size(); ++i)
 	{
 		m_aInputs[i].setParameters(pParameters + m_aInputs[i].getParametersCount() * i + 3);

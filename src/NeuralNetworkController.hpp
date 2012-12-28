@@ -5,6 +5,7 @@
 #include "Framework/Framework.hpp"
 #include "Simulation/World.hpp"
 #include "SNN/SpikingNetwork.hpp"
+#include "DE/DifferentialEvolution.hpp"
 #include "IApplicationController.hpp"
 
 class NeuralNetworkController
@@ -19,11 +20,18 @@ public:
 	virtual void fixedStepUpdate();
 
 private:
+	void evaluateIndividual(SNN::real* pIndividual);
+
+	void evaluateNextGeneration();
+
+private:
 	Framework::Framework& m_framework;
 	Simulation::World& m_world;
 	SNN::SpikingNetwork& m_network;
+	DE::DifferentialEvolution m_differentialEvolution;
 
 	bool m_bStarted;
+	bool m_bInitializated;
 };
 
 #endif // SNN_NEURALNETWORKCONTROLLER

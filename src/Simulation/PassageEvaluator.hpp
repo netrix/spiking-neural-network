@@ -19,6 +19,8 @@ public:
 	float getTime() const		{ return m_fTime; }
 	float getPoints() const		{ return m_fPoints; }
 
+	bool isRunning() const		{ return m_bRunning; }
+
 private:
 	float evaluateCarTrackDistance() const;
 

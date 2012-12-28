@@ -220,7 +220,8 @@ void ApplicationManager::initController()
 {
 	m_framework.setWindowTitle("ApplicationManager choice menu");
 	
-	std::cout << "ApplicationManager choice menu:" << std::endl
+	std::cout << std::endl
+		<< "ApplicationManager choice menu:" << std::endl
 		<< " [ F1 ] - User controlled simulation" << std::endl
 		<< " [ F2 ] - SNN controlled simulation" << std::endl
 		<< " [ F3 ] - SNN learning mode" << std::endl

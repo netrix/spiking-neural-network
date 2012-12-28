@@ -43,7 +43,7 @@ public:
 	 */
 	void updateIndividual(NLib::NSize_t uIndex, float fCost);
 
-	void setCost(NLib::NSize_t uIndex, float fCost)		{ m_costs[uIndex] = fCost; }
+	void setCost(NLib::NSize_t uIndex, float fCost);
 
 	const SNN::real*	getCurrentIndividualData(NLib::NSize_t uIndex) const	{ return &m_aPopulations[0].at(m_uIndividualSize * uIndex); }
 	SNN::real*			getCurrentIndividualData(NLib::NSize_t uIndex)			{ return &m_aPopulations[0].at(m_uIndividualSize * uIndex); }
@@ -51,12 +51,18 @@ public:
 	const SNN::real*	getNextIndividualData(NLib::NSize_t uIndex) const	{ return &m_aPopulations[1].at(m_uIndividualSize * uIndex); }
 	SNN::real*			getNextIndividualData(NLib::NSize_t uIndex)			{ return &m_aPopulations[1].at(m_uIndividualSize * uIndex); }
 
+	float				getBestCost() const				{ return m_costs[m_uBestIndividual]; }
+	const SNN::real*	getBestIndividual() const		{ return getCurrentIndividualData(m_uBestIndividual); }
+	NLib::NSize_t		getBestIndividualIndex() const	{ return m_uBestIndividual; }
+
 private:
 	void resizePopulations();
 
 	void mutateIndividuals(SNN::real* pDest, SNN::real* pXa, SNN::real* pXb, SNN::real* pXc);
 
 	void crossIndividuals(SNN::real* pDest, SNN::real* pXi);
+
+	void updateBestIndividual(NLib::NSize_t uIndex, float fCost);
 
 private:
 	RealVector m_aPopulations[2];
@@ -66,6 +72,8 @@ private:
 	NLib::NSize_t m_uPopulationSize;
 	float m_fWeight;
 	float m_fCR;
+
+	NLib::NSize_t m_uBestIndividual;
 };
 
 } // DE

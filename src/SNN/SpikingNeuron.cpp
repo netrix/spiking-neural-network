@@ -70,6 +70,7 @@ void SpikingNeuron::update()
 void SpikingNeuron::reset()
 {
 	m_fValue = 0.0f;
+	m_fOutput = 0.0f;
 	
 	std::for_each(m_aInputs.begin(), m_aInputs.end(), [](NeuronInput& input)
 	{
@@ -109,8 +110,6 @@ void SpikingNeuron::setParameters(const real* pParameters)
 	{
 		m_aInputs[i].setParameters(pParameters + m_aInputs[i].getParametersCount() * i + 3);
 	}
-
-	m_fValue = 0.0f;
 }
 
 float SpikingNeuron::evaluateParameters() const

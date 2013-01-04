@@ -2,6 +2,12 @@
 
 using namespace NLib::Math;
 
+namespace {
+
+const float MAX_TRACK_DISTANCE = 20.0f;
+
+}
+
 namespace Simulation {
 
 Physics::MyDestructionListener World::s_destructionListener;
@@ -18,7 +24,8 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	, m_carTrackAngleProbe(m_car, m_track)
 	, m_carTrackDistanceProbeA(m_track)
 	, m_carTrackDistanceProbeB(m_track)
-	, m_carTrackSideProbe(m_track)
+	, m_carTrackLeftSideProbe(m_track, Probes::TrackSide::TRACK_SIDE_LEFT)
+	, m_carTrackRightSideProbe(m_track, Probes::TrackSide::TRACK_SIDE_RIGHT)
 	, m_leftTrackDistanceProbe(m_track)
 	, m_forwardImpulseHandler(null)
 	, m_backwardImpulseHandler(null)
@@ -36,6 +43,7 @@ World::World(const Framework::Framework& framework, float fWorldScale, float fDe
 	// Track setup
 	m_track.addPoint(trackStart * fWorldScale);
 	m_track.setTrackWidth(fTrackWidth);
+	m_track.setMaxTrackDistance(MAX_TRACK_DISTANCE);
 
 	// Start position of car
 	reset();
@@ -86,6 +94,7 @@ void World::update()
 	m_car.update(m_iControlState);
 	
 	physicsStep(1.0f / m_fDelta);
+	m_track.setCurrentPosition(m_car.getPosition());
 	updateProbes();
 	m_passageEvaluator.update(m_fDelta);
 
@@ -135,15 +144,16 @@ void World::updateProbes()
 	m_carTrackAngleProbe.update(m_fDelta);
 
 	// Probe from the point in front of the car
-	m_track.setCurrentPosition(m_car.getPosition() + m_car.getDirection() * PROBE_DISTANCE);	// TODO: There's a bug with setting two points, track handles properly only one point
+	m_carTrackDistanceProbeB.setPosition(m_car.getPosition() + m_car.getDirection() * PROBE_DISTANCE);
 	m_carTrackDistanceProbeB.update(m_fDelta);
 
 	// Probe from the point of car position
-	m_track.setCurrentPosition(m_car.getPosition());
+	m_carTrackDistanceProbeA.setPosition(m_car.getPosition());
 	m_carTrackDistanceProbeA.update(m_fDelta);
 
 	// Probe for side between car and track
-	m_carTrackSideProbe.update(m_fDelta);
+	m_carTrackLeftSideProbe.update(m_fDelta);
+	m_carTrackRightSideProbe.update(m_fDelta);
 
 	// Distance left probe
 	m_leftTrackDistanceProbe.update(m_fDelta);

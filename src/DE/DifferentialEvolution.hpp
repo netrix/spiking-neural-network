@@ -18,6 +18,8 @@ class DifferentialEvolution
 public:
 	DifferentialEvolution();
 
+	void loadGenerationFromFile(const std::string& filepath);
+
 	void			setPopulationSize(NLib::NSize_t uSize);
 	NLib::NSize_t	getPopulationSize() const						{ return m_uPopulationSize; }
 

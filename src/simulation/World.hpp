@@ -41,14 +41,17 @@ public:
 	void setCarTrackAngleProbeHandler(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackAngleProbe.setImpulseHandler(impulseHandler); }
 	void setCarTrackDistanceProbeAHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeA.setImpulseHandler(impulseHandler); }
 	void setCarTrackDistanceProbeBHandler(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackDistanceProbeB.setImpulseHandler(impulseHandler); }
-	void setCarTrackSideProbeHandle(Probes::IImpulseHandler& impulseHandler)		{ m_carTrackSideProbe.setImpulseHandler(impulseHandler); }
+	void setCarTrackLeftSideProbeHandle(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackLeftSideProbe.setImpulseHandler(impulseHandler); }
+	void setCarTrackRightSideProbeHandle(Probes::IImpulseHandler& impulseHandler)	{ m_carTrackRightSideProbe.setImpulseHandler(impulseHandler); }
 	void setLeftDistanceProbeHandler(Probes::IImpulseHandler& impulseHandler)		{ m_leftTrackDistanceProbe.setImpulseHandler(impulseHandler); }
 
 	Probes::IImpulseHandler& getCarVelocityProbeHandler()			{ return m_carVelocityProbe.getImpulseHandler(); }
 	Probes::IImpulseHandler& getCarTrackAngleProbeHandler()			{ return m_carTrackAngleProbe.getImpulseHandler(); }
 	Probes::IImpulseHandler& getCarTrackDistanceProbeAHandler()		{ return m_carTrackDistanceProbeA.getImpulseHandler(); }
 	Probes::IImpulseHandler& getCarTrackDistanceProbeBHandler()		{ return m_carTrackDistanceProbeB.getImpulseHandler(); }
-	Probes::IImpulseHandler& getCarTrackSideProbeHandle()			{ return m_carTrackSideProbe.getImpulseHandler(); }
+	Probes::IImpulseHandler& getCarTrackLeftSideProbeHandle()		{ return m_carTrackLeftSideProbe.getImpulseHandler(); }
+	Probes::IImpulseHandler& getCarTrackRightSideProbeHandle()		{ return m_carTrackRightSideProbe.getImpulseHandler(); }
+
 	Probes::IImpulseHandler& getLeftDistanceProbeHandler()			{ return m_leftTrackDistanceProbe.getImpulseHandler(); }
 
 	void setForwardImpulseHandler(Probes::IImpulseHandler& impulseHandler)		{ m_forwardImpulseHandler = &impulseHandler; }
@@ -85,7 +88,8 @@ private:
 	Probes::TrackAngle m_carTrackAngleProbe;		// Probe for angle between car and track.
 	Probes::TrackDistance m_carTrackDistanceProbeA;	// Probe from center of the car.
 	Probes::TrackDistance m_carTrackDistanceProbeB; // Probe from point in front of the car.
-	Probes::TrackSide m_carTrackSideProbe;			// Probe for side of track at which car is.
+	Probes::TrackSide m_carTrackLeftSideProbe;		// Probe for side of track at which car is.
+	Probes::TrackSide m_carTrackRightSideProbe;		// Probe for side of track at which car is.
 	Probes::LeftDistance m_leftTrackDistanceProbe;	// Probe of the remaining distance.
 
 	// Input impulse handlers

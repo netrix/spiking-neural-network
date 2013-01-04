@@ -77,35 +77,39 @@ void ApplicationManager::initSpikingNetwork()
 	m_testWorld.setCarTrackDistanceProbeBHandler(*m_aNeuronImpulseHandlers[1]);
 	m_testWorld.setLeftDistanceProbeHandler(*m_aNeuronImpulseHandlers[2]);
 	m_testWorld.setCarTrackAngleProbeHandler(*m_aNeuronImpulseHandlers[3]);
-	m_testWorld.setCarTrackSideProbeHandle(*m_aNeuronImpulseHandlers[4]);
-	m_testWorld.setCarVelocityProbeHandler(*m_aNeuronImpulseHandlers[5]);
+	m_testWorld.setCarTrackLeftSideProbeHandle(*m_aNeuronImpulseHandlers[4]);
+	m_testWorld.setCarTrackRightSideProbeHandle(*m_aNeuronImpulseHandlers[5]);
+	m_testWorld.setCarVelocityProbeHandler(*m_aNeuronImpulseHandlers[6]);
 }
 
 void ApplicationManager::initPlots()
 {
-	PlotImpulseHandlerProxyAPtr plotCarTrackDistanceA(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 10.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotCarTrackDistanceB(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 21.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotLeftDistance(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 32.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotCarTrackAngle(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 43.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotCarTrackSide(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 54.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotCarVelocity(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 65.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotInputForward(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 78.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotInputBackward(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 89.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotInputLeft(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 100.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotInputRight(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(10.0f, 111.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackDistanceA(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 10.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackDistanceB(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 21.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotLeftDistance(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 32.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackAngle(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 43.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackLeftSide(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 54.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackRightSide(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 65.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarVelocity(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 76.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotInputForward(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 88.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotInputBackward(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(82.0f, 88.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotInputLeft(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 99.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotInputRight(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(82.0f, 99.0f), NMVector2fLoad(75.0, 10.0f)));
 
 	plotCarTrackDistanceA->setImpulseHandler(m_testWorld.getCarTrackDistanceProbeAHandler());
 	plotCarTrackDistanceB->setImpulseHandler(m_testWorld.getCarTrackDistanceProbeBHandler());
 	plotLeftDistance->setImpulseHandler(m_testWorld.getLeftDistanceProbeHandler());
 	plotCarTrackAngle->setImpulseHandler(m_testWorld.getCarTrackAngleProbeHandler());
-	plotCarTrackSide->setImpulseHandler(m_testWorld.getCarTrackSideProbeHandle());
+	plotCarTrackLeftSide->setImpulseHandler(m_testWorld.getCarTrackLeftSideProbeHandle());
+	plotCarTrackRightSide->setImpulseHandler(m_testWorld.getCarTrackRightSideProbeHandle());
 	plotCarVelocity->setImpulseHandler(m_testWorld.getCarVelocityProbeHandler());
 
 	m_testWorld.setCarTrackDistanceProbeAHandler(*plotCarTrackDistanceA.get());
 	m_testWorld.setCarTrackDistanceProbeBHandler(*plotCarTrackDistanceB.get());
 	m_testWorld.setLeftDistanceProbeHandler(*plotLeftDistance.get());
 	m_testWorld.setCarTrackAngleProbeHandler(*plotCarTrackAngle.get());
-	m_testWorld.setCarTrackSideProbeHandle(*plotCarTrackSide.get());
+	m_testWorld.setCarTrackLeftSideProbeHandle(*plotCarTrackLeftSide.get());
+	m_testWorld.setCarTrackRightSideProbeHandle(*plotCarTrackRightSide.get());
 	m_testWorld.setCarVelocityProbeHandler(*plotCarVelocity.get());
 
 	m_testWorld.setForwardImpulseHandler(*plotInputForward.get());
@@ -117,7 +121,8 @@ void ApplicationManager::initPlots()
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackDistanceB));
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotLeftDistance));
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackAngle));
-	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackSide));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackLeftSide));
+	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarTrackRightSide));
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotCarVelocity));
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotInputForward));
 	m_impulsePlotBundle.addPlot(Plots::ImpulsePlotAPtr(plotInputBackward));

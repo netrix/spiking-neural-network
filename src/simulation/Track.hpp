@@ -30,10 +30,14 @@ public:
 
 	float	getTrackLength() const;
 
+	void	setMaxTrackDistance(float fMaxTrackDistance);
+	float	getMaxTrackDistance() const;
+
 	void							setCurrentPositionFromStart(const NLib::Math::NMVector2f& point);
 	void							setCurrentPosition(const NLib::Math::NMVector2f& point);
 	const NLib::Math::NMVector2f&	getCurrentPosition() const		{ return m_currentPosition; }
 
+	float getDistanceToTrack(const NLib::Math::NMVector2f& point) const;
 	float getCurrentDistanceFromTrack() const;
 	float getCurrentSideFromTrack() const;
 	float getTravelledDistance() const;
@@ -51,7 +55,7 @@ public:
 	void loadFromFile(const std::string& filePath);
 
 private:
-	NLib::NSize_t findClosestPoint(const NLib::Math::NMVector2f& point);
+	NLib::NSize_t findClosestPoint(const NLib::Math::NMVector2f& point) const;
 
 	NLib::NSize_t findClosestPointAround(NLib::NSize_t uIndex, const NLib::Math::NMVector2f& point);
 
@@ -62,6 +66,8 @@ private:
 	NLib::Math::NMVector2f m_currentPosition;
 	bool m_bIsPointCloser;
 	float m_fTrackWidth;
+
+	float m_fMaxTrackDistance;
 };
 
 } // Simulation

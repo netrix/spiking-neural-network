@@ -3,6 +3,7 @@
 #include <set>
 #include <limits>
 #include <ctime>
+#include <fstream>
 
 using namespace NLib;
 
@@ -22,6 +23,16 @@ DifferentialEvolution::DifferentialEvolution()
 	, m_fCR(DEFAULT_CR)
 	, m_uBestIndividual(0)
 {
+}
+
+void DifferentialEvolution::loadGenerationFromFile(const std::string& filepath)
+{
+	std::ifstream in(filepath);
+
+	for(NSize_t i = 0; i < m_aPopulations[0].size(); ++i)
+	{
+		in >> m_aPopulations[0][i];
+	}
 }
 
 void DifferentialEvolution::setPopulationSize(NSize_t uSize)

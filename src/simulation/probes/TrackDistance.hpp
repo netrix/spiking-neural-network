@@ -13,9 +13,12 @@ class TrackDistance
 public:
 	TrackDistance(Track& track);
 
+	void setPosition(const NLib::Math::NMVector2f& point);
+
 	virtual void update(float fDelta);
 
 private:
+	NLib::Math::NMVector2f m_position;
 	Track& m_track;
 };
 

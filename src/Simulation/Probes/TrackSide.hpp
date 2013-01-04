@@ -15,11 +15,19 @@ class TrackSide
 	: public BaseProbe
 {
 public:
-	TrackSide(Track& track);
+	enum Enum
+	{
+		TRACK_SIDE_LEFT,
+		TRACK_SIDE_RIGHT
+	};
+
+public:
+	TrackSide(Track& track, Enum side);
 
 	virtual void update(float fDelta);
 
 private:
+	Enum m_side;
 	Track& m_track;
 };
 

@@ -18,7 +18,7 @@ class ApplicationManager
 	: public IApplicationController
 	, NLib::NNonCopyable
 {
-	static const NLib::NSize_t NEURON_INPUT_COUNT = 6;
+	static const NLib::NSize_t NEURON_INPUT_COUNT = 7;
 
 public:
 	ApplicationManager();

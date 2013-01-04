@@ -35,7 +35,6 @@ private:
 	Simulation::World&		m_world;
 	SNN::SpikingNetwork&	m_testNetwork;
 
-	SNN::SpikingNetwork			m_learningNetwork;
 	DE::DifferentialEvolution	m_differentialEvolution;
 
 	bool m_bStarted;

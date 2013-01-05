@@ -75,8 +75,12 @@ void NeuralNetworkController::initializeFirstGeneration()
 		m_differentialEvolution.setCost(i, max(fCostA, fCostB));
 	}
 
+	Math::NMVector2f generationStats = m_differentialEvolution.getCostStats();
+
 	std::cout << "OK, Best score: " << m_differentialEvolution.getBestCost() 
-		<< " of individual: " << m_differentialEvolution.getBestIndividualIndex() << std::endl;
+		<< " of individual: " << m_differentialEvolution.getBestIndividualIndex()
+		<< ". Generation average: " << generationStats.x << ", std: " 
+		<< generationStats.y << std::endl;
 
 	setBestIndividual();
 }
@@ -250,8 +254,12 @@ void NeuralNetworkController::evaluateNextGeneration()
 		m_differentialEvolution.updateIndividual(i, max(fCostA, fCostB));
 	}
 
+	Math::NMVector2f generationStats = m_differentialEvolution.getCostStats();
+
 	std::cout << "OK, Best score: " << m_differentialEvolution.getBestCost() 
-		<< " of individual: " << m_differentialEvolution.getBestIndividualIndex() << std::endl;
+		<< " of individual: " << m_differentialEvolution.getBestIndividualIndex()
+		<< ". Generation average: " << generationStats.x << ", std: " 
+		<< generationStats.y << std::endl;
 
 	setBestIndividual();
 }

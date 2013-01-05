@@ -3,6 +3,7 @@
 
 #include <NLib/Base/nBase.hpp>
 #include <NLib/Base/nNonCopyable.hpp>
+#include <NLib/Math/nMath.hpp>
 #include <random>
 #include <vector>
 #include "SNN/Common.hpp"
@@ -45,7 +46,9 @@ public:
 	 */
 	void updateIndividual(NLib::NSize_t uIndex, float fCost);
 
-	void setCost(NLib::NSize_t uIndex, float fCost);
+	void					setCost(NLib::NSize_t uIndex, float fCost);
+	float					getCost(NLib::NSize_t uIndex) const;
+	NLib::Math::NMVector2f	getCostStats() const;
 
 	const SNN::real*	getCurrentIndividualData(NLib::NSize_t uIndex) const	{ return &m_aPopulations[0].at(m_uIndividualSize * uIndex); }
 	SNN::real*			getCurrentIndividualData(NLib::NSize_t uIndex)			{ return &m_aPopulations[0].at(m_uIndividualSize * uIndex); }

@@ -60,7 +60,7 @@ void DifferentialEvolution::resizePopulations()
 void DifferentialEvolution::randomizeCurrentGeneration()
 {
 	std::default_random_engine generator(time(0));
-	std::normal_distribution<float> distribution(0.0f, 10.0f);
+	std::normal_distribution<float> distribution(0.0f, 1.0f);
 
 	for(NSize_t i = 0; i < m_aPopulations[0].size(); ++i)
 	{
@@ -158,6 +158,33 @@ void DifferentialEvolution::setCost(NLib::NSize_t uIndex, float fCost)
 { 
 	m_costs[uIndex] = fCost;
 	updateBestIndividual(uIndex, fCost);
+}
+
+float DifferentialEvolution::getCost(NLib::NSize_t uIndex) const
+{
+	return m_costs[uIndex];
+}
+
+NLib::Math::NMVector2f DifferentialEvolution::getCostStats() const
+{
+	float fCostSum = 0.0f;
+
+	for(NSize_t i = 0; i < m_costs.size(); ++i)
+	{
+		fCostSum += m_costs[i];
+	}
+
+	float fAverage = fCostSum / m_costs.size();
+
+	fCostSum = 0.0f;
+
+	for(NSize_t i = 0; i < m_costs.size(); ++i)
+	{
+		float fDiff = m_costs[i] - fAverage;
+		fCostSum += fDiff * fDiff;
+	}
+
+	return NLib::Math::NMVector2fLoad(fAverage, fCostSum / m_costs.size());
 }
 
 } // DE

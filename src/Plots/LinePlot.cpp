@@ -1,6 +1,7 @@
 #include "LinePlot.hpp"
 
-using namespace NLib::Math;
+using namespace NLib;
+using namespace Math;
 
 namespace Plots {
 

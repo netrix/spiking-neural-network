@@ -3,6 +3,7 @@
 #include <set>
 #include <limits>
 #include <ctime>
+#include <cstring>  // for memcpy
 #include <fstream>
 
 using namespace NLib;

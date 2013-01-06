@@ -1,7 +1,9 @@
 #include "Track.hpp"
 #include <NLib/Base/nAssert.hpp>
 #include <fstream>
-using namespace NLib::Math;
+
+using namespace NLib;
+using namespace Math;
 
 namespace Simulation {
 

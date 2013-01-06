@@ -3,11 +3,11 @@
 
 #include <NLib/Base/nBase.hpp>
 #include <NLib/Math/nMath.hpp>
-#include <SDL.h>
-#include <SDL_opengl.h>
 #include <memory>
 #include <string>
 #include <vector>
+#include <SDL.h>
+#include <SDL_opengl.h>
 
 #include "Exceptions.hpp"
 #include "DebugDrawOpenGL.hpp"

@@ -1,6 +1,7 @@
 #ifndef SNN_SIMULATION_TRACK
 #define SNN_SIMULATION_TRACK
 
+#include <string>
 #include <vector>
 #include <NLib/Math/nMath.hpp>
 

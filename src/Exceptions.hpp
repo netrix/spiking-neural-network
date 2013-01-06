@@ -1,7 +1,7 @@
 #ifndef SNN_EXCEPTIONS
 #define SNN_EXCEPTIONS
 
-#include <exception>
+#include<stdexcept>
 
 /**
  *

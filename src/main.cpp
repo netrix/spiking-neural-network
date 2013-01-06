@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ApplicationManager.hpp"
 
-int SDL_main(int argc, char* args[])
+int main(int argc, char* args[])
 {
 	ApplicationManager app;
 	app.run();

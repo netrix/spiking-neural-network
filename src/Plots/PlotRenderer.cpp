@@ -1,7 +1,8 @@
 #include "PlotRenderer.hpp"
 #include <algorithm>
 
-using namespace NLib::Math;
+using namespace NLib;
+using namespace Math;
 
 namespace Plots {
 

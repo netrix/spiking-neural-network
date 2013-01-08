@@ -64,6 +64,7 @@ void World::reset()
 	m_car.setTransform(m_carStartPosition, m_carStartOrientation);
 	m_car.stop();
 	m_track.setCurrentPositionFromStart(m_car.getPosition());
+	m_b2World.ClearForces();
 
 	m_passageEvaluator.start();
 }

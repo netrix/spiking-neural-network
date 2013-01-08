@@ -25,6 +25,15 @@ DifferentialEvolution::DifferentialEvolution()
 	, m_uBestIndividual(0)
 {
 }
+void DifferentialEvolution::saveGenerationToFile(const std::string& filepath)
+{
+	std::ofstream out(filepath);
+
+	for(NSize_t i = 0; i < m_aPopulations[0].size(); ++i)
+	{
+		out << m_aPopulations[0][i] << std::endl;
+	}
+}
 
 void DifferentialEvolution::loadGenerationFromFile(const std::string& filepath)
 {
@@ -61,7 +70,9 @@ void DifferentialEvolution::resizePopulations()
 void DifferentialEvolution::randomizeCurrentGeneration()
 {
 	std::default_random_engine generator(time(0));
-	std::normal_distribution<float> distribution(0.0f, 1.0f);
+	std::normal_distribution<float> distribution(0.0f, 0.2f);
+	//std::default_random_engine generator(time(0));
+	//std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
 	for(NSize_t i = 0; i < m_aPopulations[0].size(); ++i)
 	{

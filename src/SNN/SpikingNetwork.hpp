@@ -34,6 +34,9 @@ public:
 	void setParameters(const real* pParameters);
 	float evaluateParameters() const;
 
+	void saveToFile(const std::string& filepath) const;
+	void loadFromFile(const std::string& filepath);
+
 private:
 	const real m_fStep;
 	std::vector<SpikingNeuron*> m_spikingNeurons;

@@ -2,6 +2,12 @@
 #include <NLib/Base/nAssert.hpp>
 #include <algorithm>
 
+namespace {
+
+const NLib::NSize_t INTERNAL_PARAMETERS = 4;
+
+}
+
 namespace SNN {
 
 SpikingNeuron::SpikingNeuron(NLib::NSize_t uInputNum, real fStep)
@@ -80,7 +86,7 @@ void SpikingNeuron::reset()
 
 NLib::NSize_t SpikingNeuron::getParametersCount() const
 {
-	return NeuronInput::getParametersCount() * m_aInputs.size() + 4;
+	return NeuronInput::getParametersCount() * m_aInputs.size() + INTERNAL_PARAMETERS;
 }
 
 void SpikingNeuron::getParameters(real* opParameters) const
@@ -92,7 +98,7 @@ void SpikingNeuron::getParameters(real* opParameters) const
 
 	for(NLib::NSize_t i = 0; i < m_aInputs.size(); ++i)
 	{
-		m_aInputs[i].getParameters(opParameters + m_aInputs[i].getParametersCount() * i + 3);
+		m_aInputs[i].getParameters(opParameters + m_aInputs[i].getParametersCount() * i + INTERNAL_PARAMETERS);
 	}
 }
 
@@ -108,7 +114,7 @@ void SpikingNeuron::setParameters(const real* pParameters)
 
 	for(NLib::NSize_t i = 0; i < m_aInputs.size(); ++i)
 	{
-		m_aInputs[i].setParameters(pParameters + m_aInputs[i].getParametersCount() * i + 3);
+		m_aInputs[i].setParameters(pParameters + m_aInputs[i].getParametersCount() * i + INTERNAL_PARAMETERS);
 	}
 }
 
@@ -127,5 +133,6 @@ float SpikingNeuron::evaluateParameters() const
 
 	return fValue;
 }
+
 
 } // SNN

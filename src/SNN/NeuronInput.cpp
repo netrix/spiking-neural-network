@@ -1,6 +1,12 @@
 #include "NeuronInput.hpp"
 #include <NLib/Base/nAssert.hpp>
 
+namespace {
+
+const NLib::NSize_t INTERNAL_PARAMETERS = 2;
+
+}
+
 namespace SNN {
 
 NeuronInput::NeuronInput()
@@ -49,7 +55,7 @@ void NeuronInput::reset()
 
 NLib::NSize_t NeuronInput::getParametersCount()
 {
-	return 2;
+	return INTERNAL_PARAMETERS;
 }
 
 void NeuronInput::getParameters(real* opParameters) const

@@ -1,6 +1,10 @@
 #include <iostream>
 #include "ApplicationManager.hpp"
 
+#ifdef main
+	#undef main
+#endif
+
 int main(int argc, char* args[])
 {
 	ApplicationManager app;

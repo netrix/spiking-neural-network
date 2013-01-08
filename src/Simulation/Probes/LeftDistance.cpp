@@ -10,7 +10,7 @@ LeftDistance::LeftDistance(Track& track)
 
 void LeftDistance::update(float fDelta)
 {
-	float fLeftDistance = m_track.getTrackLength() - m_track.getTravelledDistance();
+	float fLeftDistance = 30.0f * m_track.getTrackLength() / (m_track.getTrackLength() - m_track.getTravelledDistance());
 
 	BaseProbe::update(fDelta, fLeftDistance);
 }

@@ -1,6 +1,7 @@
 #include "SpikingNetwork.hpp"
 #include <algorithm>
 #include <NLib/Base/nAssert.hpp>
+#include <fstream>
 
 using namespace NLib;
 
@@ -108,6 +109,37 @@ float SpikingNetwork::evaluateParameters() const
 	}
 
 	return fValue;
+}
+
+void SpikingNetwork::saveToFile(const std::string& filepath) const
+{
+	// Getting data
+	std::vector<real> data(getParametersCount());
+	getParameters(&data[0]);
+
+	// Writing to file
+	std::ofstream fout(filepath);
+
+	for(NSize_t i = 0; i < data.size(); ++i)
+	{
+		fout << data[i] << std::endl;
+	}
+}
+
+void SpikingNetwork::loadFromFile(const std::string& filepath)
+{
+	std::vector<real> data(getParametersCount());
+
+	// Writing to file
+	std::ifstream fin(filepath);
+
+	for(NSize_t i = 0; i < data.size(); ++i)
+	{
+		fin >> data[i];
+	}
+	
+	// Setting data
+	setParameters(&data[0]);
 }
 
 } // SNN

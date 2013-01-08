@@ -24,11 +24,12 @@ private:
 
 	float evaluateIndividual(const SNN::real* pIndividual);
 
+	void evaluateGeneration(bool bInit = false);
 	void evaluateNextGeneration();
 
 	void setBestIndividual();
 
-	void saveBestGenerationToFile(const std::string& filepath);
+	void printStats();
 
 private:
 	Framework::Framework&	m_framework;

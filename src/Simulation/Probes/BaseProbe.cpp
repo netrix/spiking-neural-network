@@ -24,5 +24,10 @@ void BaseProbe::update(float fDelta, float fFrequency)
 	}
 }
 
+void BaseProbe::reset()
+{
+	m_fLastImpulse = 0.0f;
+}
+
 } // Probes
 } // Simulation

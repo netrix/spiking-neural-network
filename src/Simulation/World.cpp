@@ -67,6 +67,14 @@ void World::reset()
 	m_b2World.ClearForces();
 
 	m_passageEvaluator.start();
+
+	m_carVelocityProbe.reset();
+	m_carTrackAngleProbe.reset();
+	m_carTrackDistanceProbeA.reset();
+	m_carTrackDistanceProbeB.reset();
+	m_carTrackLeftSideProbe.reset();
+	m_carTrackRightSideProbe.reset();
+	m_leftTrackDistanceProbe.reset();
 }
 
 void World::draw(Framework::Sprite& carSprite, Framework::Sprite& backgroundSprite) const

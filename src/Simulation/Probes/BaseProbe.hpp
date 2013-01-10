@@ -17,6 +17,8 @@ public:
 
 	virtual void update(float fDelta) = 0;
 
+	virtual void reset();
+
 protected:
 	BaseProbe();
 

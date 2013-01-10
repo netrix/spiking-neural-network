@@ -85,17 +85,17 @@ void ApplicationManager::initSpikingNetwork()
 
 void ApplicationManager::initPlots()
 {
-	PlotImpulseHandlerProxyAPtr plotCarTrackDistanceA(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 10.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotCarTrackDistanceB(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 21.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotLeftDistance(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 32.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotCarTrackAngle(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 43.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotCarTrackLeftSide(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 54.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotCarTrackRightSide(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 65.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotCarVelocity(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 76.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotInputForward(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 88.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotInputBackward(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(82.0f, 88.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotInputLeft(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 99.0f), NMVector2fLoad(75.0, 10.0f)));
-	PlotImpulseHandlerProxyAPtr plotInputRight(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(82.0f, 99.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackDistanceA(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 5.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackDistanceB(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 16.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotLeftDistance(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 27.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackAngle(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 38.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackLeftSide(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 49.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarTrackRightSide(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 60.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotCarVelocity(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 71.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotInputForward(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 83.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotInputBackward(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(82.0f, 83.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotInputLeft(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(2.0f, 94.0f), NMVector2fLoad(75.0, 10.0f)));
+	PlotImpulseHandlerProxyAPtr plotInputRight(new PlotImpulseHandlerProxy(m_framework, NMVector2fLoad(82.0f, 94.0f), NMVector2fLoad(75.0, 10.0f)));
 
 	plotCarTrackDistanceA->setImpulseHandler(m_testWorld.getCarTrackDistanceProbeAHandler());
 	plotCarTrackDistanceB->setImpulseHandler(m_testWorld.getCarTrackDistanceProbeBHandler());

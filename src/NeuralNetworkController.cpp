@@ -16,7 +16,7 @@ namespace
 		RIGHT
 	};
 
-	const float MAX_SIMULATION_TIME = 15.0f;	// for SIMPLE track
+	const float MAX_SIMULATION_TIME = 20.0f;	// for SIMPLE track
 
 	const float NETWORK_PENALTY = 1000.0f;
 	const float STEER_PENALTY = 1000.0f;
@@ -82,6 +82,7 @@ bool NeuralNetworkController::handleKeys()
 {
 	bool bReturn = false;
 
+	static bool sbE = false;
 	static bool sbL = false;
 	static bool sbN = false;
 	static bool sbO = false;
@@ -93,6 +94,10 @@ bool NeuralNetworkController::handleKeys()
 	static bool sbF8 = false;
 	static bool sbF9 = false;
 
+	if(!sbE && m_framework.checkKeyDown(SDLK_e))
+	{
+		evaluateGeneration();
+	}
 	if(!sbL && m_framework.checkKeyDown(SDLK_l))
 	{
 		m_bLoopEvaluation = !m_bLoopEvaluation;
@@ -114,6 +119,7 @@ bool NeuralNetworkController::handleKeys()
 	{
 		m_differentialEvolution.loadGenerationFromFile(DEFAULT_GENERATION_FILE);
 		evaluateGeneration(true);
+		m_bInitializated = true;
 	}
 	if(!sbR && m_framework.checkKeyDown(SDLK_r))
 	{
@@ -149,6 +155,7 @@ bool NeuralNetworkController::handleKeys()
 		m_testNetwork.loadFromFile(DEFAULT_NETWORK_DRIVER_FILE);
 	}
 
+	sbE = m_framework.checkKeyDown(SDLK_e);
 	sbL = m_framework.checkKeyDown(SDLK_l);
 	sbN = m_framework.checkKeyDown(SDLK_n);
 	sbO = m_framework.checkKeyDown(SDLK_o);
@@ -169,21 +176,22 @@ bool NeuralNetworkController::handleKeys()
 			m_bInitializated = true;
 		}
 
-		if(m_uCurrentGeneration > 1500000000)
-		{
-			std::ostringstream oss;
-			oss << "../../generations/generation_" << m_uCurrentReset << "_" << m_uCurrentGeneration;
-			// Save to file
-			m_differentialEvolution.saveGenerationToFile(oss.str());
+		//if(m_uCurrentGeneration > 1500000000)
+		//{
+		//	std::ostringstream oss;
+		//	oss << "../../generations/generation_" << m_uCurrentReset << "_" << m_uCurrentGeneration;
+		//	// Save to file
+		//	m_differentialEvolution.saveGenerationToFile(oss.str());
 
-			// Reset
-			initializeFirstGeneration();
+		//	// Reset
+		//	initializeFirstGeneration();
 
-			m_uCurrentGeneration = 0;
-			m_uCurrentReset++;
-			m_bStarted = true;
-		}
-		else if(!m_bStarted)
+		//	m_uCurrentGeneration = 0;
+		//	m_uCurrentReset++;
+		//	m_bStarted = true;
+		//}
+		//else 
+		if(!m_bStarted)
 		{
 			std::cout << std::endl << "Evaluating generation: " << m_uCurrentGeneration << ", after reset: " << m_uCurrentReset;
 			evaluateNextGeneration();
@@ -205,9 +213,15 @@ void NeuralNetworkController::fixedStepUpdate()
 {
 	const Simulation::PassageEvaluator& pe = m_world.getPassageEvaluator();
 
+	float fSteerEvaluation = m_testNetwork.checkOutputImpulse(FORWARD)
+		&& m_testNetwork.checkOutputImpulse(BACKWARD) ? STEER_PENALTY : 0.0f;
+
+	fSteerEvaluation += m_testNetwork.checkOutputImpulse(LEFT) 
+		&& m_testNetwork.checkOutputImpulse(RIGHT) ? STEER_PENALTY : 0.0f;
+
 	std::cout << "\r" 
 		<< "Time: " << std::setw(6) << std::setprecision(4) << pe.getTime()
-		<< ", Points: " << std::setprecision(4) << pe.getPoints()
+		<< ", Points: " << std::setprecision(4) << pe.getPoints() + fSteerEvaluation + m_testNetwork.evaluateParameters() * NETWORK_PENALTY
 		<< ", Forward output value: " << std::scientific << m_testNetwork.getNeuron(FORWARD).getValue() << std::fixed;
 
 	if(m_bStarted)
@@ -275,7 +289,16 @@ void NeuralNetworkController::evaluateGeneration(bool bInit)
 		std::cout << "Evaluating generation... " << i << "/" << m_differentialEvolution.getPopulationSize() << "\r";
 
 		// Double check
-		float fCostA = evaluateIndividual(m_differentialEvolution.getNextIndividualData(i));
+		float fCostA = 0.0f;
+		
+		if(bInit)
+		{
+			fCostA = evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
+		}
+		else
+		{
+			fCostA = evaluateIndividual(m_differentialEvolution.getNextIndividualData(i));
+		}
 		//float fCostB = evaluateIndividual(m_differentialEvolution.getNextIndividualData(i));
 
 		//if(fCostA != fCostB)

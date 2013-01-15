@@ -102,7 +102,7 @@ set(NAME "snn")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(${NAME} ${ALL_SOURCES})
-target_link_libraries(${NAME} nmemory)
+target_link_libraries(${NAME} nbase)
 target_link_libraries(${NAME} Box2D)
 
 # For Visual Studio

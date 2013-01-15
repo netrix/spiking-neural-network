@@ -148,7 +148,7 @@ bool NeuralNetworkController::handleKeys()
 	}
 	if(!sbF7 && m_framework.checkKeyDown(SDLK_F7))
 	{
-		NLib::NSize_t uGeneration = 159;
+		NLib::NSize_t uGeneration = 5721;
 		float fCost = loadAndEvaluate(uGeneration);
 		std::cout << "Cost of generation: " << uGeneration << " is " << fCost << " of individual " 
 				<< m_differentialEvolution.getBestIndividualIndex() << ", average: " 

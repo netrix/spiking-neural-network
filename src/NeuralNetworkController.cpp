@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <queue>
 
 using namespace NLib;
 
@@ -91,6 +92,7 @@ bool NeuralNetworkController::handleKeys()
 	static bool sbW = false;
 	static bool sbF4 = false;
 	static bool sbF5 = false;
+	static bool sbF7 = false;
 	static bool sbF8 = false;
 	static bool sbF9 = false;
 
@@ -135,12 +137,6 @@ bool NeuralNetworkController::handleKeys()
 	{
 		m_differentialEvolution.saveGenerationToFile(DEFAULT_GENERATION_FILE);
 	}
-	if(!sbF8 && m_framework.checkKeyDown(SDLK_F8))
-	{
-		m_differentialEvolution.loadGenerationFromFile("../../generations/generation_0_1311");
-
-		evaluateGeneration();
-	}
 	if(!sbF4 && m_framework.checkKeyDown(SDLK_F4))
 	{
 		m_differentialEvolution.randomizeCurrentGeneration();
@@ -149,6 +145,18 @@ bool NeuralNetworkController::handleKeys()
 	if(!sbF5 && m_framework.checkKeyDown(SDLK_F5))
 	{
 		m_testNetwork.saveToFile(DEFAULT_NETWORK_DRIVER_FILE);
+	}
+	if(!sbF7 && m_framework.checkKeyDown(SDLK_F7))
+	{
+		NLib::NSize_t uGeneration = 159;
+		float fCost = loadAndEvaluate(uGeneration);
+		std::cout << "Cost of generation: " << uGeneration << " is " << fCost << " of individual " 
+				<< m_differentialEvolution.getBestIndividualIndex() << ", average: " 
+				<< m_differentialEvolution.getCostStats().x << std::endl;
+	}
+	if(!sbF8 && m_framework.checkKeyDown(SDLK_F8))
+	{
+		evaluateGenerationsFromFiles();
 	}
 	if(!sbF9 && m_framework.checkKeyDown(SDLK_F9))
 	{
@@ -164,6 +172,7 @@ bool NeuralNetworkController::handleKeys()
 	sbW = m_framework.checkKeyDown(SDLK_w);
 	sbF4 = m_framework.checkKeyDown(SDLK_F4);
 	sbF5 = m_framework.checkKeyDown(SDLK_F5);
+	sbF7 = m_framework.checkKeyDown(SDLK_F7);
 	sbF8 = m_framework.checkKeyDown(SDLK_F8);
 	sbF9 = m_framework.checkKeyDown(SDLK_F9);
 
@@ -331,4 +340,69 @@ void NeuralNetworkController::printStats()
 		<< " of individual: " << m_differentialEvolution.getBestIndividualIndex()
 		<< ". Generation average: " << generationStats.x << ", std: " 
 		<< generationStats.y << std::endl;
+}
+
+void NeuralNetworkController::evaluateGenerationsFromFiles()
+{
+		std::ofstream results("generations_best_results.txt");
+		NLib::NSize_t MAX_GENERATION = 10738;
+
+		struct T
+		{
+			NLib::NSize_t a, b;
+			float fCostA, fCostB;
+		};
+		std::queue<T> indices;
+
+		T actual = { 0, MAX_GENERATION };
+		actual.fCostA = loadAndEvaluate(0);
+		std::cout << "Cost of generation: " << 0 << " is " << actual.fCostA << std::endl;
+		results << "Cost of generation: " << 0 << " is " << actual.fCostA << " of individual " << m_differentialEvolution.getBestIndividualIndex() << ", average: " << m_differentialEvolution.getCostStats().x << std::endl;
+
+		actual.fCostB = loadAndEvaluate(MAX_GENERATION);
+		std::cout << "Cost of generation: " << MAX_GENERATION << " is " << actual.fCostB << std::endl;
+		results << "Cost of generation: " << MAX_GENERATION << " is " << actual.fCostB << " of individual " << m_differentialEvolution.getBestIndividualIndex() << ", average: " << m_differentialEvolution.getCostStats().x << std::endl;
+
+		if(actual.fCostA != actual.fCostB)
+		{
+			indices.push(actual);
+		}
+
+		while(!indices.empty())
+		{
+			actual = indices.front();
+			indices.pop();
+
+			if(actual.b > actual.a + 1)
+			{
+				NLib::NSize_t uNewIndex = ((actual.b - actual.a) >> 1) + actual.a;
+				float fNewCost = loadAndEvaluate(uNewIndex);
+
+				std::cout << "Cost of generation: " << uNewIndex << " is " << fNewCost << std::endl;
+				results << "Cost of generation: " << uNewIndex << " is " << fNewCost << " of individual " << m_differentialEvolution.getBestIndividualIndex() << ", average: " << m_differentialEvolution.getCostStats().x << std::endl;
+				results.flush();
+
+				if(actual.fCostA != fNewCost)
+				{
+					T n = { actual.a, uNewIndex, actual.fCostA, fNewCost };
+					indices.push(n);
+				}
+				if(actual.fCostB != fNewCost)
+				{
+					T n = { uNewIndex, actual.b, fNewCost, actual.fCostB };
+					indices.push(n);
+				}
+			}
+		}
+}
+
+float NeuralNetworkController::loadAndEvaluate(NLib::NSize_t uIndex)
+{
+	std::ostringstream sout;
+	sout << "../../generations/generation_0_" << uIndex;
+
+	m_differentialEvolution.loadGenerationFromFile(sout.str());
+	evaluateGeneration(true);
+
+	return m_differentialEvolution.getBestCost();
 }

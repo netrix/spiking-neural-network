@@ -31,6 +31,9 @@ private:
 
 	void printStats();
 
+	void evaluateGenerationsFromFiles();
+	float loadAndEvaluate(NLib::NSize_t uIndex);
+
 private:
 	Framework::Framework&	m_framework;
 	Simulation::World&		m_world;

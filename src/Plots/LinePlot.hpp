@@ -20,6 +20,8 @@ public:
 
 	void draw();
 
+	void reset();
+
 	void setDrawScale(bool bValue)		{ m_oglPlot.setDrawScale(bValue); }
 
 private:

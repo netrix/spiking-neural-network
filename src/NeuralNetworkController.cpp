@@ -148,7 +148,10 @@ bool NeuralNetworkController::handleKeys()
 	}
 	if(!sbF7 && m_framework.checkKeyDown(SDLK_F7))
 	{
-		NLib::NSize_t uGeneration = 5721;
+		NLib::NSize_t uGeneration = 10738;
+
+		std::cin >> uGeneration;
+
 		float fCost = loadAndEvaluate(uGeneration);
 		std::cout << "Cost of generation: " << uGeneration << " is " << fCost << " of individual " 
 				<< m_differentialEvolution.getBestIndividualIndex() << ", average: " 
@@ -298,32 +301,17 @@ void NeuralNetworkController::evaluateGeneration(bool bInit)
 		std::cout << "Evaluating generation... " << i << "/" << m_differentialEvolution.getPopulationSize() << "\r";
 
 		// Double check
-		float fCostA = 0.0f;
+		float fCost = 0.0f;
 		
 		if(bInit)
 		{
-			fCostA = evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
+			fCost = evaluateIndividual(m_differentialEvolution.getCurrentIndividualData(i));
+			m_differentialEvolution.setCost(i, fCost);
 		}
 		else
 		{
-			fCostA = evaluateIndividual(m_differentialEvolution.getNextIndividualData(i));
-		}
-		//float fCostB = evaluateIndividual(m_differentialEvolution.getNextIndividualData(i));
-
-		//if(fCostA != fCostB)
-		//{
-		//	std::cout << "Different for " << i << ", fCostA: " << fCostA << ", fCostB: " << fCostB << std::endl;
-		//}
-
-//		std::cout << "Cost: " << max(fCostA, fCostB) << std::endl;
-
-		if(bInit)
-		{
-			m_differentialEvolution.setCost(i, fCostA);// max(fCostA, fCostB));
-		}
-		else
-		{
-			m_differentialEvolution.updateIndividual(i, fCostA);// max(fCostA, fCostB));
+			fCost = evaluateIndividual(m_differentialEvolution.getNextIndividualData(i));
+			m_differentialEvolution.updateIndividual(i, fCost);
 		}
 	}
 

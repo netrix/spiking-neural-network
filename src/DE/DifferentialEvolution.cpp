@@ -70,13 +70,21 @@ void DifferentialEvolution::resizePopulations()
 void DifferentialEvolution::randomizeCurrentGeneration()
 {
 	std::default_random_engine generator(time(0));
-	std::normal_distribution<float> distribution(0.0f, 0.2f);
-	//std::default_random_engine generator(time(0));
-	//std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+	std::normal_distribution<float> normalDistribution(0.0f, 0.2f);
+	std::uniform_real_distribution<float> uniformDistribution(0.0f, 1.0f);
 
 	for(NSize_t i = 0; i < m_aPopulations[0].size(); ++i)
 	{
-		m_aPopulations[0].at(i) = distribution(generator);
+		NSize_t uNeuronValueIndex = i % 18;		// yep, 18 inputs
+
+		if(uNeuronValueIndex < 4 || (uNeuronValueIndex % 2) == 1)
+		{
+			m_aPopulations[0].at(i) = uniformDistribution(generator);
+		}
+		else
+		{
+			m_aPopulations[0].at(i) = normalDistribution(generator);
+		}
 	}
 
 	m_uBestIndividual = 0;	// Reset of best individual

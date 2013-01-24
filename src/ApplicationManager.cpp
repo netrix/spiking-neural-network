@@ -33,6 +33,7 @@ ApplicationManager::ApplicationManager()
 	, m_pApplicationController(null)
 	, m_bShowPlots(true)
 	, m_currentTrackPath(COMPLEX_TRACK_PATH)
+	, m_uCurrentLinePlot(0)
 	, m_impulsePlotBundle(m_framework)
 	, m_linePlot(m_framework, NMVector2fLoad(90.0f, 10.0f),  NMVector2fLoad(60.0f, 50.0f), 160)
 	, m_testWorld(m_framework, WORLD_SCALE, STEP)
@@ -144,10 +145,23 @@ bool ApplicationManager::handleApplicationKeys()
 
 	static bool sbEscape = false;
 	static bool sbP = false;
+	static bool sbK = false;
 
 	if(!sbP && m_framework.checkKeyDown(SDLK_p))
 	{
 		m_bShowPlots = !m_bShowPlots;
+	}
+
+	if(!sbK && m_framework.checkKeyDown(SDLK_k))
+	{
+		if(m_uCurrentLinePlot + 1 >= m_spikingNetwork.getOutputCount())
+		{
+			setCurrentLinePlot(0);
+		}
+		else
+		{
+			setCurrentLinePlot(m_uCurrentLinePlot + 1);
+		}
 	}
 
 	if(!bReturn)
@@ -191,7 +205,6 @@ bool ApplicationManager::handleKeys()
 		setApplicationController(m_networkController);
 		bReturn = true;
 	}
-
 
 	// Track
 	if(!sbF11 && m_framework.checkKeyDown(SDLK_F11))
@@ -285,10 +298,16 @@ void ApplicationManager::run()
 			// Update with fixed step
 			m_pApplicationController->fixedStepUpdate();
 			m_impulsePlotBundle.update(STEP);
-			m_linePlot.pushValue(m_spikingNetwork.getNeuron(0).getValue());
+			m_linePlot.pushValue(m_spikingNetwork.getNeuron(m_uCurrentLinePlot).getValue());
 		}
 
 		m_framework.flipScreen();
 	}
+}
+
+void ApplicationManager::setCurrentLinePlot(NLib::NSize_t uPlotIndex)
+{
+	m_uCurrentLinePlot = uPlotIndex;
+	m_linePlot.reset();
 }
 

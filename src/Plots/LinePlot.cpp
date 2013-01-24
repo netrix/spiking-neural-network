@@ -32,4 +32,10 @@ void LinePlot::draw()
 	m_oglPlot.drawLines(m_values, m_minMax);
 }
 
+void LinePlot::reset()
+{
+	m_minMax = NMVector2fLoad(0.0f, 1.0f);
+	m_values.clear();
+}
+
 } // Plots

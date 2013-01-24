@@ -41,6 +41,8 @@ private:
 
 	void setApplicationController(IApplicationController& pController);
 
+	void setCurrentLinePlot(NLib::NSize_t uPlotIndex);
+
 private:
 	Framework::Framework		m_framework;
 	const float					m_fWorldScale;
@@ -51,6 +53,7 @@ private:
 
 	bool						m_bShowPlots;
 	std::string					m_currentTrackPath;
+	NLib::NSize_t				m_uCurrentLinePlot;
 
 	Plots::ImpulsePlotBundle	m_impulsePlotBundle;
 	Plots::LinePlot				m_linePlot;
